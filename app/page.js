@@ -37,7 +37,7 @@ export default function Home() {
               </div>
             </div>
             <p className="mt-10 text-lg leading-8 text-gray-300">
-              En Capellini, nos enorgullece nuestra larga tradición en la venta
+              En Capellari, nos enorgullece nuestra larga tradición en la venta
               de productos confiables y eficientes para tu vida diaria.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
