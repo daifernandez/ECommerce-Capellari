@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  ShoppingCartIcon,
+  UserIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Ofertas", href: "#" },
@@ -20,21 +25,12 @@ export default function Header() {
       >
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
+            <span className="sr-only">Capellari</span>
             {/* Agregar logo de Capellari */}
             logo de Capellari
           </a>
         </div>
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-          </button>
-        </div>
+
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
             <a
@@ -46,14 +42,24 @@ export default function Header() {
             </a>
           ))}
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="flex flex-1 justify-end">
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            carrito de compras |
+            <ShoppingCartIcon className="h-6 w-6 mx-3" aria-hidden="true" />
           </a>
 
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            | Log in <span aria-hidden="true">&rarr;</span>
+            <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}
           </a>
+          <div className="flex lg:hidden">
+            <button
+              type="button"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <span className="sr-only">Open main menu</span>
+              <Bars3Icon className="h-6 w-6 mx-3" aria-hidden="true" />
+            </button>
+          </div>
         </div>
       </nav>
       <Dialog
@@ -67,7 +73,7 @@ export default function Header() {
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Capellari</span>
-             {/* logo de la empresa */}
+              {/* logo de la empresa */}
             </a>
             <button
               type="button"
