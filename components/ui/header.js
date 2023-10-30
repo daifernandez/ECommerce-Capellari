@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import {
@@ -9,7 +10,6 @@ import {
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Ofertas", href: "#" },
   { name: "Marketplace", href: "#" },
   { name: "Compania", href: "#" },
 ];

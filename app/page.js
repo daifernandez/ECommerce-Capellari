@@ -1,6 +1,7 @@
 import Title from "../components/ui/title";
 import Header from "../components/ui/header";
 import Footer from "../components/ui/footer";
+import Products from "@/components/ui/products";
 
 export const metadata = {
   title: "Coderhouse Next App || Daiana Fernandez",
@@ -12,8 +13,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="bg-gray-900">
+      <main>
         <Title />
+        <Products />
       </main>
       <Footer />
     </>
