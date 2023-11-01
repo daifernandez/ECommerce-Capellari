@@ -16,7 +16,7 @@ export default function Title() {
             "absolute inset-0 z-[10] h-full w-full object-cover opacity-20"
           }
         />
-        
+
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
@@ -46,19 +46,6 @@ export default function Title() {
                 </a>
               </div>
             </div>
-            {/* MOVER EL SIGUIENTE CODIGO CUANDO GENERE UN COMPONENTE DE ABOUT */}
-            {/* <p className="mt-10 text-lg leading-8 text-gray-300">
-            En Capellari, nos enorgullece nuestra larga tradición en la venta
-            de productos confiables y eficientes para tu vida diaria.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="#"
-              className="rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-            >
-              Ir a la tienda
-            </a> 
-          </div>*/}
           </div>
         </div>
         <div

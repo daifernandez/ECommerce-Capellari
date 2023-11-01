@@ -1,6 +1,4 @@
 import Title from "../components/ui/title";
-import Header from "../components/ui/header";
-import Footer from "../components/ui/footer";
 import Products from "@/components/ui/products";
 
 export const metadata = {
@@ -11,13 +9,9 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <>
-      <Header />
-      <main>
-        <Title />
-        <Products />
-      </main>
-      <Footer />
-    </>
+    <main>
+      <Title />
+      <Products />
+    </main>
   );
 }
