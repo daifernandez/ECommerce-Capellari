@@ -9,7 +9,7 @@ const filters = [
     name: "Categoria",
     options: [
       { value: "ofertas", label: "ofertas" },
-      { value: "tv", label: "tv" },
+      { value: "smart tv", label: "smart tv" },
       { value: "heladeras", label: "heladeras" },
       { value: "lavarropas", label: "lavarropas" },
       { value: "cocinas", label: "cocinas" },

@@ -48,9 +48,12 @@ export default function Header() {
           ))}
         </div>
         <div className="flex flex-1 justify-end">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <Link
+            href="/carrito"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
             <ShoppingCartIcon className="h-6 w-6 mx-3" aria-hidden="true" />
-          </a>
+          </Link>
 
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}
