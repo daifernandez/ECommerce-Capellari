@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 export default function Title() {
   return (
@@ -40,10 +41,10 @@ export default function Title() {
             <div className="sm:mb-8 sm:flex sm:justify-center mb-6 mt-8">
               <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-yellow-500">
                 Descubre la calidad y tradición de Capellari.{" "}
-                <a href="#" className="font-semibold text-white">
+                <Link href="/about" className="font-semibold text-white">
                   <span className="absolute inset-0" aria-hidden="true" />
                   Ver más <span aria-hidden="true">&rarr;</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

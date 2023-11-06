@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const timeline = [
   {
@@ -174,12 +175,17 @@ export default function About() {
                   mejor se adapten a sus necesidades.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
-                  <a
-                    href="#"
-                    className="rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                  <Link
+                    href="/"
+                    className="rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm
+                    font-semibold text-white shadow-sm hover:bg-yellow-300
+                    focus-visible:outline focus-visible:outline-2
+                    focus-visible:outline-offset-2
+                    focus-visible:outline-indigo-400"
                   >
+                    {" "}
                     Volver a la tienda
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">
