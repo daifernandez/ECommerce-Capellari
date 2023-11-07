@@ -51,31 +51,22 @@ export default function About() {
               </h1>
               <div className="mt-6 max-w-xl lg:mt-0 xl:col-end-1 xl:row-start-1">
                 <p className="text-lg leading-8 text-gray-600">
-                  En Capellari, nos enorgullecemos de nuestra rica tradición en
-                  la venta de electrodomésticos, una historia que se remonta a
-                  nuestros humildes comienzos en 1929. A lo largo de décadas,
-                  nuestra familia ha mantenido el firme compromiso de ofrecer
-                  productos de la más alta calidad y confiabilidad a nuestros
-                  clientes. Hoy en día, continuamos esa tradición con una amplia
-                  variedad de electrodomésticos confiables y eficientes para
-                  hacer que tu vida cotidiana sea más fácil y cómoda. Lo que nos
-                  distingue es nuestra pasión por la innovación y la atención al
-                  cliente. Nuestro equipo se esfuerza constantemente por estar a
-                  la vanguardia de la tecnología, ofreciendo las últimas
-                  novedades en electrodomésticos que pueden simplificar tu
-                  rutina diaria y mejorar tu calidad de vida. En Capellari, no
-                  solo vendemos electrodomésticos, sino que también construimos
-                  relaciones duraderas con nuestros clientes. Estamos aquí para
-                  asesorarte, responder a tus preguntas y garantizar que
-                  encuentres el producto perfecto para tus necesidades. Tu
-                  satisfacción es nuestra principal prioridad, y eso se refleja
-                  en todo lo que hacemos. Si estás buscando electrodomésticos de
-                  calidad respaldados por décadas de experiencia y compromiso,
-                  estás en el lugar adecuado.
+                  Capellari tiene una rica historia que se remonta a 1929. Desde
+                  entonces, nos hemos destacado en la venta de electrodomésticos
+                  de alta calidad. Durante décadas, nuestra familia ha mantenido
+                  un firme compromiso de ofrecer productos confiables y
+                  eficientes a nuestros clientes. Nuestra pasión por la
+                  innovación nos ha llevado a estar a la vanguardia de la
+                  tecnología, ofreciendo los últimos avances en
+                  electrodomésticos para hacer la vida cotidiana más fácil y
+                  cómoda.
                 </p>
                 <p className="mt-6 text-base leading-7 text-gray-600">
-                  Descubre lo que Capellari puede hacer por ti y transforma tu
-                  hogar con la confianza de saber que estás eligiendo lo mejor.
+                  En Capellari, nuestra historia está marcada por décadas de
+                  experiencia y compromiso en ofrecer electrodomésticos de
+                  calidad respaldados por una tradición familiar. Estamos
+                  orgullosos de nuestra herencia y esperamos seguir brindando lo
+                  mejor a nuestros clientes en el futuro.
                 </p>
               </div>
               <Image
