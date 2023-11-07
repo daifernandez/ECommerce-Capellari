@@ -1,10 +1,6 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import BackButton from "@/components/ui/backbutton";
 
 export default function NotFound() {
-  const router = useRouter();
-
   return (
     <>
       {" "}
@@ -18,12 +14,7 @@ export default function NotFound() {
             Lo sentimos, no pudimos encotrar lo que estas buscando.
           </p>
           <div className="mt-10 flex justify-center">
-            <button
-              onClick={() => router.back()}
-              className="text-sm font-semibold leading-7"
-            >
-              <span aria-hidden="true">&larr;</span> Volver al inicio
-            </button>
+            <BackButton />
           </div>
         </div>
       </main>

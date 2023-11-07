@@ -1,3 +1,4 @@
+import BackButton from "@/components/ui/backbutton";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -175,17 +176,7 @@ export default function About() {
                   mejor se adapten a sus necesidades.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
-                  <Link
-                    href="/"
-                    className="rounded-md bg-slate-800 px-3.5 py-2.5 text-sm
-                    font-semibold text-white shadow-sm hover:bg-slate-500
-                    focus-visible:outline focus-visible:outline-2
-                    focus-visible:outline-offset-2
-                    focus-visible:outline-indigo-400"
-                  >
-                    {" "}
-                    Volver a la tienda
-                  </Link>
+                  <BackButton />
                 </div>
               </div>
               <div className="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">

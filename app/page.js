@@ -1,5 +1,5 @@
 import Title from "../components/ui/title";
-import Products from "@/components/ui/products";
+import Products from "./productos/[categoria]/page";
 
 export const metadata = {
   title: "Coderhouse Next App || Daiana Fernandez",
