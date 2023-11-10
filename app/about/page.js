@@ -1,6 +1,5 @@
 import BackButton from "@/components/ui/backbutton";
 import Image from "next/image";
-import Link from "next/link";
 
 const timeline = [
   {

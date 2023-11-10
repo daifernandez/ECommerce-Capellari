@@ -35,7 +35,7 @@ export default function ProductDetail({ slug }) {
           Descripcion
         </h3>
         {/* Mejorar la descripcion */}
-        {/* <p className="text-gray-600">{item.description}</p> */}
+        <p className="text-gray-600">{item.description}</p>
       </section>
     </div>
   );
