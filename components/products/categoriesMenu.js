@@ -12,11 +12,11 @@ const Links = [
   { label: "Aspiradoras", href: "/productos/aspiradoras" },
   { label: "Hornos", href: "/productos/hornos" },
   { label: "Microondas", href: "/productos/microondas" },
+  { label: "Ventilacion", href: "/productos/ventilacion" },
 ];
 
 export default function CategoriesMenu() {
   const pathName = usePathname();
-
 
   return (
     <aside className="flex flex-col gap-3 mt-8 mb-8">

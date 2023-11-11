@@ -55,9 +55,12 @@ export default function Header() {
             <ShoppingCartIcon className="h-6 w-6 mx-3" aria-hidden="true" />
           </Link>
 
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <Link
+            href="/login"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
             <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}
-          </a>
+          </Link>
           <div className="flex lg:hidden">
             <button
               type="button"
@@ -111,12 +114,12 @@ export default function Header() {
                 ))}
               </div>
               <div className="py-6">
-                <a
-                  href="#"
+                <Link
+                  href="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Log in
-                </a>
+                </Link>
               </div>
             </div>
           </div>
