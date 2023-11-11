@@ -9,7 +9,7 @@ export async function generateMetadata({ params, serchParams }, parent) {
 }
 
 export default function Products({ params }) {
-  const categoria = params ? params.categoria : "Todos";
+  const categoria = params ? params.categoria : "todos";
 
   return (
     <main className="mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
