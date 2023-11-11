@@ -9,8 +9,7 @@ export async function generateMetadata({ params, serchParams }, parent) {
 }
 
 export default function Products({ params }) {
-  const categoria = params;
-  console.log(categoria);
+  const categoria = params ? params.categoria : "Todos";
 
   return (
     <main className="mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
@@ -20,7 +19,7 @@ export default function Products({ params }) {
         </h1>
         <Search />
       </div>
-      <h1 className="text-4xl font-bold tracking-tight text-red-900">
+      <h1 className="text-4xl font-bold tracking-tight capitalize text-red-900">
         {categoria}
       </h1>
       <div className="flex flex-col-reverse lg:flex-row">

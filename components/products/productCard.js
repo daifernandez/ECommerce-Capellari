@@ -21,11 +21,8 @@ export default function ProductCard({ item }) {
             {item.title}
           </h3>
           <h4 className="text-sm font-medium text-gray-600">
-            {" "}
-            <a href="">
-              <span aria-hidden="true" className="absolute inset-0" />
-              {item.brand}
-            </a>
+            {item.brand}
+            <span aria-hidden="true" className="absolute inset-0" />
           </h4>
           <div className="px-4 border-t border-gray-200 bg-white sm:p-6">
             <p className="text-sm text-gray-500">{item.rating}</p>

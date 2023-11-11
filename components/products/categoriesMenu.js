@@ -12,7 +12,7 @@ const Links = [
   { label: "Aspiradoras", href: "/productos/aspiradoras" },
   { label: "Hornos", href: "/productos/hornos" },
   { label: "Microondas", href: "/productos/microondas" },
-  { label: "Ventilacion", href: "/productos/ventilacion" },
+  { label: "Climatizacion", href: "/productos/climatizacion" },
 ];
 
 export default function CategoriesMenu() {

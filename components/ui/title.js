@@ -9,13 +9,12 @@ export default function Title() {
         <Image
           src={"/fondo.jpg"}
           alt="Electrodomésticos de Capellini"
-          // layout={"fill"}
-          // objectFit={"cover"}
           width={1920}
           height={1080}
           className={
             "absolute inset-0 z-[10] h-full w-full object-cover opacity-20"
           }
+          priority
         />
 
         <div

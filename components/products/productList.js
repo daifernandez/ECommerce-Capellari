@@ -3,19 +3,24 @@ import ProductCard from "./productCard";
 import Pagination from "../ui/pagination";
 
 export default function ProductsList({ categoria }) {
+  console.log(categoria);
   const items =
-    categoria === "Todos"
+    categoria === "todos"
       ? mockData
-      : mockData.filter((item) => item.type === categoria);
+      : mockData.filter((item) => item.category === categoria);
 
-  return (
-    <div className="mb-20">
-      <section className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
-        {items.map((item) => (
-          <ProductCard key={item.slug} item={item} />
-        ))}{" "}
-      </section>
-      <Pagination />
-    </div>
-  );
+  if (items.length === 0) {
+    return <div className="text-center">No hay productos para mostrar</div>;
+  } else {
+    return (
+      <div className="mb-20">
+        <section className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
+          {items.map((item) => (
+            <ProductCard key={item.slug} item={item} />
+          ))}{" "}
+        </section>
+        <Pagination />
+      </div>
+    );
+  }
 }
