@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 const Links = [
   { label: "Todos", href: "/productos/todos" },
   { label: "Smart TV", href: "/productos/smart-tv" },
-  { label: "Heladeras", href: "/productos/heladeras" },
   { label: "Lavarropas", href: "/productos/lavarropas" },
   { label: "Cocinas", href: "/productos/cocinas" },
   { label: "Refrigeracion", href: "/productos/refrigeracion" },

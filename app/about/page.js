@@ -74,6 +74,7 @@ export default function About() {
                 width={1920}
                 height={1080}
                 className="mt-10 aspect-[5/7] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
+                priority
               />
             </div>
           </div>
