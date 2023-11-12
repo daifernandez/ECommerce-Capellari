@@ -3,11 +3,16 @@ import Image from "next/image";
 import { mockData } from "@/data/products";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import AdminPagination from "./adminPagination";
+import SearchAdmin from "./searchAdmin";
 
 export default function AdminTable({ onEdit, onDelete }) {
   const data = mockData;
   return (
     <div className="flex flex-col">
+      <SearchAdmin />
+      <div className="flex justify-between items-center my-4 mb-8">
+        <h2 className="text-2xl font-semibold">Products</h2>
+      </div>
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr>
