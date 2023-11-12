@@ -1,6 +1,7 @@
 import { mockData } from "@/data/products";
 import ProductCard from "./productCard";
 import Pagination from "../ui/pagination";
+import NoProducts from "./noProducts";
 
 export default function ProductsList({ categoria }) {
   console.log(categoria);
@@ -10,7 +11,7 @@ export default function ProductsList({ categoria }) {
       : mockData.filter((item) => item.category === categoria);
 
   if (items.length === 0) {
-    return <div className="text-center">No hay productos para mostrar</div>;
+    return <NoProducts />;
   } else {
     return (
       <div className="mb-20">
