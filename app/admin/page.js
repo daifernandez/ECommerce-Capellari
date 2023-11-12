@@ -10,6 +10,7 @@ import {
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import AdminTable from "@/components/admin/adminTable";
 import AddProducts from "@/components/admin/addProducts";
+import Welcome from "@/components/admin/welcome";
 
 const navigation = [
   {
@@ -34,7 +35,7 @@ function classNames(...classes) {
 
 export default function Admin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [content, setContent] = useState("Details");
+  const [content, setContent] = useState("Welcome");
 
   const handleAddContent = () => {
     setContent("AddProducts");
@@ -290,9 +291,8 @@ export default function Admin() {
           <main className="py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               {/* Componentes admin*/}
+              <Welcome />
               {contentComponent}
-              {/* <AddProducts /> */}
-              {/* <AdminTable /> */}
             </div>
           </main>
         </div>
