@@ -1,14 +1,8 @@
+import Link from "next/link";
+
 export default function LogIn() {
   return (
     <>
-      {/*
-            This example requires updating your template:
-    
-            ```
-            <html class="h-full bg-white">
-            <body class="h-full">
-            ```
-          */}
       <div className="flex min-h-full flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-sm space-y-10">
           <div>
@@ -81,12 +75,14 @@ export default function LogIn() {
             </div>
 
             <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-              >
-                Entrar
-              </button>
+              <Link href="/admin">
+                <button
+                  type="submit"
+                  className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
+                >
+                  Entrar
+                </button>
+              </Link>
             </div>
           </form>
         </div>
