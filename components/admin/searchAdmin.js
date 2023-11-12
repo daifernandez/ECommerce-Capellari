@@ -6,7 +6,7 @@ export default function SearchAdmin() {
       {" "}
       <form className="relative flex flex-1 mb-8" action="#" method="GET">
         <label htmlFor="search-field" className="sr-only">
-          Search
+          Buscar
         </label>
         <MagnifyingGlassIcon
           className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"

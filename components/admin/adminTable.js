@@ -11,17 +11,19 @@ export default function AdminTable({ onEdit, onDelete }) {
     <div className="flex flex-col">
       <SearchAdmin />
       <div className="flex justify-between items-center my-4 mb-8">
-        <h2 className="text-2xl font-semibold">Products</h2>
+        <h2 className="text-2xl font-semibold">Productos</h2>
       </div>
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Image</th>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Category</th>
-            <th className="py-2 px-4 border-b">Price</th>
+            <th className="py-2 px-4 border-b">Imagen</th>
+            <th className="py-2 px-4 border-b">Titulo</th>
+            <th className="py-2 px-4 border-b">Categoria</th>
+            <th className="py-2 px-4 border-b">Precio</th>
+            <th className="py-2 px-4 border-b">Stock</th>
+            <th className="py-2 px-4 border-b">Marca</th>
             <th className="py-2 px-4 border-b">slug</th>
-            <th className="py-2 px-4 border-b">Actions</th>
+            <th className="py-2 px-4 border-b"></th>
           </tr>
         </thead>
         <tbody>
@@ -43,7 +45,10 @@ export default function AdminTable({ onEdit, onDelete }) {
               <td className="py-2 px-4 border-b">{appliance.title}</td>
               <td className="py-2 px-4 border-b">{appliance.category}</td>
               <td className="py-2 px-4 border-b">{appliance.price}</td>
+              <td className="py-2 px-4 border-b">{appliance.sti}</td>
+              <td className="py-2 px-4 border-b">{appliance.brand}</td>
               <td className="py-2 px-4 border-b">{appliance.slug}</td>
+
               <td className="py-3 px-6 border-b">
                 <div className="flex items-center justify-center space-x-1">
                   <button
