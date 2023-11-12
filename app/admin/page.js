@@ -11,34 +11,55 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-
 import AdminTable from "@/components/admin/adminTable";
 import AddProducts from "@/components/admin/addProducts";
 
 const navigation = [
-  { name: "Agregar Productos", href: "#", icon: FolderIcon, current: false },
-  { name: "Editar Productos", href: "#", icon: UsersIcon, current: false },
+  {
+    name: "Agregar Productos",
+    icon: FolderIcon,
+    current: false,
+    content: "AddProducts",
+  },
+  {
+    name: "Editar Productos",
+    icon: UsersIcon,
+    current: false,
+    content: "AdminTable",
+  },
 ];
 
-const userNavigation = [{ name: "Salir", href: "#" }];
+const userNavigation = [{ name: "Salir", href: "/login" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default function Admin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [content, setContent] = useState("Details");
+
+  const handleAddContent = () => {
+    setContent("AddProducts");
+  };
+  const handleEditContent = () => {
+    setContent("AdminTable");
+  };
+
+  var contentComponent;
+  switch (content) {
+    case "AddProducts":
+      contentComponent = <AddProducts />;
+      break;
+    case "AdminTable":
+      contentComponent = <AdminTable />;
+      break;
+    default:
+      break;
+  }
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -92,14 +113,10 @@ export default function Example() {
                       </button>
                     </div>
                   </Transition.Child>
-                  {/* Sidebar component, swap this element with another sidebar if you like */}
+                  {/* Sidebar */}
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                     <div className="flex h-16 shrink-0 items-center">
-                      {/* <img
-                        className="h-8 w-auto"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                        alt="Your Company"
-                      /> */}
+                      {/* Imagen de la compania */}
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -108,19 +125,23 @@ export default function Example() {
                             {navigation.map((item) => (
                               <li key={item.name}>
                                 <a
-                                  href={item.href}
                                   className={classNames(
                                     item.current
-                                      ? "bg-gray-50 text-indigo-600"
-                                      : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                                      ? "bg-gray-50 text-slate-600"
+                                      : "text-gray-700 hover:text-slate-600 hover:bg-gray-50",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                   )}
+                                  onClick={
+                                    item.name == "Agregar Productos"
+                                      ? handleAddContent
+                                      : handleEditContent
+                                  }
                                 >
                                   <item.icon
                                     className={classNames(
                                       item.current
-                                        ? "text-indigo-600"
-                                        : "text-gray-400 group-hover:text-indigo-600",
+                                        ? "text-slate-600"
+                                        : "text-gray-400 group-hover:text-slate-600",
                                       "h-6 w-6 shrink-0"
                                     )}
                                     aria-hidden="true"
@@ -142,14 +163,10 @@ export default function Example() {
 
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
+          {/* Sidebar */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              {/* <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt="Your Company"
-              /> */}
+              {/*imagen logo*/}
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -161,16 +178,21 @@ export default function Example() {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                              ? "bg-gray-50 text-slate-600"
+                              : "text-gray-700 hover:text-slate-600 hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
+                          onClick={
+                            item.name == "Agregar Productos"
+                              ? handleAddContent
+                              : handleEditContent
+                          }
                         >
                           <item.icon
                             className={classNames(
                               item.current
-                                ? "text-indigo-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
+                                ? "text-slate-600"
+                                : "text-gray-400 group-hover:text-slate-600",
                               "h-6 w-6 shrink-0"
                             )}
                             aria-hidden="true"
@@ -232,11 +254,7 @@ export default function Example() {
                   <Menu as="div" className="relative">
                     <Menu.Button className="-m-1.5 flex items-center p-1.5">
                       <span className="sr-only">Abrir menu de usuario</span>
-                      {/* <img
-                        className="h-8 w-8 rounded-full bg-gray-50"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      /> */}
+                      {/* logo pequeño */}
                       <span className="hidden lg:flex lg:items-center">
                         <span
                           className="ml-4 text-sm font-semibold leading-6 text-gray-900"
@@ -286,8 +304,9 @@ export default function Example() {
           <main className="py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               {/* Componentes admin*/}
+              {contentComponent}
+              {/* <AddProducts /> */}
               {/* <AdminTable /> */}
-              <AddProducts />
             </div>
           </main>
         </div>
