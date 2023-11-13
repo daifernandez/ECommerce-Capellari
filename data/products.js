@@ -155,4 +155,22 @@ export const mockData = [
     brand: "whirpool",
     rating: 4.7,
   },
+  {
+    title: "Lavarropas automático Drean Next 6.06 Eco 6kg blanco 220V",
+    description: `Lo que tenés que saber de este producto
+    • Carga frontal de 6 kg.
+    • Centrifuga a una velocidad de 600 rpm.
+    • Apto para lavar con agua a diversas temperaturas.
+    • Filtro atrapa pelusas.
+    • Eficiencia energética A.
+    • Las imágenes pueden ser ilustrativas.
+    • Comodidad y practicidad para tu hogar.`,
+    inStock: 100,
+    price: "$449.999",
+    slug: "lavarropas2",
+    image: "lavarropas2.jpg",
+    category: "lavarropas",
+    brand: "Drean",
+    rating: 4.7,
+  },
 ];
