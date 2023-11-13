@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { Dialog } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function HeaderAdmin() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,11 +13,7 @@ export default function HeaderAdmin() {
         <div className="flex flex-1 justify-center"></div>
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Logo de Capellari </span>
-          {/* <img
-            className="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt=""
-          /> */}
+          {/*imagen de logo */}
           logo capellari
         </a>
         <div className="flex flex-1 justify-end" />
