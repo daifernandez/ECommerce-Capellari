@@ -4,7 +4,6 @@ import Pagination from "../ui/pagination";
 import NoProducts from "./noProducts";
 
 export default function ProductsList({ categoria }) {
-  console.log(categoria);
   const items =
     categoria === "todos"
       ? mockData
