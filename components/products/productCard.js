@@ -11,7 +11,7 @@ export default function ProductCard({ item }) {
             src={`/imgs/products/${item.image}`}
             width={288}
             height={288}
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: "contain", width: "100%", height: "100%" }}
             className="object-cover object-center sm:h-full sm:w-full"
           />
         </div>

@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Administradores || Capellari",
+  description: "Login para administradores de Capellari",
+};
+
 export default function LogIn() {
   return (
     <>

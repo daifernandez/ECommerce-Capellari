@@ -11,6 +11,7 @@ export default function AdminLayout({ children }) {
       <body>
         <HeaderAdmin />
         {children}
+        <Footer />
       </body>
     </html>
   );

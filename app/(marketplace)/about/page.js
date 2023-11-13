@@ -1,6 +1,11 @@
 import BackButton from "@/components/ui/backbutton";
 import Image from "next/image";
 
+export const metadata = {
+  title: "Sobre Nosotros || Capellari",
+  description: "Conoce nuestra historia y nuestros clientes.",
+};
+
 const timeline = [
   {
     name: "Nacimiento",

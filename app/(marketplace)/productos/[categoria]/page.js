@@ -1,4 +1,5 @@
 import CategoriesMenu from "@/components/products/categoriesMenu";
+import NavbarCategory from "@/components/products/navbarCategory";
 import ProductsList from "@/components/products/productList";
 import Search from "@/components/ui/search";
 
@@ -19,10 +20,8 @@ export default function Products({ params }) {
         </h1>
         <Search />
       </div>
-      <h1 className="text-4xl font-bold tracking-tight capitalize text-red-900">
-        {categoria}
-      </h1>
-      <div className="flex flex-col-reverse lg:flex-row">
+      <NavbarCategory categoria={categoria} />
+      <div className="flex flex-col lg:flex-row">
         <div className="lg:w-1/4">
           <CategoriesMenu />
         </div>

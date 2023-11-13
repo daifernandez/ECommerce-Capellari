@@ -1,4 +1,4 @@
-import Title from "../components/ui/title";
+import Title from "../../components/ui/title";
 import Products from "./productos/[categoria]/page";
 
 export const metadata = {
