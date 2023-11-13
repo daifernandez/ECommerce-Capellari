@@ -18,6 +18,7 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartItems, setCartItems] = useState(2);
   const pathname = usePathname();
 
   return (
@@ -50,9 +51,17 @@ export default function Header() {
         <div className="flex flex-1 justify-end">
           <Link
             href="/carrito"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="flex items-center text-sm font-semibold leading-2 text-gray-900"
           >
-            <ShoppingCartIcon className="h-6 w-6 mx-3" aria-hidden="true" />
+            <ShoppingCartIcon
+              className="h-6 w-6 mr-1 mx-3"
+              aria-hidden="true"
+            />
+
+            {/* Agregar número para la cantidad de pedidos en el carrito */}
+            <span className="bg-slate-700 text-white rounded-full px-2 py-1">
+              {cartItems}
+            </span>
           </Link>
 
           <Link
