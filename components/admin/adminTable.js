@@ -22,7 +22,7 @@ export default function AdminTable({ onEdit, onDelete }) {
             <th className="py-2 px-4 border-b">Precio</th>
             <th className="py-2 px-4 border-b">Stock</th>
             <th className="py-2 px-4 border-b">Marca</th>
-            <th className="py-2 px-4 border-b">slug</th>
+            <th className="py-2 px-4 border-b">Slug</th>
             <th className="py-2 px-4 border-b"></th>
           </tr>
         </thead>

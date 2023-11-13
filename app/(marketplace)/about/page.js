@@ -132,7 +132,7 @@ export default function About() {
             <div className="mx-auto mt-20 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:max-w-4xl lg:grid-cols-5">
               {/* <Image
                 className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src=""
+                src="Imagen de Marcas?"
                 alt="marcas"
                 width={158}
                 height={48}

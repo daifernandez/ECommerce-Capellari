@@ -34,7 +34,7 @@ export default function Carrito() {
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-0">
         <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Shopping Cart
+          Carrito de Compras
         </h1>
 
         <form className="mt-12">
@@ -111,7 +111,7 @@ export default function Carrito() {
             </ul>
           </section>
 
-          {/* Order summary */}
+          {/* Orden */}
           <section aria-labelledby="summary-heading" className="mt-10">
             <h2 id="summary-heading" className="sr-only">
               Resumen del pedido
