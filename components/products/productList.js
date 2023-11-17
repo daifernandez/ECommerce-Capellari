@@ -1,13 +1,16 @@
-import { mockData } from "@/data/products";
 import ProductCard from "./productCard";
 import Pagination from "../ui/pagination";
 import NoProducts from "./noProducts";
 
-export default function ProductsList({ categoria }) {
-  const items =
-    categoria === "todos"
-      ? mockData
-      : mockData.filter((item) => item.category === categoria);
+export default async function ProductsList({ categoria }) {
+  const items = await fetch(
+    `http://localhost:3000/api/productos/${categoria}`,
+    {
+      cache: "no-store",
+    }
+  )
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
 
   if (items.length === 0) {
     return <NoProducts />;
