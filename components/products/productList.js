@@ -6,7 +6,10 @@ export default async function ProductsList({ categoria }) {
   const items = await fetch(
     `http://localhost:3000/api/productos/${categoria}`,
     {
-      cache: "no-store",
+      cache: "force-cache",
+      next: {
+        tags: ["productos"],
+      },
     }
   )
     .then((res) => res.json())

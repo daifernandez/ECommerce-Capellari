@@ -1,7 +1,31 @@
+"use client";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import ButtonsAdmin from "./buttonsAdmin";
+import { useState } from "react";
 
 export default function AddProducts() {
+  const [value, setValue] = useState({
+    title: "",
+    description: "",
+    image: "",
+    category: "",
+    price: "",
+    brand: "",
+    stock: "",
+  });
+
+  const handleChange = (e) => {
+    setValue({ ...value, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await fetch("https://localhost:3000/api/admin/productos", {
+      method: "POST",
+      body: JSON.stringify(value),
+    });
+  };
+
   return (
     <div className="space-y-10 divide-y divide-gray-900/10">
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
@@ -14,7 +38,10 @@ export default function AddProducts() {
           </p>
         </div>
 
-        <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+        >
           <div className="px-4 py-6 sm:p-8">
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
@@ -28,11 +55,14 @@ export default function AddProducts() {
                   <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-600 sm:max-w-md">
                     <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
                     <input
+                      value={value.title}
+                      required
                       type="text"
                       name="title"
                       id="title"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       placeholder="Nombre"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -47,11 +77,14 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <textarea
-                    id="about"
-                    name="about"
+                    value={value.description}
+                    required
+                    id="descripcion"
+                    name="descripcion"
                     rows={3}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                     defaultValue={""}
+                    onChange={handleChange}
                   />
                 </div>
                 <p className="mt-3 text-sm leading-6 text-gray-600">
@@ -79,10 +112,13 @@ export default function AddProducts() {
                       >
                         <span>Subir Imagen</span>
                         <input
-                          id="file-upload"
-                          name="file-upload"
+                          value={value.image}
+                          required
+                          id="image"
+                          name="image"
                           type="file"
                           className="sr-only"
+                          onChange={handleChange}
                         />
                       </label>
                       <p className="pl-1">o arrastrar</p>
@@ -95,19 +131,6 @@ export default function AddProducts() {
               </div>
             </div>
           </div>
-          <ButtonsAdmin />
-        </form>
-      </div>
-
-      <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-        <div className="px-4 sm:px-0">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Mas Información
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">mas info</p>
-        </div>
-
-        <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
           <div className="px-4 py-6 sm:p-8">
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
@@ -119,10 +142,13 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <select
-                    id="country"
-                    name="country"
-                    autoComplete="country-name"
+                    value={value.category}
+                    required
+                    id="category"
+                    name="category"
+                    autoComplete="category"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    onChange={handleChange}
                   >
                     <option>Refrigeracion</option>
                     <option>Climatizacion</option>
@@ -145,11 +171,14 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <input
+                    value={value.price}
+                    required
                     type="text"
                     name="price"
                     id="price"
                     autoComplete="$"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -163,11 +192,14 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <input
+                    value={value.brand}
+                    required
                     type="text"
                     name="brand"
                     id="brand"
                     autoComplete="brand"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -181,17 +213,20 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <input
+                    value={value.stock}
+                    required
                     type="text"
                     name="stock"
                     id="stock"
                     autoComplete="stock"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                    onChange={handleChange}
                   />
                 </div>
               </div>
             </div>
           </div>
-          <ButtonsAdmin />
+          <ButtonsAdmin type="submit" />
         </form>
       </div>
     </div>
