@@ -7,6 +7,13 @@ export async function POST(request) {
       request.body;
     // Validación de datos
     if (
+      typeof title !== "string" ||
+      typeof description !== "string" ||
+      typeof image !== "string" ||
+      typeof category !== "string" ||
+      typeof brand !== "string" ||
+      typeof stock !== "number" ||
+      typeof price !== "number" ||
       !title ||
       !description ||
       !image ||
@@ -16,7 +23,10 @@ export async function POST(request) {
       !stock
     ) {
       return NextResponse.json(
-        { error: "Todos los campos son requeridos" },
+        {
+          error:
+            "Todos los campos son requeridos",
+        },
         400
       );
     }
@@ -29,14 +39,12 @@ export async function POST(request) {
       price,
       brand,
       stock,
+      slug: title.replace(/\s+/g, "-"), // slug
     };
-    // Añadir el nuevo producto a la lista de productos
-    mockData.push({
-      ...newProduct,
-      slug: newProduct.title.replace(/\s+/g, "-"),
-    });
-    //guarda el nuevo producto en la base de datos
-    await newProduct.save();
+
+    // Añade nuevo producto a la lista de productos
+    mockData.push(newProduct);
+
     return NextResponse.json({ message: "Producto creado exitosamente" });
   } catch (error) {
     console.error(error);
