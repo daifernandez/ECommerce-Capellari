@@ -4,8 +4,8 @@ import { mockData } from "@/data/products";
 export async function POST(request) {
   try {
     const { title, description, image, category, price, brand, stock } =
-      await request.json();
-    // Validaacion de datos
+      request.body;
+    // Validación de datos
     if (
       !title ||
       !description ||
@@ -31,7 +31,12 @@ export async function POST(request) {
       stock,
     };
     // Añadir el nuevo producto a la lista de productos
-    productos.push({ mockData });
+    mockData.push({
+      ...newProduct,
+      slug: newProduct.title.replace(/\s+/g, "-"),
+    });
+    //guarda el nuevo producto en la base de datos
+    await newProduct.save();
     return NextResponse.json({ message: "Producto creado exitosamente" });
   } catch (error) {
     console.error(error);
@@ -43,53 +48,35 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
-  try {
-    const { id } = await request.json();
+  const slug = request.nextUrl.query.slug;
+  const index = mockData.findIndex((product) => product.slug === slug);
 
-    // Validación de datos
-    if (!id) {
-      return NextResponse.json(
-        { error: "El ID del producto es requerido" },
-        400
-      );
-    }
-
-    // Verificar si el producto existe
-    const product = mockData.find((product) => product.id === id);
-    if (!product) {
-      return NextResponse.json({ error: "Producto no encontrado" }, 404);
-    }
-
-    // Eliminar producto
-    product = mockData.filter((product) => product.id !== id);
-
-    return NextResponse.json({ message: "Producto eliminado exitosamente" });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Hubo un error al procesar tu solicitud" },
-      500
-    );
+  if (index !== -1) {
+    mockData.splice(index, 1);
+    return new NextResponse("Producto eliminado exitosamente");
+  } else {
+    return new NextResponse("Producto no encontrado", { status: 404 });
   }
 }
 
 export async function PUT(request) {
-  try {
-    const { id, data } = await request.body.json();
-    let product = mockData.find((product) => product.id === id);
+  const slug = request.nextUrl.query.slug;
+  const index = mockData.findIndex((product) => product.slug === slug);
+  const { title, description, image, category, price, brand, stock } =
+    await request.json();
 
-    if (!product) {
-      return NextResponse.json({ error: "Producto no encontrado" }, 404);
-    }
-
-    // Actualizar producto
-    product = { ...product, ...data };
-    return NextResponse.json({ message: "Producto actualizado exitosamente" });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Hubo un error al procesar tu solicitud" },
-      500
-    );
+  if (index !== -1) {
+    mockData[index] = {
+      title,
+      description,
+      image,
+      category,
+      price,
+      brand,
+      stock,
+    };
+    return new NextResponse("Producto actualizado exitosamente");
+  } else {
+    return new NextResponse("Producto no encontrado", { status: 404 });
   }
 }
