@@ -2,6 +2,8 @@ import CategoriesMenu from "@/components/products/categoriesMenu";
 import NavbarCategory from "@/components/products/navbarCategory";
 import ProductsList from "@/components/products/productList";
 import Search from "@/components/ui/search";
+import StreamingList from "@/components/ui/streamingList";
+import { Suspense } from "react";
 
 export async function generateMetadata({ params, serchParams }, parent) {
   return {
@@ -26,7 +28,9 @@ export default function Products({ params }) {
           <CategoriesMenu />
         </div>
         <div className="lg:w-3/4">
-          <ProductsList categoria={categoria} />
+          <Suspense fallback={<StreamingList />}>
+            <ProductsList categoria={categoria} />
+          </Suspense>
         </div>
       </div>
     </main>
