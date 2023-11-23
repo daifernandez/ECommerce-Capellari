@@ -11,6 +11,21 @@ export async function generateMetadata({ params, serchParams }, parent) {
   };
 }
 
+export function generateStaticParams() {
+  return [
+    { categoria: "todos" },
+    { categoria: "smartTv" },
+    { categoria: "lavarropas" },
+    { categoria: "cocinas" },
+    { categoria: "refrigeracion" },
+    { categoria: "aspiradoras" },
+    { categoria: "hornos" },
+    { categoria: "microondas" },
+    { categoria: "climatizacion" },
+  ];
+}
+export const revalidate = 3600;
+
 export default function Products({ params }) {
   const categoria = params ? params.categoria : "todos";
 
