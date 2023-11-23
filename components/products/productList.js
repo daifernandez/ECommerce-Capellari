@@ -6,7 +6,7 @@ export default async function ProductsList({ categoria }) {
   const items = await fetch(
     `http://localhost:3000/api/productos/${categoria}`,
     {
-      cache: "force-cache",
+      cache: "no-store", // TODO: Mejorar cache
       next: {
         tags: ["productos"],
       },
@@ -15,7 +15,7 @@ export default async function ProductsList({ categoria }) {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 
-  if (items.length === 0) {
+  if (items === undefined || items.length === 0) {
     return <NoProducts />;
   } else {
     return (
@@ -23,7 +23,7 @@ export default async function ProductsList({ categoria }) {
         <section className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
           {items.map((item) => {
             return <ProductCard key={item.slug} item={item} />;
-          })}{" "}
+          })}
         </section>
         <Pagination />
       </div>
