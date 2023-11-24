@@ -1,16 +1,33 @@
 "use client";
+
 import { useState } from "react";
 import Counter from "../ui/counter";
 import Button from "../ui/button";
+import { useCartContext } from "../context/cartContext";
 
 const QtySelector = ({ item }) => {
+  const { addToCart, isInCart } = useCartContext();
   const [quantity, setQuantity] = useState(1);
 
   const handleAdd = () => {
-    console.log({
-      ...item,
-      quantity,
-    });
+    const INSUFFICIENT_STOCK_MSG = "No hay stock suficiente";
+    const INVALID_QUANTITY_MSG = "No se puede agregar al carrito";
+    const EXCESS_QUANTITY_MSG = "No se puede agregar más de 3 unidades";
+    const SUCCESS_MSG = "Producto agregado al carrito";
+    const ALREADY_IN_CART_MSG = "El producto ya está en el carrito";
+
+    if (isInCart(item)) {
+      alert(ALREADY_IN_CART_MSG);
+    } else if (quantity < 1) {
+      alert(INVALID_QUANTITY_MSG);
+    } else if (item.inStock < quantity) {
+      alert(INSUFFICIENT_STOCK_MSG);
+    } else if (quantity >= 3) {
+      alert(EXCESS_QUANTITY_MSG);
+    } else {
+      addToCart({ ...item, quantity });
+      alert(SUCCESS_MSG);
+    }
   };
 
   return (

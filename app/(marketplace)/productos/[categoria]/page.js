@@ -24,6 +24,7 @@ export function generateStaticParams() {
     { categoria: "climatizacion" },
   ];
 }
+
 export const revalidate = 3600;
 
 export default function Products({ params }) {
