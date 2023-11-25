@@ -2,12 +2,13 @@
 // Description: Contiene la página del carrito de compras
 import { CheckIcon, ClockIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-
+import { useState } from "react";
 import { useCartContext } from "../../../components/context/cartContext";
 import Image from "next/image";
 
 export default function Carrito() {
-  const { cart } = useCartContext();
+  const { cart, setCart } = useCartContext();
+  const [cartItems, setCartItems] = useState(cart.length);
 
   const removeFromCart = (product) => {
     const newCart = cart.filter((item) => item.slug !== product.slug);
@@ -72,15 +73,15 @@ export default function Carrito() {
                               </p>
                             </h4>
                             <p className="ml-4 text-sm font-medium text-gray-900">
-                              {`${product.price} c/u`}
+                              {`$${product.price}`}
                             </p>
-                          </div>{" "}
+                          </div>
                           <p className="mt-1 text-sm text-gray-500">
                             {product.brand}
                           </p>
                           <p className="mt-4 text-sm text-gray-500">
                             Cantidad seleccionada: {product.quantity}
-                          </p>{" "}
+                          </p>
                         </div>
 
                         <div className="mt-4 flex flex-1 items-end justify-between">

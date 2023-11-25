@@ -33,7 +33,9 @@ export default async function ProductDetail({ slug }) {
             </h2>
             <p className="text-gray-600">{item.rating}</p>
             <p className="text-gray-600 font-medium">{item.brand}</p>
-            <p className="text-4xl text-end text-slate-500">{item.price}</p>
+            <p className="text-4xl text-end text-slate-500 mt-4">
+              ${item.price}
+            </p>
 
             <QtySelector item={item} />
           </div>

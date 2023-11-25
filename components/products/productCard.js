@@ -29,7 +29,7 @@ export default function ProductCard({ item }) {
             <div className="flex flex-1 flex-col justify-end">
               <p className="text-sm italic text-gray-500">{item.category}</p>
               <p className="text-base text-gray-900 font-bold text-right">
-                {item.price}
+                $ {item.price}
               </p>
             </div>
           </div>
