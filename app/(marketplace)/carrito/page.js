@@ -9,6 +9,25 @@ import Image from "next/image";
 export default function Carrito() {
   const { cart } = useCartContext();
 
+  const removeFromCart = (product) => {
+    const newCart = cart.filter((item) => item.slug !== product.slug);
+    console.log(newCart);
+    setCart(newCart);
+  };
+
+  const totalPrice = cart.reduce((acc, item) => {
+    const price = parseFloat(item.price);
+    if (isNaN(price) || isNaN(item.quantity)) {
+      console.error("Error: Precio o cantidad no válidos");
+      return acc;
+    } else {
+      const totalItemPrice = price * item.quantity;
+      return acc + totalItemPrice;
+    }
+  }, 0);
+
+  const totalPriceString = totalPrice.toString();
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-0">
@@ -53,7 +72,7 @@ export default function Carrito() {
                               </p>
                             </h4>
                             <p className="ml-4 text-sm font-medium text-gray-900">
-                              {product.price}
+                              {`${product.price} c/u`}
                             </p>
                           </div>{" "}
                           <p className="mt-1 text-sm text-gray-500">
@@ -62,11 +81,10 @@ export default function Carrito() {
                           <p className="mt-4 text-sm text-gray-500">
                             Cantidad seleccionada: {product.quantity}
                           </p>{" "}
-                      
                         </div>
 
                         <div className="mt-4 flex flex-1 items-end justify-between">
-                              <p className="flex items-center space-x-2 text-sm text-gray-700">
+                          <p className="flex items-center space-x-2 text-sm text-gray-700">
                             {cart.inStock ? (
                               <CheckIcon
                                 className="h-5 w-5 flex-shrink-0 text-green-500"
@@ -87,6 +105,7 @@ export default function Carrito() {
                           </p>
                           <div className="ml-4">
                             <button
+                              onClick={() => removeFromCart(product)}
                               type="button"
                               className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                             >
@@ -114,7 +133,7 @@ export default function Carrito() {
                     Subtotal
                   </dt>
                   <dd className="ml-4 text-base font-medium text-gray-900">
-                    {/* Colocar el precio total de los productos */}$ 0.00
+                    $ {totalPrice}
                   </dd>
                 </div>
               </dl>
