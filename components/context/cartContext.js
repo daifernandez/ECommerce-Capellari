@@ -19,6 +19,7 @@ export const CartProvider = ({ children }) => {
   const isInCart = (item) => {
     return cart.some((cartItem) => cartItem.id === item.id);
   };
+  
 
   return (
     <cartContext.Provider value={{ cart, addToCart, isInCart }}>

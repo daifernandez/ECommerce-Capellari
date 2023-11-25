@@ -59,10 +59,14 @@ export default function Carrito() {
                           <p className="mt-1 text-sm text-gray-500">
                             {product.brand}
                           </p>
+                          <p className="mt-4 text-sm text-gray-500">
+                            Cantidad seleccionada: {product.quantity}
+                          </p>{" "}
+                      
                         </div>
 
                         <div className="mt-4 flex flex-1 items-end justify-between">
-                          <p className="flex items-center space-x-2 text-sm text-gray-700">
+                              <p className="flex items-center space-x-2 text-sm text-gray-700">
                             {cart.inStock ? (
                               <CheckIcon
                                 className="h-5 w-5 flex-shrink-0 text-green-500"
@@ -110,7 +114,7 @@ export default function Carrito() {
                     Subtotal
                   </dt>
                   <dd className="ml-4 text-base font-medium text-gray-900">
-                    $
+                    {/* Colocar el precio total de los productos */}$ 0.00
                   </dd>
                 </div>
               </dl>

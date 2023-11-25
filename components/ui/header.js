@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCartContext } from "../../components/context/cartContext";
 
 const navigation = [
   { name: "Marketplace", href: "/" },
@@ -18,8 +19,17 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [cartItems, setCartItems] = useState(2);
+  const [cartItems, setCartItems] = useState(0);
   const pathname = usePathname();
+  const { cart } = useCartContext();
+
+  const totalItemsInCart = (cart) => {
+    let totalItems = 0;
+    cart.forEach((item) => {
+      totalItems += item.quantity;
+    });
+    return totalItems;
+  };
 
   return (
     <header className="bg-white">
@@ -60,7 +70,7 @@ export default function Header() {
 
             {/* Agregar número para la cantidad de pedidos en el carrito */}
             <span className="bg-slate-700 text-white rounded-full px-2 py-1">
-              {cartItems}
+              {totalItemsInCart(cart)}
             </span>
           </Link>
 
