@@ -12,7 +12,7 @@ const QtySelector = ({ item }) => {
   const handleAdd = () => {
     const INSUFFICIENT_STOCK_MSG = "No hay stock suficiente";
     const INVALID_QUANTITY_MSG = "No se puede agregar al carrito";
-    const EXCESS_QUANTITY_MSG = "No se puede agregar más de 3 unidades";
+    const EXCESS_QUANTITY_MSG = "No se puede agregar más de 2 unidades";
     const SUCCESS_MSG = "Producto agregado al carrito";
     const ALREADY_IN_CART_MSG = "El producto ya está en el carrito";
 
@@ -26,6 +26,7 @@ const QtySelector = ({ item }) => {
       alert(EXCESS_QUANTITY_MSG);
     } else {
       addToCart({ ...item, quantity });
+      console.log(item);
       alert(SUCCESS_MSG);
     }
   };

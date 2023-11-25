@@ -10,7 +10,7 @@ export function useCartContext() {
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  console.log(cart);
+  console.log("Carrito:", cart);
 
   const addToCart = (item) => {
     setCart([...cart, item]);
