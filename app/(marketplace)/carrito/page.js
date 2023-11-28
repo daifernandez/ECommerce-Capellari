@@ -122,51 +122,52 @@ export default function Carrito() {
               </div>
             )}{" "}
           </section>
-
           {/* Orden */}
-          <section aria-labelledby="summary-heading" className="mt-10">
-            <h2 id="summary-heading" className="sr-only">
-              Resumen del pedido
-            </h2>
+          {cart && cart.length === 0 ? null : (
+            <section aria-labelledby="summary-heading" className="mt-10">
+              <h2 id="summary-heading" className="sr-only">
+                Resumen del pedido
+              </h2>
 
-            <div>
-              <dl className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <dt className="text-base font-medium text-gray-900">
-                    Subtotal
-                  </dt>
-                  <dd className="ml-4 text-base font-medium text-gray-900">
-                    $ {totalPrice}
-                  </dd>
-                </div>
-              </dl>
-              <p className="mt-1 text-sm text-gray-500">
-                Solo costo de productos
-              </p>
-            </div>
+              <div>
+                <dl className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <dt className="text-base font-medium text-gray-900">
+                      Subtotal
+                    </dt>
+                    <dd className="ml-4 text-base font-medium text-gray-900">
+                      $ {totalPrice}
+                    </dd>
+                  </div>
+                </dl>
+                <p className="mt-1 text-sm text-gray-500">
+                  Solo costo de productos
+                </p>
+              </div>
 
-            <div className="mt-10">
-              <button
-                type="submit"
-                className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-              >
-                Checkout
-              </button>
-            </div>
-
-            <div className="mt-6 text-center text-sm">
-              <p>
-                o{" "}
-                <Link
-                  href="/"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+              <div className="mt-10">
+                <button
+                  type="submit"
+                  className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
-                  Continuar comprando
-                  <span aria-hidden="true"> &rarr;</span>
-                </Link>
-              </p>
-            </div>
-          </section>
+                  Checkout
+                </button>
+              </div>
+
+              <div className="mt-6 text-center text-sm">
+                <p>
+                  o{" "}
+                  <Link
+                    href="/"
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
+                    Continuar comprando
+                    <span aria-hidden="true"> &rarr;</span>
+                  </Link>
+                </p>
+              </div>
+            </section>
+          )}{" "}
         </form>
       </div>
     </div>
