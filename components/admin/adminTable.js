@@ -1,12 +1,22 @@
 "use client";
 import Image from "next/image";
-import { mockData } from "@/data/products";
+import { useEffect, useState } from "react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import AdminPagination from "./adminPagination";
 import SearchAdmin from "./searchAdmin";
+import { getProducts } from "../../app/api/admin/productos/route";
 
-export default function AdminTable({ onEdit, onDelete }) {
-  const data = mockData;
+export default function AdminTable({ OnDelete, OnEdit }) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getProducts()
+      .then((products) => {
+        setProducts(products);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <div className="flex flex-col">
       <SearchAdmin />
@@ -27,12 +37,11 @@ export default function AdminTable({ onEdit, onDelete }) {
           </tr>
         </thead>
         <tbody>
-          {mockData.map((appliance, index) => (
+          {products && products.map((appliance, index) => (
             <tr
               key={index}
               className={(index + 1) % 2 === 0 ? "bg-gray-100" : ""}
             >
-              {/* ver la imagen */}
               <td className="py-2 px-4 border-b">
                 <Image
                   src={`/imgs/products/${appliance.image}`}
