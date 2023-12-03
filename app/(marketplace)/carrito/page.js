@@ -21,7 +21,7 @@ export default function Carrito() {
       const newCart = cart.filter((item) => item.slug !== product.slug);
       setCart(newCart);
     }
-    alert("Se ha eliminado el producto del carrito");
+    alert("Estas eliminando un producto del carrito");
   };
 
   const totalPrice = cart.reduce((acc, item) => {
