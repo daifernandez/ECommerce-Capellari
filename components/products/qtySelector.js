@@ -5,7 +5,7 @@ import Button from "../ui/button";
 import { useCartContext } from "../context/cartContext";
 
 const QtySelector = ({ item }) => {
-  const { addToCart, isInCart, cart } = useCartContext();
+  const { addItem, isInCart, cart } = useCartContext();
   const [quantity, setQuantity] = useState(1);
 
   function countInCart(item, cart) {
@@ -24,7 +24,7 @@ const QtySelector = ({ item }) => {
     const EXCESS_QUANTITY_MSG =
       "No se puede agregar más de 2 unidades a tu carrito";
     const SUCCESS_MSG = "Producto agregado al carrito";
-    const ALREADY_IN_CART_MSG = "El producto ya está en el carrito";
+    // const ALREADY_IN_CART_MSG = "El producto ya está en el carrito";
 
     let currentCount = countInCart(item, cart);
 
@@ -37,8 +37,7 @@ const QtySelector = ({ item }) => {
     } else if (quantity >= 3) {
       alert(EXCESS_QUANTITY_MSG);
     } else {
-      addToCart({ ...item, quantity });
-      console.log(item);
+      addItem(item, quantity);
       alert(SUCCESS_MSG);
     }
   };

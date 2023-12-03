@@ -9,12 +9,19 @@ import EmptyCart from "@/components/products/emptyCart";
 
 export default function Carrito() {
   const { cart, setCart } = useCartContext();
-  const [cartItems, setCartItems] = useState(cart.length);
 
   const removeFromCart = (product) => {
-    const newCart = cart.filter((item) => item.slug !== product.slug);
-    console.log(newCart);
-    setCart(newCart);
+    if (product.quantity > 1) {
+      for (let i = 0; i < cart.length; i++) {
+        if (cart[i].slug === product.slug) {
+          cart[i].quantity -= 1;
+        }
+      }
+      setCart([...cart]);
+    } else {
+      const newCart = cart.filter((item) => item.slug !== product.slug);
+      setCart(newCart);
+    }
   };
 
   const totalPrice = cart.reduce((acc, item) => {
@@ -81,13 +88,15 @@ export default function Carrito() {
                               {product.brand}
                             </p>
                             <p className="mt-4 text-sm text-gray-500">
-                              Cantidad seleccionada: {product.quantity}
+                              Cantidad seleccionada
+                            </p>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {product.quantity}
                             </p>
                           </div>
 
                           <div className="mt-4 flex flex-1 items-end justify-between">
                             <p className="flex items-center space-x-2 text-sm text-gray-700">
-                              {/* condicion si el numero en stock es mayor a 0 */}
                               {product.inStock > 0 ? (
                                 <CheckIcon
                                   className="h-5 w-5 flex-shrink-0 text-green-500"
