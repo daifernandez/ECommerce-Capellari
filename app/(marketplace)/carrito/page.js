@@ -2,7 +2,6 @@
 // Description: Contiene la página del carrito de compras
 import { CheckIcon, ClockIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { useState } from "react";
 import { useCartContext } from "../../../components/context/cartContext";
 import Image from "next/image";
 import EmptyCart from "@/components/products/emptyCart";
@@ -22,6 +21,7 @@ export default function Carrito() {
       const newCart = cart.filter((item) => item.slug !== product.slug);
       setCart(newCart);
     }
+    alert("Se ha eliminado el producto del carrito");
   };
 
   const totalPrice = cart.reduce((acc, item) => {

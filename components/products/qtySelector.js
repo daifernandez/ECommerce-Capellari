@@ -24,7 +24,6 @@ const QtySelector = ({ item }) => {
     const EXCESS_QUANTITY_MSG =
       "No se puede agregar más de 2 unidades a tu carrito";
     const SUCCESS_MSG = "Producto agregado al carrito";
-    // const ALREADY_IN_CART_MSG = "El producto ya está en el carrito";
 
     let currentCount = countInCart(item, cart);
 
