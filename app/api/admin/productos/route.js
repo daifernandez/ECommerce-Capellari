@@ -6,6 +6,6 @@ export async function getProducts() {
   const productsRef = collection(db, "products");
   const productsSnapshot = await getDocs(productsRef);
   const products = productsSnapshot.docs.map((doc) => doc.data());
+  // return NextResponse.json(products);
   return products;
 }
-

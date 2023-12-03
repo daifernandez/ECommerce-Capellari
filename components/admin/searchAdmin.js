@@ -3,7 +3,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 export default function SearchAdmin() {
   return (
     <>
-      {" "}
       <form className="relative flex flex-1 mb-8" action="#" method="GET">
         <label htmlFor="search-field" className="sr-only">
           Buscar

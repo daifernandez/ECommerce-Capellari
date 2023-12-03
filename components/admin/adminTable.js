@@ -37,45 +37,46 @@ export default function AdminTable({ OnDelete, OnEdit }) {
           </tr>
         </thead>
         <tbody>
-          {products && products.map((appliance, index) => (
-            <tr
-              key={index}
-              className={(index + 1) % 2 === 0 ? "bg-gray-100" : ""}
-            >
-              <td className="py-2 px-4 border-b">
-                <Image
-                  src={`/imgs/products/${appliance.image}`}
-                  alt={appliance.title}
-                  width={100}
-                  height={100}
-                  className="object-contain my-8"
-                />
-              </td>
-              <td className="py-2 px-4 border-b">{appliance.title}</td>
-              <td className="py-2 px-4 border-b">{appliance.category}</td>
-              <td className="py-2 px-4 border-b">{appliance.price}</td>
-              <td className="py-2 px-4 border-b">{appliance.sti}</td>
-              <td className="py-2 px-4 border-b">{appliance.brand}</td>
-              <td className="py-2 px-4 border-b">{appliance.slug}</td>
+          {products &&
+            products.map((appliance, index) => (
+              <tr
+                key={index}
+                className={(index + 1) % 2 === 0 ? "bg-gray-100" : ""}
+              >
+                <td className="py-2 px-4 border-b">
+                  <Image
+                    src={`/imgs/products/${appliance.image}`}
+                    alt={appliance.title}
+                    width={100}
+                    height={100}
+                    className="object-contain my-8"
+                  />
+                </td>
+                <td className="py-2 px-4 border-b">{appliance.title}</td>
+                <td className="py-2 px-4 border-b">{appliance.category}</td>
+                <td className="py-2 px-4 border-b">${appliance.price}</td>
+                <td className="py-2 px-4 border-b">{appliance.inStock}</td>
+                <td className="py-2 px-4 border-b">{appliance.brand}</td>
+                <td className="py-2 px-4 border-b">{appliance.slug}</td>
 
-              <td className="py-3 px-6 border-b">
-                <div className="flex items-center justify-center space-x-1">
-                  <button
-                    onClick={() => onEdit(index)}
-                    className="bg-slate-500 text-white px-3 py-1  rounded"
-                  >
-                    <PencilSquareIcon className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(index)}
-                    className="bg-red-500 text-white px-3 py-1  rounded"
-                  >
-                    <TrashIcon className="w-5 h-5" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+                <td className="py-3 px-6 border-b">
+                  <div className="flex items-center justify-center space-x-1">
+                    <button
+                      onClick={() => OnEdit(index)}
+                      className="bg-slate-500 text-white px-3 py-1  rounded"
+                    >
+                      <PencilSquareIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => OnDelete(index)}
+                      className="bg-red-500 text-white px-3 py-1  rounded"
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>{" "}
       <AdminPagination />

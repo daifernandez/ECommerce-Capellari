@@ -16,8 +16,9 @@ export const CartProvider = ({ children }) => {
     setCart([...cart, item]);
   };
 
-  const isInCart = (item) => {
-    return cart.some((cartItem) => cartItem.id === item.id);
+  const isInCart = (item, cart) => {
+    // Verificar si tiene más de dos productos con el mismo slug en el carrito
+    return cart.some((cartItem) => cartItem.slug === item.slug);
   };
 
   return (
