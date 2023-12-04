@@ -4,9 +4,8 @@ import BackButton from "../ui/backbutton";
 
 export default async function ProductDetail({ slug }) {
   const item = await fetch(`http://localhost:3000/api/product/${slug}`, {
-    cache: "no-store",
     next: {
-      revalidate: 0,
+      revalidate: 300,
     },
   }).then((res) => res.json());
 

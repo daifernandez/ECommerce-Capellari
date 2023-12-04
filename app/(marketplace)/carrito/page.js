@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useCartContext } from "../../../components/context/cartContext";
 import Image from "next/image";
 import EmptyCart from "@/components/products/emptyCart";
-import { useState, useEffect } from "react";
 
 export default function Carrito() {
   const { cart, setCart } = useCartContext();
