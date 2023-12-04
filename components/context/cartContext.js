@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 
 const cartContext = createContext();
 
@@ -10,7 +10,29 @@ export function useCartContext() {
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  console.log("Carrito:", cart);
+  const localCartFetched = useRef(false);
+
+  useEffect(() => {
+    if (!localCartFetched.current) {
+      console.log("Buscando cart...");
+      const cart = localStorage.getItem("cart");
+      if (cart) {
+        console.log("Cart found in localStorage");
+        setCart(JSON.parse(cart));
+      }
+      localCartFetched.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localCartFetched.current) {
+      const prevCart = JSON.parse(localStorage.getItem("cart")) ?? [];
+      if (JSON.stringify(prevCart) !== JSON.stringify(cart)) {
+        console.log("Guardando carrito en localStorage:");
+        localStorage.setItem("cart", JSON.stringify(cart));
+      }
+    }
+  }, [cart]);
 
   const isInCart = (item, cart) => {
     // Verificar si tiene más de dos productos con el mismo slug en el carrito
