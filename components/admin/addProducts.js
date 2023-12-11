@@ -3,13 +3,23 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import ButtonsAdmin from "./buttonsAdmin";
 import { useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import Image from "next/image";
+import { redirect } from "next/dist/server/api-utils";
 
-const createProduct = async (values) => {
+const createProduct = async (values, file) => {
+  const storageRef = ref(storage, values.slug);
+  //sube el archivo al storage
+  const fileSnapshot = await uploadBytesResumable(storageRef, file);
+  //obtiene la url del archivo
+  const filerURL = await getDownloadURL(fileSnapshot.ref);
+
   const docRef = doc(db, "products", values.slug);
-  return setDoc(docRef, { ...values }).then(() =>
-    console.log("producto creado exitosamente")
-  );
+  return setDoc(docRef, {
+    ...values,
+    image: filerURL,
+  }).then(() => console.log("producto creado exitosamente"));
   // evaluar condicion de producto ya existente
 };
 
@@ -26,13 +36,23 @@ export default function AddProducts() {
   });
 
   const handleChange = (e) => {
-    setValue({ ...value, [e.target.name]: e.target.value });
+    if (e.target.type === "file") {
+      if (e.target.files[0]) {
+        const file = e.target.files[0];
+        const imageUrl = URL.createObjectURL(file);
+        setValue({ ...value, image: imageUrl });
+      }
+    } else {
+      setValue({ ...value, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(value);
     await createProduct(value);
+    alert("Producto creado exitosamente");
+    redirect("/admin");
   };
 
   return (
@@ -61,7 +81,7 @@ export default function AddProducts() {
                   <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-600 sm:max-w-md">
                     <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
                     <input
-                      value={value.title}
+                      value={value.title || ""}
                       required
                       type="text"
                       name="title"
@@ -123,33 +143,69 @@ export default function AddProducts() {
                   Agregar Imagen
                 </label>
                 <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                  <div className="text-center">
-                    <PhotoIcon
-                      className="mx-auto h-12 w-12 text-gray-300"
-                      aria-hidden="true"
-                    />
-                    <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                      <label
-                        htmlFor="file-upload"
-                        className="relative cursor-pointer rounded-md bg-white font-semibold text-slate-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-slate-600 focus-within:ring-offset-2 hover:text-slate-500"
-                      >
-                        <span>Subir Imagen</span>
-                        <input
-                          value={value.image}
-                          required
-                          id="image"
-                          name="image"
-                          type="file"
-                          className="sr-only"
-                          onChange={handleChange}
-                        />
-                      </label>
-                      <p className="pl-1">o arrastrar</p>
+                  {value.image ? (
+                    <div className="flex flex-col items-center justify-center">
+                      <Image
+                        src={value.image}
+                        alt="imagen"
+                        width={200}
+                        height={200}
+                        className="rounded-xl"
+                      />
+                      <p className="mt-3 text-sm leading-6 text-gray-600">
+                        {value.image}
+                      </p>
+                      <div className="flex mt-2">
+                        <button
+                          onClick={() => setValue({ ...value, image: "" })}
+                          className="bg-red-500 text-white px-2 py-1 rounded mr-2"
+                        >
+                          Eliminar
+                        </button>
+                        <label
+                          htmlFor="image"
+                          className="inline-block bg-blue-500 text-white px-2 py-1 rounded cursor-pointer"
+                        >
+                          Modificar
+                          <input
+                            id="image"
+                            name="image"
+                            type="file"
+                            className="sr-only"
+                            onChange={handleChange}
+                          />
+                        </label>
+                      </div>
                     </div>
-                    <p className="text-xs leading-5 text-gray-600">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
-                  </div>
+                  ) : (
+                    <div className="text-center">
+                      <PhotoIcon
+                        className="mx-auto h-12 w-12 text-gray-300"
+                        aria-hidden="true"
+                      />
+                      <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                        <label
+                          htmlFor="image"
+                          className="relative cursor-pointer rounded-md bg-white font-semibold text-slate-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-slate-600 focus-within:ring-offset-2 hover:text-slate-500"
+                        >
+                          <span>Subir Imagen</span>
+                          <input
+                            value={value.image || ""}
+                            required
+                            id="image"
+                            name="image"
+                            type="file"
+                            className="sr-only"
+                            onChange={handleChange}
+                          />
+                        </label>
+                        <p className="pl-1">o arrastrar</p>
+                      </div>
+                      <p className="text-xs leading-5 text-gray-600">
+                        PNG, JPG, GIF up to 10MB
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -173,6 +229,8 @@ export default function AddProducts() {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     onChange={handleChange}
                   >
+                    {/* estas opciones de categorias las deberia sacar de otro lado */}
+                    {/* la primera opciion debe ser - */}
                     <option>Refrigeracion</option>
                     <option>Climatizacion</option>
                     <option>Cocinas</option>
@@ -236,12 +294,11 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <input
-                    value={value.stock}
+                    value={value.inStock}
                     required
-                    type="text"
-                    name="stock"
-                    id="stock"
-                    autoComplete="stock"
+                    type="number"
+                    name="inStock"
+                    id="inStock"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                     onChange={handleChange}
                   />
