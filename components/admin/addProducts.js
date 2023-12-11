@@ -2,6 +2,16 @@
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import ButtonsAdmin from "./buttonsAdmin";
 import { useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/config";
+
+const createProduct = async (values) => {
+  const docRef = doc(db, "products", values.slug);
+  return setDoc(docRef, { ...values }).then(() =>
+    console.log("producto creado exitosamente")
+  );
+  // evaluar condicion de producto ya existente
+};
 
 export default function AddProducts() {
   const [value, setValue] = useState({
@@ -11,7 +21,8 @@ export default function AddProducts() {
     category: "",
     price: "",
     brand: "",
-    stock: "",
+    inStock: 0,
+    slug: "",
   });
 
   const handleChange = (e) => {
@@ -20,10 +31,8 @@ export default function AddProducts() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("https://localhost:3000/api/admin/productos", {
-      method: "POST",
-      body: JSON.stringify(value),
-    });
+    console.log(value);
+    await createProduct(value);
   };
 
   return (
@@ -59,6 +68,27 @@ export default function AddProducts() {
                       id="title"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       placeholder="Nombre"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="sm:col-span-4">
+                <label className="block text-sm font-medium leading-6 text-gray-900">
+                  Slug
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-600 sm:max-w-md">
+                    <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
+                    <input
+                      value={value.slug}
+                      required
+                      type="text"
+                      name="slug"
+                      id="slug"
+                      className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      placeholder="Identificador del producto"
                       onChange={handleChange}
                     />
                   </div>
