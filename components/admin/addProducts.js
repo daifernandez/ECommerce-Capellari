@@ -7,6 +7,7 @@ import { db, storage } from "../../firebase/config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Image from "next/image";
 import { redirect } from "next/dist/server/api-utils";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const createProduct = async (values, file) => {
   const storageRef = ref(storage, values.slug);
@@ -32,10 +33,31 @@ export default function AddProducts() {
     price: "",
     brand: "",
     inStock: 0,
+    rating: 0,
     slug: "",
   });
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    // limitar el ingreso de numeros en los campos que no lo permiten y numeros negativos y mayores a 5 en el rating
+    if (
+      name === "title" ||
+      name === "description" ||
+      name === "brand" ||
+      name === "slug"
+    ) {
+      if (/^\d+$/.test(value)) {
+        alert(`El campo ingresado no puede contener solo números`);
+        return;
+      }
+    }
+    if (e.target.name === "rating") {
+      const ratingValue = parseInt(e.target.value);
+      if (ratingValue < 1 || ratingValue > 5) {
+        alert("El valor de rating debe estar entre 1 y 5");
+        return;
+      }
+    }
     if (e.target.type === "file") {
       if (e.target.files[0]) {
         const file = e.target.files[0];
@@ -152,21 +174,21 @@ export default function AddProducts() {
                         height={200}
                         className="rounded-xl"
                       />
-                      <p className="mt-3 text-sm leading-6 text-gray-600">
+                      <p className="mt-3 text-sm leading-6 text-gray-500">
                         {value.image}
                       </p>
                       <div className="flex mt-2">
                         <button
                           onClick={() => setValue({ ...value, image: "" })}
-                          className="bg-red-500 text-white px-2 py-1 rounded mr-2"
+                          className="text-red-500 px-2 py-1 rounded mr-2"
                         >
-                          Eliminar
+                          <TrashIcon className="w-5 h-5" />
                         </button>
                         <label
                           htmlFor="image"
-                          className="inline-block bg-blue-500 text-white px-2 py-1 rounded cursor-pointer"
+                          className="inline-block text-blue-500 px-2 py-1 rounded cursor-pointer"
                         >
-                          Modificar
+                          <PencilSquareIcon className="w-5 h-5" />
                           <input
                             id="image"
                             name="image"
@@ -213,10 +235,7 @@ export default function AddProducts() {
           <div className="px-4 py-6 sm:p-8">
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
-                <label
-                  htmlFor="country"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label className="block text-sm font-medium leading-6 text-gray-900">
                   Categoria
                 </label>
                 <div className="mt-2">
@@ -244,10 +263,7 @@ export default function AddProducts() {
               </div>
 
               <div className="sm:col-span-2 sm:col-start-1">
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label className="block text-sm font-medium leading-6 text-gray-900">
                   Precio
                 </label>
                 <div className="mt-2">
@@ -265,10 +281,7 @@ export default function AddProducts() {
               </div>
 
               <div className="sm:col-span-2">
-                <label
-                  htmlFor="region"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label className="block text-sm font-medium leading-6 text-gray-900">
                   Marca
                 </label>
                 <div className="mt-2">
@@ -286,10 +299,7 @@ export default function AddProducts() {
               </div>
 
               <div className="sm:col-span-2">
-                <label
-                  htmlFor="postal-code"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label className="block text-sm font-medium leading-6 text-gray-900">
                   Stock
                 </label>
                 <div className="mt-2">
@@ -299,6 +309,24 @@ export default function AddProducts() {
                     type="number"
                     name="inStock"
                     id="inStock"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium leading-6 text-gray-900">
+                  Rating
+                </label>
+                <div className="mt-2">
+                  <input
+                    value={value.rating}
+                    required
+                    type="number"
+                    name="rating"
+                    id="rating"
+                    min="1"
+                    max="5"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                     onChange={handleChange}
                   />
