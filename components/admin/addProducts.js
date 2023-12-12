@@ -58,7 +58,11 @@ export default function AddProducts() {
       const ratingValue = parseInt(value);
       return ratingValue >= 1 && ratingValue <= 5;
     },
-    price: (value) => /^[0-9]+$/.test(value) && value >= 0,
+    price: (value) => !/[^0-9.,]/.test(value) && !/^\d+$/.test(value),
+    inStock: (value) => {
+      const inStockValue = parseInt(value);
+      return !isNaN(inStockValue) && inStockValue >= 0;
+    },
   };
 
   const handleChange = (e) => {
