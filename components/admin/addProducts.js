@@ -48,33 +48,56 @@ export default function AddProducts() {
     rating: 0,
     slug: "",
   });
+  const [error, setError] = useState({});
 
   const validations = {
-    title: (value) => !/^\d+$/.test(value),
-    description: (value) => !/^\d+$/.test(value),
-    brand: (value) => !/^\d+$/.test(value),
-    slug: (value) => !/^\d+$/.test(value),
-    rating: (value) => {
-      const ratingValue = parseInt(value);
-      return ratingValue >= 1 && ratingValue <= 5;
-    },
-    price: (value) => !/[^0-9.,]/.test(value) && !/^\d+$/.test(value),
+    title: (value) =>
+      /\D/.test(value) ? null : "El valor ingresado para title es inválido",
+
+    description: (value) =>
+      /\D/.test(value)
+        ? null
+        : "El valor ingresado para description es inválido",
+
+    brand: (value) =>
+      /^\D+$/.test(value) ? null : "El valor ingresado para brand es inválido",
+
+    slug: (value) =>
+      /\D/.test(value) ? null : "El valor ingresado para slug es inválido",
+
+    price: (value) =>
+      !isNaN(Number(value.replace(",", "."))) &&
+      Number(value.replace(",", ".")) >= 0
+        ? null
+        : "El valor ingresado para price es inválido",
+
     inStock: (value) => {
       const inStockValue = parseInt(value);
-      return !isNaN(inStockValue) && inStockValue >= 0;
+      return !isNaN(inStockValue) && inStockValue > 0
+        ? null
+        : "El valor ingresado para inStock es inválido";
+    },
+
+    rating: (value) => {
+      const ratingValue = parseInt(value);
+      return !isNaN(ratingValue) && ratingValue >= 1 && ratingValue <= 5
+        ? null
+        : "El valor ingresado para rating es inválido";
     },
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const validate = validations[name];
+    const errorMessage = validate ? validate(value) : null;
 
-    if (validate && !validate(value)) {
-      alert(`El valor ingresado para ${name} es inválido`);
-      return setValue({ ...value, [name]: "" });
+    if (errorMessage) {
+      setError((prev) => ({ ...prev, [name]: errorMessage }));
     } else {
-      setValue({ ...value, [name]: e.target.value || "" });
+      setError((prev) => ({ ...prev, [name]: null }));
     }
+
+    setValue((prevValue) => ({ ...prevValue, [name]: value }));
   };
 
   const handleImageChange = async (e) => {
@@ -119,16 +142,21 @@ export default function AddProducts() {
                   <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-600 sm:max-w-md">
                     <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
                     <input
-                      value={value.title || ""}
+                      value={value.title}
                       required
                       type="text"
                       name="title"
                       id="title"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       placeholder="Nombre"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e)}
                     />
-                  </div>
+                  </div>{" "}
+                  {error && error.title && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.title}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -150,6 +178,11 @@ export default function AddProducts() {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.slug && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.slug}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -171,6 +204,11 @@ export default function AddProducts() {
                 <p className="mt-3 text-sm leading-6 text-gray-600">
                   Agregar descripción del producto
                 </p>
+                {error && error.description && (
+                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                    {error.description}
+                  </span>
+                )}
               </div>
 
               <div className="col-span-full">
@@ -289,6 +327,11 @@ export default function AddProducts() {
                     onChange={handleChange}
                   />
                 </div>
+                {error && error.price && (
+                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                    {error.price}
+                  </span>
+                )}
               </div>
 
               <div className="sm:col-span-2">
@@ -307,6 +350,11 @@ export default function AddProducts() {
                     onChange={handleChange}
                   />
                 </div>
+                {error && error.brand && (
+                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                    {error.brand}
+                  </span>
+                )}
               </div>
 
               <div className="sm:col-span-2">
@@ -324,6 +372,11 @@ export default function AddProducts() {
                     onChange={handleChange}
                   />
                 </div>
+                {error && error.inStock && (
+                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                    {error.inStock}
+                  </span>
+                )}
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -342,6 +395,11 @@ export default function AddProducts() {
                     onChange={handleChange}
                   />
                 </div>
+                {error && error.rating && (
+                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                    {error.rating}
+                  </span>
+                )}
               </div>
             </div>
           </div>
