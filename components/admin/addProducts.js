@@ -9,6 +9,18 @@ import Image from "next/image";
 import { redirect } from "next/dist/server/api-utils";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
+const categories = [
+  "-",
+  "Refrigeracion",
+  "Climatizacion",
+  "Cocinas",
+  "Smart-TV",
+  "Lavarropas",
+  "Aspiradoras",
+  "Hornos",
+  "Microondas",
+];
+
 const createProduct = async (values, file) => {
   const storageRef = ref(storage, values.slug);
   //sube el archivo al storage
@@ -37,42 +49,42 @@ export default function AddProducts() {
     slug: "",
   });
 
+  const validations = {
+    title: (value) => !/^\d+$/.test(value),
+    description: (value) => !/^\d+$/.test(value),
+    brand: (value) => !/^\d+$/.test(value),
+    slug: (value) => !/^\d+$/.test(value),
+    rating: (value) => {
+      const ratingValue = parseInt(value);
+      return ratingValue >= 1 && ratingValue <= 5;
+    },
+    price: (value) => /^[0-9]+$/.test(value) && value >= 0,
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // limitar el ingreso de numeros en los campos que no lo permiten y numeros negativos y mayores a 5 en el rating
-    if (
-      name === "title" ||
-      name === "description" ||
-      name === "brand" ||
-      name === "slug"
-    ) {
-      if (/^\d+$/.test(value)) {
-        alert(`El campo ingresado no puede contener solo números`);
-        return;
-      }
-    }
-    if (e.target.name === "rating") {
-      const ratingValue = parseInt(e.target.value);
-      if (ratingValue < 1 || ratingValue > 5) {
-        alert("El valor de rating debe estar entre 1 y 5");
-        return;
-      }
-    }
-    if (e.target.type === "file") {
-      if (e.target.files[0]) {
-        const file = e.target.files[0];
-        const imageUrl = URL.createObjectURL(file);
-        setValue({ ...value, image: imageUrl });
-      }
+    const validate = validations[name];
+
+    if (validate && !validate(value)) {
+      alert(`El valor ingresado para ${name} es inválido`);
+      return setValue({ ...value, [name]: "" });
     } else {
-      setValue({ ...value, [e.target.name]: e.target.value });
+      setValue({ ...value, [name]: e.target.value || "" });
     }
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    const blob = await file.arrayBuffer();
+    const fileBlob = new Blob([blob], { type: file.type });
+    const imageUrl = URL.createObjectURL(fileBlob);
+    setValue({ ...value, image: imageUrl });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(value);
-    await createProduct(value);
+    await createProduct(value, file);
     alert("Producto creado exitosamente");
     redirect("/admin");
   };
@@ -148,7 +160,7 @@ export default function AddProducts() {
                     name="description"
                     rows={3}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                    defaultValue={value.description}
+                    value={value.description}
                     onChange={handleChange}
                   />
                 </div>
@@ -169,9 +181,9 @@ export default function AddProducts() {
                     <div className="flex flex-col items-center justify-center">
                       <Image
                         src={value.image}
-                        alt="imagen"
-                        width={200}
-                        height={200}
+                        alt="Imagen"
+                        width={500}
+                        height={300}
                         className="rounded-xl"
                       />
                       <p className="mt-3 text-sm leading-6 text-gray-500">
@@ -194,7 +206,7 @@ export default function AddProducts() {
                             name="image"
                             type="file"
                             className="sr-only"
-                            onChange={handleChange}
+                            onChange={handleImageChange}
                           />
                         </label>
                       </div>
@@ -218,7 +230,7 @@ export default function AddProducts() {
                             name="image"
                             type="file"
                             className="sr-only"
-                            onChange={handleChange}
+                            onChange={handleImageChange}
                           />
                         </label>
                         <p className="pl-1">o arrastrar</p>
@@ -240,7 +252,7 @@ export default function AddProducts() {
                 </label>
                 <div className="mt-2">
                   <select
-                    value={value.category}
+                    value={value.category || ""}
                     required
                     id="category"
                     name="category"
@@ -248,16 +260,11 @@ export default function AddProducts() {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     onChange={handleChange}
                   >
-                    {/* estas opciones de categorias las deberia sacar de otro lado */}
-                    {/* la primera opciion debe ser - */}
-                    <option>Refrigeracion</option>
-                    <option>Climatizacion</option>
-                    <option>Cocinas</option>
-                    <option>Smart-TV</option>
-                    <option>Lavarropas</option>
-                    <option>Aspiradoras</option>
-                    <option>Hornos</option>
-                    <option>Microondas</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
