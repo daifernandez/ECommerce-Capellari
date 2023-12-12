@@ -62,17 +62,18 @@ export default function AdminTable({ OnDelete, OnEdit }) {
                 <td className="py-3 px-6 border-b">
                   <div className="flex items-center justify-center space-x-1">
                     <button
-                      onClick={() => OnEdit(index)}
-                      className="bg-slate-500 text-white px-3 py-1  rounded"
-                    >
-                      <PencilSquareIcon className="w-5 h-5" />
-                    </button>
-                    <button
                       onClick={() => OnDelete(index)}
                       className="bg-red-500 text-white px-3 py-1  rounded"
                     >
                       <TrashIcon className="w-5 h-5" />
                     </button>
+                    <button
+                      onClick={() => OnEdit(index)}
+                      className="bg-slate-500 text-white px-3 py-1  rounded"
+                    >
+                      <PencilSquareIcon className="w-5 h-5" />
+                    </button>
+                    d
                   </div>
                 </td>
               </tr>
