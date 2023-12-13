@@ -2,22 +2,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import CATEGORIES from "@/data/categories";
 
-const Links = [
-  { label: "Todos", href: "/productos/todos" },
-  { label: "Smart TV", href: "/productos/smart-tv" },
-  { label: "Lavarropas", href: "/productos/lavarropas" },
-  { label: "Cocinas", href: "/productos/cocinas" },
-  { label: "Refrigeracion", href: "/productos/refrigeracion" },
-  { label: "Aspiradoras", href: "/productos/aspiradoras" },
-  { label: "Hornos", href: "/productos/hornos" },
-  { label: "Microondas", href: "/productos/microondas" },
-  { label: "Climatizacion", href: "/productos/climatizacion" },
-];
 
 export default function CategoriesMenu() {
   const pathName = usePathname();
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); 
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -48,7 +38,6 @@ export default function CategoriesMenu() {
         </button>
       </div>
 
-      {/* Links */}
       <div
         className={`lg:flex lg:flex-col lg:gap-3 ${
           isMobileMenuOpen
@@ -56,10 +45,10 @@ export default function CategoriesMenu() {
             : "hidden"
         }`}
       >
-        {Links.map((link) => (
+        {CATEGORIES.map((link) => (
           <Link
             key={link.label}
-            href={link.href}
+            href={`/productos/${link.id}`}
             className={`${
               pathName === link.href ? "font-semibold border-b " : ""
             } py-2 lg:py-0 lg:px-2 block lg:inline-block`}

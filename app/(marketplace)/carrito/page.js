@@ -63,7 +63,7 @@ export default function Carrito() {
                       <li key={product.slug} className="flex py-6">
                         <div className="flex-shrink-0">
                           <Image
-                            src={`/imgs/products/${product.image}`}
+                            src={item.image}
                             alt={product.title}
                             width={200}
                             height={200}

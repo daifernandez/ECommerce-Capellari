@@ -45,7 +45,7 @@ export default function AdminTable({ OnDelete, OnEdit }) {
               >
                 <td className="py-2 px-4 border-b">
                   <Image
-                    src={`/imgs/products/${appliance.image}`}
+                    src={item.image}
                     alt={appliance.title}
                     width={100}
                     height={100}

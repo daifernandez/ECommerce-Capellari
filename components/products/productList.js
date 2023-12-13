@@ -3,6 +3,7 @@ import Pagination from "../ui/pagination";
 import NoProducts from "./noProducts";
 
 export default async function ProductsList({ categoria }) {
+  console.log("categoria", categoria);
   const items = await fetch(
     `http://localhost:3000/api/productos/${categoria}`,
     {

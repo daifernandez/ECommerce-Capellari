@@ -8,7 +8,7 @@ export default function ProductCard({ item }) {
         <div className="aspect-h-2 aspect-w-3 bg-white-200 sm:aspect-none group-hover:opacity-75 sm:h-96">
           <Image
             alt={item.title}
-            src={`/imgs/products/${item.image}`}
+            src={item.image}
             width={288}
             height={288}
             style={{ objectFit: "contain", width: "100%", height: "100%" }}

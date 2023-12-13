@@ -6,32 +6,21 @@ import { doc, setDoc } from "firebase/firestore";
 import { db, storage } from "../../firebase/config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Image from "next/image";
-import { redirect } from "next/dist/server/api-utils";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-
-const categories = [
-  "-",
-  "Refrigeracion",
-  "Climatizacion",
-  "Cocinas",
-  "Smart-TV",
-  "Lavarropas",
-  "Aspiradoras",
-  "Hornos",
-  "Microondas",
-];
+import { toast } from "react-toastify";
+import CATEGORIES from "@/data/categories";
 
 const createProduct = async (values, file) => {
   const storageRef = ref(storage, values.slug);
   //sube el archivo al storage
   const fileSnapshot = await uploadBytesResumable(storageRef, file);
   //obtiene la url del archivo
-  const filerURL = await getDownloadURL(fileSnapshot.ref);
+  const fileURL = await getDownloadURL(fileSnapshot.ref);
 
   const docRef = doc(db, "products", values.slug);
   return setDoc(docRef, {
     ...values,
-    image: filerURL,
+    image: fileURL,
   }).then(() => console.log("producto creado exitosamente"));
   // evaluar condicion de producto ya existente
 };
@@ -48,6 +37,7 @@ export default function AddProducts() {
     rating: 0,
     slug: "",
   });
+  const [file, setFile] = useState(null);
   const [error, setError] = useState({});
 
   const validations = {
@@ -106,14 +96,41 @@ export default function AddProducts() {
     const fileBlob = new Blob([blob], { type: file.type });
     const imageUrl = URL.createObjectURL(fileBlob);
     setValue({ ...value, image: imageUrl });
+    setFile(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(value);
-    await createProduct(value, file);
-    alert("Producto creado exitosamente");
-    redirect("/admin");
+
+    if (!value.title || !value.description || !value.price) {
+      alert("Por favor, completa todos los campos necesarios.");
+      return;
+    }
+
+    try {
+      console.log(value);
+      await createProduct(value, file);
+
+      // Retroalimentación al usuario
+      toast.success("Producto creado exitosamente");
+
+      setValue({
+        title: "",
+        description: "",
+        image: "",
+        category: "",
+        price: "",
+        brand: "",
+        inStock: 0,
+        rating: 0,
+        slug: "",
+      });
+    } catch (error) {
+      console.error("Hubo un error al crear el producto:", error);
+      toast.error(
+        "Hubo un error al crear el producto. Por favor, inténtalo de nuevo."
+      );
+    }
   };
 
   return (
@@ -266,7 +283,7 @@ export default function AddProducts() {
                         >
                           <span>Subir Imagen</span>
                           <input
-                            value={value.image || ""}
+                            value={file || ""}
                             required
                             id="image"
                             name="image"
@@ -302,9 +319,12 @@ export default function AddProducts() {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     onChange={handleChange}
                   >
-                    {categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
+                    <option value="">Seleccionar</option>
+                    {CATEGORIES.filter(
+                      (category) => category.id != "todos"
+                    ).map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.label}
                       </option>
                     ))}
                   </select>

@@ -19,7 +19,7 @@ export default async function ProductDetail({ slug }) {
           <div className="relative basis-1/2">
             <Image
               priority={true}
-              src={`/imgs/products/${item.image}`}
+              src={item.image}
               alt={"imagen del producto"}
               width={860}
               height={860}
