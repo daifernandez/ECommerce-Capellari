@@ -3,6 +3,7 @@ import { useState } from "react";
 import Counter from "../ui/counter";
 import Button from "../ui/button";
 import { useCartContext } from "../context/cartContext";
+import { toast, Toaster } from "react-hot-toast";
 
 const QtySelector = ({ item }) => {
   const { addItem, isInCart, cart } = useCartContext();
@@ -28,21 +29,22 @@ const QtySelector = ({ item }) => {
     let currentCount = countInCart(item, cart);
 
     if (isInCart(item, cart) && currentCount + quantity > 2) {
-      alert(EXCESS_QUANTITY_MSG);
+      toast.error(EXCESS_QUANTITY_MSG);
     } else if (quantity < 1) {
-      alert(INVALID_QUANTITY_MSG);
+      toast.error(INVALID_QUANTITY_MSG);
     } else if (item.inStock < quantity) {
-      alert(INSUFFICIENT_STOCK_MSG);
+      toast.error(INSUFFICIENT_STOCK_MSG);
     } else if (quantity >= 3) {
-      alert(EXCESS_QUANTITY_MSG);
+      toast.error(EXCESS_QUANTITY_MSG);
     } else {
       addItem(item, quantity);
-      alert(SUCCESS_MSG);
+      toast.success(SUCCESS_MSG);
     }
   };
 
   return (
     <div className="flex flex-col gap-5 mt-6">
+      <Toaster />
       <Counter max={item.inStock} counter={quantity} setCounter={setQuantity} />
       <Button className="w-full hover:bg-blue-600" onClick={handleAdd}>
         Agregar al carrito

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCartContext } from "../../../components/context/cartContext";
 import Image from "next/image";
 import EmptyCart from "@/components/products/emptyCart";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function Carrito() {
   const { cart, setCart } = useCartContext();
@@ -21,7 +22,7 @@ export default function Carrito() {
       const newCart = cart.filter((item) => item.slug !== product.slug);
       setCart(newCart);
     }
-    alert("Estas eliminando un producto del carrito");
+    toast.success("Producto eliminado del carrito");
   };
 
   const totalPrice = cart.reduce((acc, item) => {
@@ -39,6 +40,7 @@ export default function Carrito() {
 
   return (
     <div className="bg-white">
+      <Toaster />
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-0">
         <form className="mt-12">
           <section aria-labelledby="cart-heading">
@@ -63,7 +65,7 @@ export default function Carrito() {
                       <li key={product.slug} className="flex py-6">
                         <div className="flex-shrink-0">
                           <Image
-                            src={item.image}
+                            src={product.image}
                             alt={product.title}
                             width={200}
                             height={200}

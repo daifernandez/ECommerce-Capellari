@@ -7,7 +7,7 @@ import { db, storage } from "../../firebase/config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Image from "next/image";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import CATEGORIES from "@/data/categories";
 
 const createProduct = async (values, file) => {
@@ -103,16 +103,18 @@ export default function AddProducts() {
     e.preventDefault();
 
     if (!value.title || !value.description || !value.price) {
-      alert("Por favor, completa todos los campos necesarios.");
+      toast.error("Por favor, completa todos los campos necesarios.");
       return;
     }
+
+    const toastId = toast.loading("Creando producto...");
 
     try {
       console.log(value);
       await createProduct(value, file);
-
-      // Retroalimentación al usuario
-      toast.success("Producto creado exitosamente");
+      toast.success("Producto creado exitosamente", {
+        id: toastId,
+      });
 
       setValue({
         title: "",
@@ -126,10 +128,10 @@ export default function AddProducts() {
         slug: "",
       });
     } catch (error) {
+      toast.error("Hubo un error al crear el producto", {
+        id: toastId,
+      });
       console.error("Hubo un error al crear el producto:", error);
-      toast.error(
-        "Hubo un error al crear el producto. Por favor, inténtalo de nuevo."
-      );
     }
   };
 
@@ -276,14 +278,14 @@ export default function AddProducts() {
                         className="mx-auto h-12 w-12 text-gray-300"
                         aria-hidden="true"
                       />
-                      <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                      <div className="mt-4 text-sm leading-6 text-gray-600">
                         <label
                           htmlFor="image"
                           className="relative cursor-pointer rounded-md bg-white font-semibold text-slate-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-slate-600 focus-within:ring-offset-2 hover:text-slate-500"
                         >
                           <span>Subir Imagen</span>
                           <input
-                            value={file || ""}
+                            value={value.image || ""}
                             required
                             id="image"
                             name="image"
@@ -292,10 +294,10 @@ export default function AddProducts() {
                             onChange={handleImageChange}
                           />
                         </label>
-                        <p className="pl-1">o arrastrar</p>
+                        {/* <p className="pl-1">o arrastrar</p> */}
                       </div>
                       <p className="text-xs leading-5 text-gray-600">
-                        PNG, JPG, GIF up to 10MB
+                        PNG, JPG, GIF hasta 10MB
                       </p>
                     </div>
                   )}
@@ -319,7 +321,9 @@ export default function AddProducts() {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     onChange={handleChange}
                   >
-                    <option value="">Seleccionar</option>
+                    <option value="" disabled>
+                      Seleccione una categoria
+                    </option>
                     {CATEGORIES.filter(
                       (category) => category.id != "todos"
                     ).map((category) => (
@@ -426,6 +430,7 @@ export default function AddProducts() {
           <ButtonsAdmin type="submit" />
         </form>
       </div>
+      <Toaster />
     </div>
   );
 }
