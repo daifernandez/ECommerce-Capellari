@@ -1,11 +1,12 @@
 "use client";
-import { auth } from "../../firebase/config";
+import { auth, googleProvider } from "../../firebase/config";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
 } from "firebase/auth";
 
 const AuthContext = createContext();
@@ -30,6 +31,21 @@ export const AuthProvider = ({ children }) => {
     await signOut(auth);
   };
 
+  const googleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        // Manejar el cierre del popup por el usuario
+        console.log(
+          "El usuario cerró el popup antes de finalizar la autenticación."
+        );
+      } else {
+        console.log(error.message);
+      }
+    }
+  };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -49,7 +65,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, registerUser, loginUser, logOut }}>
+    <AuthContext.Provider
+      value={{ user, registerUser, loginUser, logOut, googleLogin }}
+    >
       {children}
     </AuthContext.Provider>
   );

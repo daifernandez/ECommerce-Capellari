@@ -4,7 +4,7 @@ import { useAuth } from "../context/authContext";
 import { useState } from "react";
 
 export default function LoginForm() {
-  const { registerUser, loginUser } = useAuth();
+  const { registerUser, loginUser, googleLogin } = useAuth();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -63,7 +63,6 @@ export default function LoginForm() {
               />
             </div>
           </div>
-
           <div>
             <button
               onClick={() => loginUser(values)}
@@ -98,6 +97,15 @@ export default function LoginForm() {
                 Registrarme
               </button>
             </div>
+          </div>{" "}
+          {/* boton para google */}
+          <div className="text-sm leading-6">
+            <button
+              onClick={() => googleLogin()}
+              className=" hover:text-slate-500 justify-center w-full rounded-md bg-white px-3 py-1.5 text-sm font-semibold leading-6 text-slate-600 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
+            >
+              Ingresar con Google
+            </button>
           </div>
         </form>
       </div>
