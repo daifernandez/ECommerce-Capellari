@@ -75,7 +75,7 @@ export default function Header() {
           </Link>
 
           <Link
-            href="/login"
+            href="/admin"
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}

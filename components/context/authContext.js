@@ -6,7 +6,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -17,6 +16,7 @@ export const AuthProvider = ({ children }) => {
     email: null,
     uid: null,
   });
+  
   const registerUser = async ({ values }) => {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       uid: user.uid,
     });
   };
-  
+
   return (
     <AuthContext.Provider value={{ user, registerUser, loginUser }}>
       {children}
