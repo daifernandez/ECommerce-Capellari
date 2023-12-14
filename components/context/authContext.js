@@ -1,10 +1,11 @@
 "use client";
 import { auth } from "../../firebase/config";
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 const AuthContext = createContext();
@@ -16,40 +17,39 @@ export const AuthProvider = ({ children }) => {
     email: null,
     uid: null,
   });
-  
-  const registerUser = async ({ values }) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    );
-    console.log(userCredential);
 
-    const user = userCredential.user;
-    setUser({
-      logged: true,
-      email: user.email,
-      uid: user.uid,
-    });
+  const registerUser = async ({ values }) => {
+    await createUserWithEmailAndPassword(auth, values.email, values.password);
   };
 
   const loginUser = async (values) => {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    );
-
-    const user = userCredential.user;
-    setUser({
-      logged: true,
-      email: user.email,
-      uid: user.uid,
-    });
+    await signInWithEmailAndPassword(auth, values.email, values.password);
   };
 
+  const logOut = async () => {
+    await signOut(auth);
+  };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          logged: true,
+          email: user.email,
+          uid: user.uid,
+        });
+      } else {
+        setUser({
+          logged: false,
+          email: null,
+          uid: null,
+        });
+      }
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, registerUser, loginUser }}>
+    <AuthContext.Provider value={{ user, registerUser, loginUser, logOut }}>
       {children}
     </AuthContext.Provider>
   );

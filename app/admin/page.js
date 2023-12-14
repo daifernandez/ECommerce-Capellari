@@ -12,6 +12,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import AdminTable from "@/components/admin/adminTable";
 import AddProducts from "@/components/admin/addProducts";
 import Welcome from "@/components/admin/welcome";
+import LogOutButton from "@/components/admin/logOutButton";
 
 const navigation = [
   {
@@ -27,8 +28,6 @@ const navigation = [
     content: "AdminTable",
   },
 ];
-
-const userNavigation = [{ name: "Salir", href: "/admin" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -266,7 +265,7 @@ export default function Admin() {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                        {userNavigation.map((item) => (
+                        {/* {userNavigation.map((item) => (
                           <Menu.Item key={item.name}>
                             {({ active }) => (
                               <a
@@ -280,7 +279,8 @@ export default function Admin() {
                               </a>
                             )}
                           </Menu.Item>
-                        ))}
+                        ))} */}
+                        <LogOutButton />
                       </Menu.Items>
                     </Transition>
                   </Menu>
