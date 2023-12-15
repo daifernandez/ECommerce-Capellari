@@ -5,8 +5,9 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import AdminPagination from "./adminPagination";
 import SearchAdmin from "./searchAdmin";
 import { getProducts } from "../../app/api/admin/productos/route";
+import Link from "next/link";
 
-export default function AdminTable({ OnDelete, OnEdit }) {
+export default function AdminTable() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -61,16 +62,14 @@ export default function AdminTable({ OnDelete, OnEdit }) {
 
                 <td className="py-3 px-6 border-b">
                   <div className="flex items-center justify-center space-x-1">
-                    <button
-                      onClick={() => OnEdit(index)}
-                      className="bg-slate-500 text-white px-3 py-1  rounded"
-                    >
-                      <PencilSquareIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => OnDelete(index)}
-                      className="bg-red-500 text-white px-3 py-1  rounded"
-                    >
+                    <Link href={`/admin/edit/${appliance.slug}`}>
+                      {" "}
+                      <button className="bg-slate-500 text-white px-3 py-1  rounded">
+                        <PencilSquareIcon className="w-5 h-5" />{" "}
+                      </button>
+                    </Link>
+
+                    <button className="bg-red-500 text-white px-3 py-1  rounded">
                       <TrashIcon className="w-5 h-5" />
                     </button>
                   </div>
