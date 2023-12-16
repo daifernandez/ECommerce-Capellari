@@ -7,7 +7,6 @@ import Image from "next/image";
 import EmptyCart from "@/components/products/emptyCart";
 import { toast, Toaster } from "react-hot-toast";
 
-
 export default function Carrito() {
   const { cart, setCart } = useCartContext();
 
@@ -159,16 +158,17 @@ export default function Carrito() {
 
               <button
                 type="submit"
-                className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                className="w-full mt-10 rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 onClick={() => {
                   localStorage.setItem("totalPrice", totalPrice);
-                  {console.log(
-                    `estoy enviando el valor de totalPrice ${totalPrice}`
-                  )}
+                  {
+                    console.log(
+                      `estoy enviando el valor de totalPrice ${totalPrice}`
+                    );
+                  }
                 }}
               >
                 <Link href="/carrito/checkout">Checkout</Link>
-                
               </button>
 
               <div className="mt-6 text-center text-sm">
