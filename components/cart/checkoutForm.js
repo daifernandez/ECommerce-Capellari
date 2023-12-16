@@ -4,6 +4,11 @@ import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useCartContext } from "@/components/context/cartContext";
 import Image from "next/image";
+import { db } from "@/firebase/config";
+import { setDoc, doc, Timestamp } from "firebase/firestore";
+import CreditCard from "@/components/cart/creditCard";
+import Transfer from "@/components/cart/transfer";
+import PaymentMethod from "@/components/cart/paymentMethod";
 
 const deliveryMethods = [
   {
@@ -15,10 +20,33 @@ const deliveryMethods = [
   { id: 2, title: "Express", turnaround: "2–5 dias hábiles", price: "$16.00" },
 ];
 const paymentMethods = [
-  { id: "credit-card", title: "Credit card" },
-  { id: "paypal", title: "PayPal" },
-  { id: "etransfer", title: "eTransfer" },
+  { id: "creditCard", title: "Credit card" },
+
+  { id: "transfer", title: "Transferencia bancaria" },
 ];
+
+// agregarle un modal para uqe se muestre un mensaje de exito y agradecimiento por la compra
+const createOrder = async (values, items) => {
+  const order = {
+    client: values,
+    items: items.map((item) => ({
+      title: item.title,
+      price: item.price,
+      slug: item.slug,
+      quantity: item.quantity,
+      brand: item.brand,
+      category: item.category,
+      image: item.image,
+    })),
+    date: new Date().toISOString(),
+  };
+
+  const docId = Timestamp.fromDate(new Date()).toMillis();
+  const orderRef = doc(db, "orders", String(docId));
+  await setDoc(orderRef, order);
+
+  return docId;
+};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -26,10 +54,59 @@ function classNames(...classes) {
 
 export default function CheckoutForm({ totalPrice }) {
   const { cart } = useCartContext();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState("paymentMethod");
+
+  const [values, setValues] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    apartment: "",
+    city: "",
+    country: "",
+    region: "",
+    postalCode: "",
+    phone: "",
+    paymentType: "",
+    cardNumber: "",
+    nameOnCard: "",
+    expirationDate: "",
+    cvc: "",
+  });
 
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
+
+  const handleChange = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await createOrder(values, cart);
+    console.log(result);
+  };
+
+  var contentComponentPaymentMethod;
+  switch (selectedPaymentMethod) {
+    case "paymentMethod":
+      contentComponentPaymentMethod = <PaymentMethod />;
+      break;
+    case "creditCard":
+      contentComponentPaymentMethod = <CreditCard />;
+      break;
+
+    case "transfer":
+      contentComponentPaymentMethod = <Transfer />;
+      break;
+    default:
+      contentComponentPaymentMethod = <CreditCard />;
+  }
 
   return (
     <div className="bg-gray-50">
@@ -38,7 +115,10 @@ export default function CheckoutForm({ totalPrice }) {
           Checkout
         </h1>
 
-        <form className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+        <form
+          onSubmit={handleSubmit}
+          className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"
+        >
           <div className="mt-10">
             <div>
               <h2 className="text-lg font-medium text-gray-900">Informacion</h2>
@@ -53,10 +133,10 @@ export default function CheckoutForm({ totalPrice }) {
                 <div className="mt-1">
                   <input
                     type="email"
-                    id="email-address"
-                    name="email-address"
-                    autoComplete="email"
+                    id="email"
+                    name="email"
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -70,7 +150,7 @@ export default function CheckoutForm({ totalPrice }) {
               <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                 <div>
                   <label
-                    htmlFor="first-name"
+                    htmlFor="firstName"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Nombre
@@ -78,17 +158,17 @@ export default function CheckoutForm({ totalPrice }) {
                   <div className="mt-1">
                     <input
                       type="text"
-                      id="first-name"
-                      name="first-name"
-                      autoComplete="given-name"
+                      id="firstName"
+                      name="firstName"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label
-                    htmlFor="last-name"
+                    htmlFor="lastName"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Apellido
@@ -96,10 +176,10 @@ export default function CheckoutForm({ totalPrice }) {
                   <div className="mt-1">
                     <input
                       type="text"
-                      id="last-name"
-                      name="last-name"
-                      autoComplete="family-name"
+                      id="lastName"
+                      name="lastName"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -116,8 +196,8 @@ export default function CheckoutForm({ totalPrice }) {
                       type="text"
                       name="address"
                       id="address"
-                      autoComplete="street-address"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -135,6 +215,7 @@ export default function CheckoutForm({ totalPrice }) {
                       name="apartment"
                       id="apartment"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -151,8 +232,8 @@ export default function CheckoutForm({ totalPrice }) {
                       type="text"
                       name="city"
                       id="city"
-                      autoComplete="address-level2"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -168,8 +249,8 @@ export default function CheckoutForm({ totalPrice }) {
                     <select
                       id="country"
                       name="country"
-                      autoComplete="country-name"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     >
                       {/* opciones */}
                     </select>
@@ -188,15 +269,15 @@ export default function CheckoutForm({ totalPrice }) {
                       type="text"
                       name="region"
                       id="region"
-                      autoComplete="address-level1"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label
-                    htmlFor="postal-code"
+                    htmlFor="postalCode"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Código Postal
@@ -204,10 +285,10 @@ export default function CheckoutForm({ totalPrice }) {
                   <div className="mt-1">
                     <input
                       type="text"
-                      name="postal-code"
-                      id="postal-code"
-                      autoComplete="postal-code"
+                      name="postalCode"
+                      id="postalCode"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -224,8 +305,8 @@ export default function CheckoutForm({ totalPrice }) {
                       type="text"
                       name="phone"
                       id="phone"
-                      autoComplete="tel"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -311,23 +392,16 @@ export default function CheckoutForm({ totalPrice }) {
                 <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
                   {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
                     <div key={paymentMethod.id} className="flex items-center">
-                      {paymentMethodIdx === 0 ? (
-                        <input
-                          id={paymentMethod.id}
-                          name="payment-type"
-                          type="radio"
-                          defaultChecked
-                          className="h-4 w-4 border-gray-300 text-slate-600 focus:ring-slate-500"
-                        />
-                      ) : (
-                        <input
-                          id={paymentMethod.id}
-                          name="payment-type"
-                          type="radio"
-                          className="h-4 w-4 border-gray-300 text-slate-600 focus:ring-slate-500"
-                        />
-                      )}
-
+                      <input
+                        id={paymentMethod.id}
+                        name="payment-type"
+                        type="radio"
+                        // defaultChecked={paymentMethodIdx === 0}
+                        className="h-4 w-4 border-gray-300 text-slate-600 focus:ring-slate-500"
+                        onChange={() =>
+                          setSelectedPaymentMethod(paymentMethod.id)
+                        }
+                      />
                       <label
                         htmlFor={paymentMethod.id}
                         className="ml-3 block text-sm font-medium text-gray-700"
@@ -339,79 +413,8 @@ export default function CheckoutForm({ totalPrice }) {
                 </div>
               </fieldset>
 
-              <div className="mt-6 grid grid-cols-4 gap-x-4 gap-y-6">
-                <div className="col-span-4">
-                  <label
-                    htmlFor="card-number"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Número de tarjeta
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="card-number"
-                      name="card-number"
-                      autoComplete="cc-number"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-4">
-                  <label
-                    htmlFor="name-on-card"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Nombre en la tarjeta
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="name-on-card"
-                      name="name-on-card"
-                      autoComplete="cc-name"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-3">
-                  <label
-                    htmlFor="expiration-date"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Fecha de vencimiento (MM/AA)
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="expiration-date"
-                      id="expiration-date"
-                      autoComplete="cc-exp"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="cvc"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    CVC
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="cvc"
-                      id="cvc"
-                      autoComplete="csc"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
+              {/* renderiza el content segun paymentMethod */}
+              {contentComponentPaymentMethod}
             </div>
           </div>
 

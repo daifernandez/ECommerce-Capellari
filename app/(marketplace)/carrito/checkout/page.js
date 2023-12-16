@@ -1,4 +1,4 @@
-import CheckoutForm from "@/components/ui/checkoutForm";
+import CheckoutForm from "@/components/cart/checkoutForm";
 
 export default function Checkout({ totalPrice }) {
   return (
