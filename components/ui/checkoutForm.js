@@ -426,14 +426,15 @@ export default function CheckoutForm({ totalPrice }) {
               <ul role="list" className="divide-y divide-gray-200">
                 {cart.map((product) => (
                   <li key={product.slug} className="flex px-4 py-6 sm:px-6">
-                    <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center">
                       <Image
                         src={product.image}
                         alt={product.title}
                         width={100}
                         height={100}
-                        className=" rounded-md object-center object-cover"
-                        objectFit="contain"
+                        className="rounded-md object-cover"
+                        style={{ width: "auto", height: "auto" }}
+
                       />
                     </div>
 
