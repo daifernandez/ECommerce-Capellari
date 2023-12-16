@@ -1,5 +1,5 @@
 "use client";
-import { auth, googleProvider } from "../../firebase/config";
+import { auth, googleProvider, db } from "../../firebase/config";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -8,6 +8,8 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -18,6 +20,8 @@ export const AuthProvider = ({ children }) => {
     email: null,
     uid: null,
   });
+
+  const router = useRouter();
 
   const registerUser = async ({ values }) => {
     await createUserWithEmailAndPassword(auth, values.email, values.password);
@@ -47,17 +51,25 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUser({
-          logged: true,
-          email: user.email,
-          uid: user.uid,
-        });
+        const docRef = doc(db, "roles", user.uid);
+        const userDoc = await getDoc(docRef);
+
+        if (userDoc.data()?.rol === "admin") {
+          setUser({
+            logged: true,
+            email: user.email,
+            uid: user.uid,
+          });
+        } else {
+          router.push("/unauthorized");
+          logOut();
+        }
       } else {
         setUser({
           logged: false,
-          email: null,
+          emaiL: null,
           uid: null,
         });
       }
