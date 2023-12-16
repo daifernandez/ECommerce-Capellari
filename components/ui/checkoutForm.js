@@ -434,7 +434,6 @@ export default function CheckoutForm({ totalPrice }) {
                         height={100}
                         className="rounded-md object-cover"
                         style={{ width: "auto", height: "auto" }}
-
                       />
                     </div>
 
@@ -514,7 +513,7 @@ export default function CheckoutForm({ totalPrice }) {
               <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                 <button
                   type="submit"
-                  className="w-full rounded-md border border-transparent bg-slate-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                  className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
                   Confirmar orden
                 </button>
