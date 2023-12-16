@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useAuth } from "../context/authContext";
 import { useState } from "react";
 
@@ -28,7 +27,7 @@ export default function LoginForm() {
         <div>
           {/* Imagen de logo */}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Administradores
+            Login
           </h2>
         </div>
         <form className="space-y-6" onSubmit={handleSubmit}>
