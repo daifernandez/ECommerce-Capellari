@@ -6,16 +6,25 @@ import { getFirestore } from "@firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getStorage } from "@firebase/storage";
 import { getAuth, GoogleAuthProvider } from "@firebase/auth";
+import {
+  CLIENT_API,
+  AUTH_DOMAIN,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
+  APP_ID,
+  MEASUREMENT_ID,
+} from "./env";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCLXzdIfUZiPDdGsR8CY3uIqOxvHteNYJc",
-  authDomain: "app-coder-next.firebaseapp.com",
-  projectId: "app-coder-next",
-  storageBucket: "app-coder-next.appspot.com",
-  messagingSenderId: "421320588592",
-  appId: "1:421320588592:web:1d6bf8637adbf3327b5cf5",
-  measurementId: "G-SC87ZME036",
+  apiKey: CLIENT_API,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID,
 };
 
 // Initialize Firebase
