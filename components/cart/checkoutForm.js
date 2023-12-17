@@ -235,8 +235,8 @@ export default function CheckoutForm({ totalPrice }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const errors = Object.keys(values).reduce((acc, key) => {
-      const error = validations[key] ? validations[key](values[key]) : null;
+    const errors = Object.keys(value).reduce((acc, key) => {
+      const error = validations[key] ? validations[key](value[key]) : null;
       if (error) {
         acc[key] = error;
       }
