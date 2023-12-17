@@ -57,7 +57,7 @@ export default function CheckoutForm({ totalPrice }) {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState("paymentMethod");
 
-  const [values, setValues] = useState({
+  const [value, setValue] = useState({
     email: "",
     firstName: "",
     lastName: "",
@@ -78,17 +78,162 @@ export default function CheckoutForm({ totalPrice }) {
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
+  const [error, setError] = useState({});
+
+  const validations = {
+    email: (value) => {
+      if (!value.email) {
+        return "El correo electrónico es requerido";
+      } else if (!/\S+@\S+\.com/.test(value.email)) {
+        return "El correo electrónico debe contener '@' y '.com'";
+      }
+      return null;
+    },
+    firstName: (value) => {
+      if (!value.firstName) {
+        return (error.firstName = "El nombre es requerido");
+      } else if (!/^[a-zA-Z]*$/.test(value.firstName)) {
+        return (error.firstName =
+          "Por favor ingrese un nombre válido sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    lastName: (value) => {
+      if (!value.lastName) {
+        return (error.lastName = "El apellido es requerido");
+      } else if (!/^[a-zA-Z]*$/.test(value.lastName)) {
+        return (error.lastName =
+          "Por favor ingrese un apellido válido sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    address: (values) => {
+      if (!values.address) {
+        return (error.address = "La dirección es requerida");
+      } else if (!/^[a-zA-Z0-9\s]*$/.test(values.address)) {
+        return (error.address =
+          "La dirección solo debe contener letras, números y espacios");
+      }
+      return null;
+    },
+    apartment: (values) => {
+      if (!values.apartment) {
+        return (error.apartment = "El número de apartamento es requerido");
+      } else if (!/^[a-zA-Z0-9\s]*$/.test(values.apartment)) {
+        return (error.apartment =
+          "El número de apartamento solo debe contener letras, números y espacios");
+      }
+      return null;
+    },
+    city: (value) => {
+      if (!value.city) {
+        return (error.city = "La ciudad es requerida");
+      } else if (!/^[a-zA-Z]*$/.test(value.city)) {
+        return (error.city =
+          "Por favor ingrese una ciudad válida sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    country: (value) => {
+      if (!value.country) {
+        return (error.country = "El país es requerido");
+      } else if (!/^[a-zA-Z]*$/.test(value.country)) {
+        return (error.country =
+          "Por favor ingrese un país válido sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    region: (value) => {
+      if (!value.region) {
+        return (error.region = "La región es requerida");
+      } else if (!/^[a-zA-Z]*$/.test(value.region)) {
+        return (error.region =
+          "Por favor ingrese una región válida sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    postalCode: (value) => {
+      if (!value.postalCode) {
+        return (error.postalCode = "El código postal es requerido");
+      } else if (!/^[0-9]*$/.test(value.postalCode)) {
+        return (error.postalCode =
+          "Por favor ingrese un código postal válido sin letras ni caracteres especiales");
+      }
+    },
+    phone: (value) => {
+      if (!value.phone) {
+        return (error.phone = "El número de teléfono es requerido");
+      } else if (!/^[0-9]*$/.test(value.phone)) {
+        return (error.phone =
+          "Por favor ingrese un número de teléfono válido sin letras ni caracteres especiales");
+      }
+      return null;
+    },
+    paymentType: (value) => {
+      if (!value.paymentType) {
+        return (error.paymentType = "El tipo de pago es requerido");
+      } else if (!/^[a-zA-Z]*$/.test(value.paymentType)) {
+        return (error.paymentType =
+          "Por favor ingrese un tipo de pago válido sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    cardNumber: (value) => {
+      if (!value.cardNumber) {
+        return (error.cardNumber = "El número de tarjeta es requerido");
+      } else if (!/^[0-9]*$/.test(value.cardNumber)) {
+        return (error.cardNumber =
+          "Por favor ingrese un número de tarjeta válido sin letras ni caracteres especiales");
+      }
+    },
+    nameOnCard: (value) => {
+      if (!value.nameOnCard) {
+        return (error.nameOnCard = "El nombre en la tarjeta es requerido");
+      } else if (!/^[a-zA-Z]*$/.test(value.nameOnCard)) {
+        return (error.nameOnCard =
+          "Por favor ingrese un nombre válido sin números ni caracteres especiales");
+      }
+      return null;
+    },
+    expirationDate: (value) => {
+      if (!value.expirationDate) {
+        return (error.expirationDate = "La fecha de expiración es requerida");
+      } else if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(values.expirationDate)) {
+        return (error.expirationDate =
+          "Por favor ingrese una fecha de expiración válida en formato MM/AA sin letras ni caracteres especiales");
+      }
+      return null;
+    },
+    cvc: (value) => {
+      if (!value.cvc) {
+        return (error.cvc = "El código de seguridad es requerido");
+      } else if (!/^[0-9]{3,4}$/.test(values.cvc)) {
+        error.cvc =
+          "Por favor ingrese un código de seguridad válido de tres o cuatro dígitos numéricos sin espacios ni caracteres especiales";
+      }
+      return null;
+    },
+  };
 
   const handleChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+    const validate = validations[name];
+    let errorMessage = validate ? validate({ [name]: value }) : null;
+
+    setError((prev) => {
+      if (errorMessage) {
+        return { ...prev, [name]: errorMessage };
+      } else {
+        const { [name]: _, ...rest } = prev;
+        return rest;
+      }
     });
+    setValue((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await createOrder(values, cart);
+    const result = await createOrder(value, cart);
     console.log(result);
   };
 
@@ -132,6 +277,7 @@ export default function CheckoutForm({ totalPrice }) {
                 </label>
                 <div className="mt-1">
                   <input
+                    value={value.email}
                     type="email"
                     id="email"
                     name="email"
@@ -139,6 +285,11 @@ export default function CheckoutForm({ totalPrice }) {
                     onChange={handleChange}
                   />
                 </div>
+                {error && error.email && (
+                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                    {error.email}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -157,6 +308,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.firstName}
                       type="text"
                       id="firstName"
                       name="firstName"
@@ -164,6 +316,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.firstName && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.firstName}
+                    </span>
+                  )}
                 </div>
 
                 <div>
@@ -175,6 +332,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.lastName}
                       type="text"
                       id="lastName"
                       name="lastName"
@@ -182,6 +340,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.lastName && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.lastName}
+                    </span>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -193,6 +356,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.address}
                       type="text"
                       name="address"
                       id="address"
@@ -200,6 +364,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.address && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.address}
+                    </span>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -211,6 +380,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.apartment}
                       type="text"
                       name="apartment"
                       id="apartment"
@@ -218,6 +388,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.apartment && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.apartment}
+                    </span>
+                  )}
                 </div>
 
                 <div>
@@ -229,6 +404,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.city}
                       type="text"
                       name="city"
                       id="city"
@@ -236,6 +412,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.city && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.city}
+                    </span>
+                  )}
                 </div>
 
                 <div>
@@ -247,6 +428,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <select
+                      value={value.country}
                       id="country"
                       name="country"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
@@ -255,6 +437,11 @@ export default function CheckoutForm({ totalPrice }) {
                       {/* opciones */}
                     </select>
                   </div>
+                  {error && error.country && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.country}
+                    </span>
+                  )}
                 </div>
 
                 <div>
@@ -266,6 +453,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.region}
                       type="text"
                       name="region"
                       id="region"
@@ -273,6 +461,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.region && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.region}
+                    </span>
+                  )}
                 </div>
 
                 <div>
@@ -284,6 +477,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.postalCode}
                       type="text"
                       name="postalCode"
                       id="postalCode"
@@ -291,6 +485,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.postalCode && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.postalCode}
+                    </span>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -302,6 +501,7 @@ export default function CheckoutForm({ totalPrice }) {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={value.phone}
                       type="text"
                       name="phone"
                       id="phone"
@@ -309,6 +509,11 @@ export default function CheckoutForm({ totalPrice }) {
                       onChange={handleChange}
                     />
                   </div>
+                  {error && error.phone && (
+                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                      {error.phone}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
