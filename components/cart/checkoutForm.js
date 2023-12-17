@@ -9,6 +9,7 @@ import { setDoc, doc, Timestamp } from "firebase/firestore";
 import CreditCard from "@/components/cart/creditCard";
 import Transfer from "@/components/cart/transfer";
 import PaymentMethod from "@/components/cart/paymentMethod";
+import { toast, Toaster } from "react-hot-toast";
 
 const deliveryMethods = [
   {
@@ -233,8 +234,36 @@ export default function CheckoutForm({ totalPrice }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await createOrder(value, cart);
-    console.log(result);
+
+    const errors = Object.keys(values).reduce((acc, key) => {
+      const error = validations[key] ? validations[key](values[key]) : null;
+      if (error) {
+        acc[key] = error;
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
+      toast.error("Por favor, corrija los errores");
+      return;
+    }
+
+    const toastId = toast.loading("Actualizando producto...");
+    try {
+      const result = await createOrder(value, cart);
+      console.log(result);
+      toast.success("Orden creada con éxito"),
+        {
+          id: toastId,
+        };
+    } catch (error) {
+      toast
+        .error("Error procesar la orden", {
+          id: toastId,
+        })
+        .console.error("Error: ", error);
+    }
   };
 
   var contentComponentPaymentMethod;
@@ -255,6 +284,7 @@ export default function CheckoutForm({ totalPrice }) {
 
   return (
     <div className="bg-gray-50">
+      <Toaster />
       <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
           Checkout

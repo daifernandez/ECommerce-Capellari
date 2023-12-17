@@ -10,12 +10,18 @@ export default function Transfer() {
     <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4 mt-10 mb-10">
       <div>
         <div className="mt-4">
-          <p className="text-gray-700">
+          <p className="block text-sm font-medium text-gray-700 mb-2">
             Nombre del destinatario: {transferencia.destinatario}
           </p>
-          <p className="text-gray-700 mt-3">CBU: {transferencia.cbu}</p>
-          <p className="text-gray-700 mt-3">Alias: {transferencia.alias}</p>
-          <p className="text-gray-700 mt-3">Banco: {transferencia.banco}</p>
+          <p className="block text-sm font-medium text-gray-700">
+            CBU: {transferencia.cbu}
+          </p>
+          <p className="block text-sm font-medium text-gray-700">
+            Alias: {transferencia.alias}
+          </p>
+          <p className="block text-sm font-medium text-gray-700">
+            Banco: {transferencia.banco}
+          </p>
         </div>
       </div>
     </div>
