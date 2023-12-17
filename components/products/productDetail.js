@@ -3,7 +3,7 @@ import QtySelector from "./qtySelector";
 import BackButton from "../ui/backbutton";
 
 export default async function ProductDetail({ slug }) {
-  const item = await fetch(`http://localhost:3000/api/product/${slug}`, {
+  const item = await fetch(`http://${process.env.VERCEL_URL}/api/product/${slug}`, {
     next: {
       revalidate: 300,
     },
