@@ -5,7 +5,7 @@ import NoProducts from "./noProducts";
 export default async function ProductsList({ categoria }) {
   console.log("categoria", categoria);
   const items = await fetch(
-    `http://${process.env.VERCEL_URL}/api/productos/${categoria}`,
+    `http://localhost:3000/api/productos/${categoria}`,
     {
       cache: "no-store", // TODO: Mejorar cache
       next: {
