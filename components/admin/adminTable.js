@@ -11,6 +11,7 @@ import { db } from "../../firebase/config";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from "react-hot-toast";
 import { ref, deleteObject, getStorage } from "firebase/storage";
+import { useCartContext } from "../context/cartContext";
 
 const storage = getStorage();
 
@@ -18,6 +19,7 @@ export default function AdminTable() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const { deleteItem } = useCartContext();
 
   useEffect(() => {
     getProducts()
@@ -44,6 +46,9 @@ export default function AdminTable() {
 
       const newProducts = products.filter((product) => product.slug !== slug);
       setProducts(newProducts);
+
+      // saca el producto eliminado del carrito
+      deleteItem(slug);
 
       toast.success("Producto e imagen eliminados correctamente");
     } catch (e) {

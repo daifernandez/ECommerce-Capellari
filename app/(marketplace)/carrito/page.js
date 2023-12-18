@@ -8,22 +8,7 @@ import EmptyCart from "@/components/products/emptyCart";
 import { toast, Toaster } from "react-hot-toast";
 
 export default function Carrito() {
-  const { cart, setCart, totalPrice } = useCartContext();
-
-  const removeFromCart = (product) => {
-    if (product.quantity > 1) {
-      for (let i = 0; i < cart.length; i++) {
-        if (cart[i].slug === product.slug) {
-          cart[i].quantity -= 1;
-        }
-      }
-      setCart([...cart]);
-    } else {
-      const newCart = cart.filter((item) => item.slug !== product.slug);
-      setCart(newCart);
-    }
-    toast.success("Producto eliminado del carrito");
-  };
+  const { cart, setCart, totalPrice, removeFromCart } = useCartContext();
 
   return (
     <div className="bg-white">
@@ -105,7 +90,12 @@ export default function Carrito() {
                             </p>
                             <div className="ml-4">
                               <button
-                                onClick={() => removeFromCart(product)}
+                                onClick={() => {
+                                  removeFromCart(product);
+                                  toast.success(
+                                    "Producto eliminado del carrito"
+                                  );
+                                }}
                                 type="button"
                                 className="text-sm font-medium text-blue-600 hover:text-blue-500"
                               >

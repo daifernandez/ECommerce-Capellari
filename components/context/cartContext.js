@@ -64,9 +64,36 @@ export const CartProvider = ({ children }) => {
     return price;
   };
 
+  const removeFromCart = (product) => {
+    if (product.quantity > 1) {
+      for (let i = 0; i < cart.length; i++) {
+        if (cart[i].slug === product.slug) {
+          cart[i].quantity -= 1;
+        }
+      }
+      setCart([...cart]);
+    } else {
+      const newCart = cart.filter((item) => item.slug !== product.slug);
+      setCart(newCart);
+    }
+  };
+
+  const deleteItem = (slug) => {
+    const newCart = cart.filter((item) => item.slug !== slug);
+    setCart(newCart);
+  };
+
   return (
     <cartContext.Provider
-      value={{ cart, setCart, addItem, isInCart, totalPrice }}
+      value={{
+        cart,
+        setCart,
+        addItem,
+        isInCart,
+        totalPrice,
+        removeFromCart,
+        deleteItem,
+      }}
     >
       {children}
     </cartContext.Provider>
