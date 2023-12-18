@@ -348,6 +348,13 @@ export default function EditForm({ item }) {
               >
                 Guardar
               </button>
+
+              <Link
+                href="/admin"
+                className="flex justify-center items-center px-4 py-2 text-sm font-medium hover:text-slate-500"
+              >
+                Volver al menú principal
+              </Link>
             </div>
           </form>
         </div>
