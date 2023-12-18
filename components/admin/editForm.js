@@ -27,9 +27,6 @@ const updateProduct = async (slug, values, file) => {
     price: Number(values.price),
     category: values.category,
     image: fileURL,
-  }).then(() => {
-    toast.success("Producto actualizado");
-    console.log("Document successfully updated!");
   });
 };
 
@@ -49,10 +46,12 @@ export default function EditForm({ item }) {
 
   const validations = {
     title: (value) =>
-      /^\D+$/.test(value) ? null : "El valor ingresado para title es inválido",
+      /^[A-Za-z0-9-\s]+$/.test(value)
+        ? null
+        : "El valor ingresado para title es inválido",
 
     description: (value) =>
-      /\D/.test(value)
+      /^[\s\S]*$/.test(value)
         ? null
         : "El valor ingresado para description es inválido",
 
@@ -128,18 +127,12 @@ export default function EditForm({ item }) {
       return;
     }
 
-    const toastId = toast.loading("Actualizando producto...");
     try {
       await updateProduct(item.slug, values, file);
-      toast.success("Producto actualizado"),
-        {
-          id: toastId,
-        };
+      toast.success("Producto actualizado");
     } catch (error) {
       toast
-        .error("Error al actualizar el producto", {
-          id: toastId,
-        })
+        .error("Error al actualizar el producto")
         .console.error("Error updating document: ", error);
     }
   };
