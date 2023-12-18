@@ -8,7 +8,7 @@ import EmptyCart from "@/components/products/emptyCart";
 import { toast, Toaster } from "react-hot-toast";
 
 export default function Carrito() {
-  const { cart, setCart } = useCartContext();
+  const { cart, setCart, totalPrice } = useCartContext();
 
   const removeFromCart = (product) => {
     if (product.quantity > 1) {
@@ -24,19 +24,6 @@ export default function Carrito() {
     }
     toast.success("Producto eliminado del carrito");
   };
-
-  const totalPrice = cart.reduce((acc, item) => {
-    const price = parseFloat(item.price);
-    if (isNaN(price) || isNaN(item.quantity)) {
-      console.error("Error: Precio o cantidad no válidos");
-      return acc;
-    } else {
-      const totalItemPrice = price * item.quantity;
-      return acc + totalItemPrice;
-    }
-  }, 0);
-
-  const totalPriceString = totalPrice.toString();
 
   return (
     <div className="bg-white">
@@ -147,7 +134,7 @@ export default function Carrito() {
                       Subtotal
                     </dt>
                     <dd className="ml-4 text-base font-medium text-gray-900">
-                      $ {totalPrice}
+                      $ {totalPrice()}
                     </dd>
                   </div>
                 </dl>
@@ -159,14 +146,6 @@ export default function Carrito() {
               <button
                 type="submit"
                 className="w-full mt-10 rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                onClick={() => {
-                  localStorage.setItem("totalPrice", totalPrice);
-                  {
-                    console.log(
-                      `estoy enviando el valor de totalPrice ${totalPrice}`
-                    );
-                  }
-                }}
               >
                 <Link href="/carrito/checkout">Checkout</Link>
               </button>

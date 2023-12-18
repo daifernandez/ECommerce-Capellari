@@ -53,8 +53,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function CheckoutForm({ totalPrice }) {
-  const { cart } = useCartContext();
+export default function CheckoutForm() {
+  const { cart, totalPrice } = useCartContext();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState("paymentMethod");
 
@@ -707,7 +707,7 @@ export default function CheckoutForm({ totalPrice }) {
 
                       <div className="flex flex-1 items-end justify-between pt-2">
                         <p className="mt-1 text-sm font-medium text-gray-900">
-                          {product.price}
+                          ${product.price}
                         </p>
 
                         <div className="ml-4">
@@ -728,8 +728,7 @@ export default function CheckoutForm({ totalPrice }) {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${totalPrice}
-                    {console.log(`rendering ${totalPrice}`)}
+                    ${totalPrice()}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
