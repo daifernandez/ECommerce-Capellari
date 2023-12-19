@@ -43,6 +43,7 @@ export default function Carrito() {
                             height={200}
                             className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48"
                             style={{ objectFit: "contain" }}
+                            priority
                           />
                         </div>
 
@@ -133,10 +134,7 @@ export default function Carrito() {
                 </p>
               </div>
 
-              <button
-                type="submit"
-                className="w-full mt-10 rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-              >
+              <button className="w-full mt-10 rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                 <Link href="/carrito/checkout">Checkout</Link>
               </button>
 
