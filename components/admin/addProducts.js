@@ -110,7 +110,6 @@ export default function AddProducts() {
     const toastId = toast.loading("Creando producto...");
 
     try {
-      console.log(value);
       await createProduct(value, file);
       toast.success("Producto creado exitosamente", {
         id: toastId,

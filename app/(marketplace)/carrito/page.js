@@ -18,7 +18,6 @@ export default function Carrito() {
           <section aria-labelledby="cart-heading">
             <h2 id="cart-heading" className="sr-only">
               Productos en tu carrito
-              {console.log(cart)}
             </h2>
             {cart && cart.length === 0 ? (
               <EmptyCart />
