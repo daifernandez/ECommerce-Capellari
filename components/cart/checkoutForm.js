@@ -10,21 +10,38 @@ import CreditCard from "@/components/cart/creditCard";
 import Transfer from "@/components/cart/transfer";
 import PaymentMethod from "@/components/cart/paymentMethod";
 import { toast, Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 const deliveryMethods = [
   {
     id: 1,
     title: "Normal",
     turnaround: "4–10 dias hábiles",
-    price: "$5.00",
+    price: "5.00",
   },
-  { id: 2, title: "Express", turnaround: "2–5 dias hábiles", price: "$16.00" },
+  { id: 2, title: "Express", turnaround: "2–5 dias hábiles", price: "16.00" },
+  {
+    id: 3,
+    title: "Retiro en tienda",
+    turnaround: "1–2 dias hábiles",
+    price: "0.00",
+  },
+  {
+    id: 4,
+    title: "Internacional",
+    turnaround: "10–20 dias hábiles",
+    price: "20.00",
+  },
 ];
 const paymentMethods = [
   { id: "creditCard", title: "Credit card" },
 
   { id: "transfer", title: "Transferencia bancaria" },
 ];
+
+const deliveryMethodFromId = (id) => {
+  return deliveryMethods.find((deliveryMethod) => deliveryMethod.id === id);
+};
 
 // agregarle un modal para uqe se muestre un mensaje de exito y agradecimiento por la compra
 const createOrder = async (values, items) => {
@@ -36,6 +53,7 @@ const createOrder = async (values, items) => {
       slug: item.slug,
       quantity: item.quantity,
       brand: item.brand,
+      // evaluar estos dos items
       category: item.category,
       image: item.image,
     })),
@@ -69,148 +87,104 @@ export default function CheckoutForm() {
     region: "",
     postalCode: "",
     phone: "",
+    deliveryMethod: 1,
     paymentType: "",
-    cardNumber: "",
-    nameOnCard: "",
-    expirationDate: "",
-    cvc: "",
   });
 
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
-    deliveryMethods[0]
-  );
   const [error, setError] = useState({});
 
   const validations = {
-    email: (value) => {
-      if (!value.email) {
+    email: (email) => {
+      if (!email) {
         return "El correo electrónico es requerido";
-      } else if (!/\S+@\S+\.com/.test(value.email)) {
+      } else if (
+        !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
+      ) {
         return "El correo electrónico debe contener '@' y '.com'";
       }
       return null;
     },
-    firstName: (value) => {
-      if (!value.firstName) {
-        return (error.firstName = "El nombre es requerido");
-      } else if (!/^[a-zA-Z]*$/.test(value.firstName)) {
-        return (error.firstName =
-          "Por favor ingrese un nombre válido sin números ni caracteres especiales");
+    firstName: (firstName) => {
+      if (!firstName) {
+        return "El nombre es requerido";
+      } else if (!/^[a-zA-Z]*$/.test(firstName)) {
+        return "Por favor ingrese un nombre válido sin números ni caracteres especiales";
       }
       return null;
     },
-    lastName: (value) => {
-      if (!value.lastName) {
-        return (error.lastName = "El apellido es requerido");
-      } else if (!/^[a-zA-Z]*$/.test(value.lastName)) {
-        return (error.lastName =
-          "Por favor ingrese un apellido válido sin números ni caracteres especiales");
+    lastName: (lastName) => {
+      if (!lastName) {
+        return "El apellido es requerido";
+      } else if (!/^[a-zA-Z]*$/.test(lastName)) {
+        return "Por favor ingrese un apellido válido sin números ni caracteres especiales";
       }
       return null;
     },
-    address: (values) => {
-      if (!values.address) {
-        return (error.address = "La dirección es requerida");
-      } else if (!/^[a-zA-Z0-9\s]*$/.test(values.address)) {
-        return (error.address =
-          "La dirección solo debe contener letras, números y espacios");
+    address: (address) => {
+      if (!address) {
+        return "La dirección es requerida";
+      } else if (!/^[a-zA-Z0-9\s]*$/.test(address)) {
+        return "La dirección solo debe contener letras, números y espacios";
       }
       return null;
     },
-    apartment: (values) => {
-      if (!values.apartment) {
-        return (error.apartment = "El número de apartamento es requerido");
-      } else if (!/^[a-zA-Z0-9\s]*$/.test(values.apartment)) {
-        return (error.apartment =
-          "El número de apartamento solo debe contener letras, números y espacios");
+    apartment: (apartment) => {
+      if (!apartment) {
+        return "El número de apartamento es requerido";
+      } else if (!/^[a-zA-Z0-9\s]*$/.test(apartment)) {
+        return "El número de apartamento solo debe contener letras, números y espacios";
       }
       return null;
     },
-    city: (value) => {
-      if (!value.city) {
-        return (error.city = "La ciudad es requerida");
-      } else if (!/^[a-zA-Z]*$/.test(value.city)) {
-        return (error.city =
-          "Por favor ingrese una ciudad válida sin números ni caracteres especiales");
+    city: (city) => {
+      if (!city) {
+        return (city = "La ciudad es requerida");
+      } else if (!/^[a-zA-Z ]*$/.test(city)) {
+        return "Por favor ingrese una ciudad válida sin números ni caracteres especiales";
       }
       return null;
     },
-    country: (value) => {
-      if (!value.country) {
-        return (error.country = "El país es requerido");
-      } else if (!/^[a-zA-Z]*$/.test(value.country)) {
-        return (error.country =
-          "Por favor ingrese un país válido sin números ni caracteres especiales");
+    country: (country) => {
+      if (!country) {
+        return "El país es requerido";
+      } else if (!/^[a-zA-Z]*$/.test(country)) {
+        return "Por favor ingrese un país válido sin números ni caracteres especiales";
       }
       return null;
     },
-    region: (value) => {
-      if (!value.region) {
-        return (error.region = "La región es requerida");
-      } else if (!/^[a-zA-Z]*$/.test(value.region)) {
-        return (error.region =
-          "Por favor ingrese una región válida sin números ni caracteres especiales");
+    region: (region) => {
+      if (!region) {
+        return "La región es requerida";
+      } else if (!/^[a-zA-Z]*$/.test(region)) {
+        return "Por favor ingrese una región válida sin números ni caracteres especiales";
       }
       return null;
     },
-    postalCode: (value) => {
-      if (!value.postalCode) {
-        return (error.postalCode = "El código postal es requerido");
-      } else if (!/^[0-9]*$/.test(value.postalCode)) {
-        return (error.postalCode =
-          "Por favor ingrese un código postal válido sin letras ni caracteres especiales");
-      }
-    },
-    phone: (value) => {
-      if (!value.phone) {
-        return (error.phone = "El número de teléfono es requerido");
-      } else if (!/^[0-9]*$/.test(value.phone)) {
-        return (error.phone =
-          "Por favor ingrese un número de teléfono válido sin letras ni caracteres especiales");
+    postalCode: (postalCode) => {
+      if (!postalCode) {
+        return "El código postal es requerido";
+      } else if (!/^[0-9]*$/.test(postalCode)) {
+        return "Por favor ingrese un código postal válido sin letras ni caracteres especiales";
       }
       return null;
     },
-    paymentType: (value) => {
-      if (!value.paymentType) {
-        return (error.paymentType = "El tipo de pago es requerido");
-      } else if (!/^[a-zA-Z]*$/.test(value.paymentType)) {
-        return (error.paymentType =
-          "Por favor ingrese un tipo de pago válido sin números ni caracteres especiales");
+    phone: (phone) => {
+      if (!phone) {
+        return "El número de teléfono es requerido";
+      } else if (!/^[0-9]*$/.test(phone)) {
+        return "Por favor ingrese un número de teléfono válido sin letras ni caracteres especiales";
       }
       return null;
     },
-    cardNumber: (value) => {
-      if (!value.cardNumber) {
-        return (error.cardNumber = "El número de tarjeta es requerido");
-      } else if (!/^[0-9]*$/.test(value.cardNumber)) {
-        return (error.cardNumber =
-          "Por favor ingrese un número de tarjeta válido sin letras ni caracteres especiales");
-      }
-    },
-    nameOnCard: (value) => {
-      if (!value.nameOnCard) {
-        return (error.nameOnCard = "El nombre en la tarjeta es requerido");
-      } else if (!/^[a-zA-Z]*$/.test(value.nameOnCard)) {
-        return (error.nameOnCard =
-          "Por favor ingrese un nombre válido sin números ni caracteres especiales");
+    paymentType: (paymentType) => {
+      if (!paymentType) {
+        return "El tipo de pago es requerido";
       }
       return null;
     },
-    expirationDate: (value) => {
-      if (!value.expirationDate) {
-        return (error.expirationDate = "La fecha de expiración es requerida");
-      } else if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(values.expirationDate)) {
-        return (error.expirationDate =
-          "Por favor ingrese una fecha de expiración válida en formato MM/AA sin letras ni caracteres especiales");
-      }
-      return null;
-    },
-    cvc: (value) => {
-      if (!value.cvc) {
-        return (error.cvc = "El código de seguridad es requerido");
-      } else if (!/^[0-9]{3,4}$/.test(values.cvc)) {
-        error.cvc =
-          "Por favor ingrese un código de seguridad válido de tres o cuatro dígitos numéricos sin espacios ni caracteres especiales";
+    deliveryMethod: (deliveryMethod) => {
+      if (!deliveryMethod) {
+        return "El método de envío es requerido";
       }
       return null;
     },
@@ -218,8 +192,8 @@ export default function CheckoutForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const validate = validations[name];
-    let errorMessage = validate ? validate({ [name]: value }) : null;
+    console.log(name, value);
+    let errorMessage = validations[name](value);
 
     setError((prev) => {
       if (errorMessage) {
@@ -229,28 +203,34 @@ export default function CheckoutForm() {
         return rest;
       }
     });
+
     setValue((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log(value);
+    const toastId = toast.loading("Procesando orden...");
+
     const errors = Object.keys(value).reduce((acc, key) => {
-      const error = validations[key] ? validations[key](value[key]) : null;
-      if (error) {
-        acc[key] = error;
+      let errorMessage = validations[key](value[key]);
+      if (errorMessage) {
+        acc[key] = errorMessage;
       }
       return acc;
     }, {});
 
     if (Object.keys(errors).length > 0) {
       setError(errors);
-      toast.error("Por favor, corrija los errores");
+      toast.error("Por favor, corrija los errores", {
+        id: toastId,
+      });
       return;
     }
 
-    const toastId = toast.loading("Actualizando producto...");
     try {
+      // aca deberia ir la integracion con el pago con tarjeta de credito
       const result = await createOrder(value, cart);
       console.log(result);
       toast.success("Orden creada con éxito"),
@@ -258,11 +238,10 @@ export default function CheckoutForm() {
           id: toastId,
         };
     } catch (error) {
-      toast
-        .error("Error procesar la orden", {
-          id: toastId,
-        })
-        .console.error("Error: ", error);
+      toast.error("Error procesar la orden", {
+        id: toastId,
+      });
+      console.error("Error: ", error);
     }
   };
 
@@ -311,6 +290,7 @@ export default function CheckoutForm() {
                     type="email"
                     id="email"
                     name="email"
+                    required
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     onChange={handleChange}
                   />
@@ -342,6 +322,7 @@ export default function CheckoutForm() {
                       type="text"
                       id="firstName"
                       name="firstName"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -366,6 +347,7 @@ export default function CheckoutForm() {
                       type="text"
                       id="lastName"
                       name="lastName"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -390,6 +372,7 @@ export default function CheckoutForm() {
                       type="text"
                       name="address"
                       id="address"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -414,6 +397,7 @@ export default function CheckoutForm() {
                       type="text"
                       name="apartment"
                       id="apartment"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -438,6 +422,7 @@ export default function CheckoutForm() {
                       type="text"
                       name="city"
                       id="city"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -461,10 +446,19 @@ export default function CheckoutForm() {
                       value={value.country}
                       id="country"
                       name="country"
+                      // required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     >
-                      {/* opciones */}
+                      <option value="" disabled>
+                        Seleccionar país
+                      </option>
+                      <option value="Argentina">Argentina</option>
+                      <option value="Bolivia">Bolivia</option>
+                      <option value="Brasil">Brasil</option>
+                      <option value="Chile">Chile</option>
+                      <option value="Paraguay">Paraguay</option>
+                      <option value="Uruguay">Uruguay</option>
                     </select>
                   </div>
                   {error && error.country && (
@@ -487,6 +481,7 @@ export default function CheckoutForm() {
                       type="text"
                       name="region"
                       id="region"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -511,6 +506,7 @@ export default function CheckoutForm() {
                       type="text"
                       name="postalCode"
                       id="postalCode"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -535,6 +531,7 @@ export default function CheckoutForm() {
                       type="text"
                       name="phone"
                       id="phone"
+                      required
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -550,8 +547,13 @@ export default function CheckoutForm() {
 
             <div className="mt-10 border-t border-gray-200 pt-10">
               <RadioGroup
-                value={selectedDeliveryMethod}
-                onChange={setSelectedDeliveryMethod}
+                value={value.deliveryMethod}
+                onChange={(e) => {
+                  setValue((prevValues) => ({
+                    ...prevValues,
+                    deliveryMethod: e,
+                  }));
+                }}
               >
                 <RadioGroup.Label className="text-lg font-medium text-gray-900">
                   Método de envío
@@ -561,7 +563,9 @@ export default function CheckoutForm() {
                   {deliveryMethods.map((deliveryMethod) => (
                     <RadioGroup.Option
                       key={deliveryMethod.id}
-                      value={deliveryMethod}
+                      value={deliveryMethod.id}
+                      name="deliveryMethod"
+                      required
                       className={({ checked, active }) =>
                         classNames(
                           checked ? "border-transparent" : "border-gray-300",
@@ -629,13 +633,16 @@ export default function CheckoutForm() {
                     <div key={paymentMethod.id} className="flex items-center">
                       <input
                         id={paymentMethod.id}
-                        name="payment-type"
+                        name="paymentType"
                         type="radio"
+                        required
+                        value={paymentMethod.title}
                         // defaultChecked={paymentMethodIdx === 0}
                         className="h-4 w-4 border-gray-300 text-slate-600 focus:ring-slate-500"
-                        onChange={() =>
-                          setSelectedPaymentMethod(paymentMethod.id)
-                        }
+                        onChange={(e) => {
+                          handleChange(e);
+                          setSelectedPaymentMethod(paymentMethod.id);
+                        }}
                       />
                       <label
                         htmlFor={paymentMethod.id}
@@ -672,6 +679,7 @@ export default function CheckoutForm() {
                         height={100}
                         className="rounded-md object-cover"
                         style={{ width: "auto", height: "auto" }}
+                        priority
                       />
                     </div>
 
@@ -733,16 +741,22 @@ export default function CheckoutForm() {
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Costo de envio</dt>
-                  <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                  {/* colocar el costo del metodo de envio seleccionado */}
+                  <dd className="text-sm font-medium text-gray-900">
+                    ${deliveryMethodFromId(value.deliveryMethod).price}
+                  </dd>
                 </div>
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <dt className="text-sm">Taxes</dt>
                   <dd className="text-sm font-medium text-gray-900">$5.52</dd>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6">
                   <dt className="text-base font-medium">Total</dt>
+                  {/* colocar el costo total sumando los taxes y el costo del metodo de envio */}
                   <dd className="text-base font-medium text-gray-900">
-                    $75.52
+                    ${" "}
+                    {totalPrice() +
+                      Number(deliveryMethodFromId(value.deliveryMethod).price)}
                   </dd>
                 </div>
               </dl>
@@ -752,6 +766,7 @@ export default function CheckoutForm() {
                   type="submit"
                   className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
+                  {/* <Link href="/carrito/checkout/success">Confirmar orden</Link> */}
                   Confirmar orden
                 </button>
               </div>
