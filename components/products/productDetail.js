@@ -3,11 +3,14 @@ import QtySelector from "./qtySelector";
 import BackButton from "../ui/backbutton";
 
 export default async function ProductDetail({ slug }) {
-  const item = await fetch(`http://localhost:3000/api/product/${slug}`, {
-    next: {
-      revalidate: 300,
-    },
-  }).then((res) => res.json());
+  const item = await fetch(
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/product/${slug}`,
+    {
+      next: {
+        revalidate: 300,
+      },
+    }
+  ).then((res) => res.json());
 
   if (!item) {
     return <div>Producto no encontrado</div>;

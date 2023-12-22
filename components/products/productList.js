@@ -4,7 +4,7 @@ import NoProducts from "./noProducts";
 
 export default async function ProductsList({ categoria }) {
   const items = await fetch(
-    `http://localhost:3000/api/productos/${categoria}`,
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/productos/${categoria}`,
     {
       cache: "no-store", // TODO: Mejorar cache
       next: {
