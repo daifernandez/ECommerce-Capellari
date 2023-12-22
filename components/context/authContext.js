@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     logged: false,
     email: null,
     uid: null,
+    isAdmin: false,
   });
 
   const router = useRouter();
@@ -61,6 +62,7 @@ export const AuthProvider = ({ children }) => {
             logged: true,
             email: user.email,
             uid: user.uid,
+            isAdmin: true,
           });
         } else {
           router.push("/unauthorized");
@@ -71,6 +73,7 @@ export const AuthProvider = ({ children }) => {
           logged: false,
           emaiL: null,
           uid: null,
+          isAdmin: false,
         });
       }
     });

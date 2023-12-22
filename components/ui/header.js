@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartContext } from "../../components/context/cartContext";
+import { useAuth } from "../context/authContext";
+import HeaderAdmin from "../admin/headerAdmin";
 
 const navigation = [
   { name: "Marketplace", href: "/" },
@@ -22,6 +24,7 @@ export default function Header() {
   const [cartItems, setCartItems] = useState(0);
   const pathname = usePathname();
   const { cart } = useCartContext();
+  const { user } = useAuth();
 
   const totalItemsInCart = (cart) => {
     let totalItems = 0;
@@ -30,6 +33,10 @@ export default function Header() {
     });
     return totalItems;
   };
+
+  if (user?.isAdmin === true) {
+    return <HeaderAdmin />;
+  }
 
   return (
     <header className="bg-white">
