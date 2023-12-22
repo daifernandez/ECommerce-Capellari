@@ -22,7 +22,7 @@ export default function Products({ params }) {
         <h1 className="text-4xl font-bold tracking-tight text-gray-900">
           Marketplace
         </h1>
-        <Search />
+        {/* <Search /> */}
       </div>
       <NavbarCategory categoria={categoria} />
       <div className="flex flex-col lg:flex-row">

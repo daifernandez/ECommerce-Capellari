@@ -25,7 +25,7 @@ export default async function ProductsList({ categoria }) {
             return <ProductCard key={item.slug} item={item} />;
           })}
         </section>
-        <Pagination />
+        {/* <Pagination /> */}
       </div>
     );
   }

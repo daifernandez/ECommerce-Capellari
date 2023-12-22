@@ -60,7 +60,7 @@ export default function AdminTable() {
   return (
     <div className="flex flex-col">
       <Toaster />
-      <SearchAdmin />
+      {/* <SearchAdmin /> */}
       <div className="flex justify-between items-center my-4 mb-8">
         <h2 className="text-2xl font-semibold">Productos</h2>
       </div>
@@ -121,7 +121,7 @@ export default function AdminTable() {
             ))}
         </tbody>
       </table>{" "}
-      <AdminPagination />
+      {/* <AdminPagination /> */}
       <Transition appear show={open} as={Fragment}>
         <Dialog
           as="div"
