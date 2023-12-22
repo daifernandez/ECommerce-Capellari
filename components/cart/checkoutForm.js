@@ -11,28 +11,9 @@ import Transfer from "@/components/cart/transfer";
 import PaymentMethod from "@/components/cart/paymentMethod";
 import { toast, Toaster } from "react-hot-toast";
 import Link from "next/link";
+import deliveryMethods from "@/data/deliveryMethods";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-const deliveryMethods = [
-  {
-    id: 1,
-    title: "Normal",
-    turnaround: "4–10 dias hábiles",
-    price: "5.00",
-  },
-  { id: 2, title: "Express", turnaround: "2–5 dias hábiles", price: "16.00" },
-  {
-    id: 3,
-    title: "Retiro en tienda",
-    turnaround: "1–2 dias hábiles",
-    price: "0.00",
-  },
-  {
-    id: 4,
-    title: "Internacional",
-    turnaround: "10–20 dias hábiles",
-    price: "20.00",
-  },
-];
 const paymentMethods = [
   { id: "creditCard", title: "Credit card" },
 
@@ -72,6 +53,7 @@ function classNames(...classes) {
 }
 
 export default function CheckoutForm() {
+  const router = useRouter();
   const { cart, totalPrice } = useCartContext();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState("paymentMethod");
@@ -237,6 +219,10 @@ export default function CheckoutForm() {
         {
           id: toastId,
         };
+      {
+        /* <Link href="/carrito/checkout/success">Confirmar orden</Link> */
+        router.push("/carrito/checkout/success?orderId=" + result);
+      }
     } catch (error) {
       toast.error("Error procesar la orden", {
         id: toastId,
@@ -766,7 +752,6 @@ export default function CheckoutForm() {
                   type="submit"
                   className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
-                  {/* <Link href="/carrito/checkout/success">Confirmar orden</Link> */}
                   Confirmar orden
                 </button>
               </div>

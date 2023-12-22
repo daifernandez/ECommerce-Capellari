@@ -1,4 +1,42 @@
+"use client";
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import deliveryMethods from "@/data/deliveryMethods";
+import { useSearchParams } from "next/navigation";
+import { useCartContext } from "@/components/context/cartContext";
+
 export default function SuccessOrder() {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
+  console.log(orderId);
+  const [order, setOrder] = useState(null);
+  const { clearCart } = useCartContext();
+
+  const getOrder = async () => {
+    const orderRef = doc(db, "orders", orderId);
+    const orderSnap = await getDoc(orderRef);
+    if (orderSnap.exists()) {
+      setOrder(orderSnap.data());
+      console.log("Document data:", orderSnap.data());
+      clearCart();
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+  useEffect(() => {
+    getOrder();
+  }, []);
+
+  if (!order) {
+    return <div>Loading...</div>;
+  }
+
+  const deliveryMethod = deliveryMethods.find(
+    (deliveryMethod) => deliveryMethod.id === order.client.deliveryMethod
+  );
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -10,11 +48,11 @@ export default function SuccessOrder() {
             Tu orden ha sido recibida.
           </p>
           <p className="mt-2 text-base text-gray-500">
-            Tu orden #14034056 se encuentra en proceso de envío.
+            Tu orden #{orderId} se encuentra en proceso de envío.
           </p>
 
           <dl className="mt-12 text-sm font-medium">
-            <dt className="text-gray-900">Tracking number</dt>
+            <dt className="text-gray-900">NÚMERO DE SEGUIMIENTO</dt>
             <dd className="mt-2 text-slate-900">51547878755545848512</dd>
           </dl>
         </div>
@@ -32,9 +70,17 @@ export default function SuccessOrder() {
                 </dt>
                 <dd className="mt-2 text-gray-700">
                   <address className="not-italic">
-                    <span className="block">Kristin Watson</span>
-                    <span className="block">7363 Cynthia Pass</span>
-                    <span className="block">Toronto, ON N3Y 4H8</span>
+                    <span className="block">
+                      {order.client.firstName} {order.client.lastName}
+                    </span>
+                    <span className="block">
+                      {order.client.address}, {order.client.apartment}
+                    </span>
+                    <span className="block">
+                      {order.client.city}, {order.client.country}
+                    </span>
+
+                    <span className="block">cp: {order.client.postalCode}</span>
                   </address>
                 </dd>
               </div>
@@ -44,9 +90,15 @@ export default function SuccessOrder() {
                 </dt>
                 <dd className="mt-2 text-gray-700">
                   <address className="not-italic">
-                    <span className="block">Kristin Watson</span>
-                    <span className="block">7363 Cynthia Pass</span>
-                    <span className="block">Toronto, ON N3Y 4H8</span>
+                    <span className="block">
+                      {order.client.firstName} {order.client.lastName}
+                    </span>
+                    <span className="block">
+                      {order.client.address}, {order.client.apartment}
+                    </span>
+                    <span className="block">
+                      {order.client.city}, {order.client.country}
+                    </span>
                   </address>
                 </dd>
               </div>
@@ -57,19 +109,14 @@ export default function SuccessOrder() {
               <div>
                 <dt className="font-medium text-gray-900">Método de pago</dt>
                 <dd className="mt-2 text-gray-700">
-                  <p>Apple Pay</p>
-                  <p>Mastercard</p>
-                  <p>
-                    <span aria-hidden="true">••••</span>
-                    <span className="sr-only">Ending in </span>1545
-                  </p>
+                  <p>{order.client.paymentType}</p>
                 </dd>
               </div>
               <div>
                 <dt className="font-medium text-gray-900">Método de envio</dt>
                 <dd className="mt-2 text-gray-700">
-                  <p>DHL</p>
-                  <p>Takes up to 3 working days</p>
+                  <p>{deliveryMethod.title}</p>
+                  <p>{deliveryMethod.turnaround}</p>
                 </dd>
               </div>
             </dl>
