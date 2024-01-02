@@ -34,6 +34,13 @@ export const AuthProvider = ({ children }) => {
 
   const logOut = async () => {
     await signOut(auth);
+    console.log("Sesión cerrada");
+    setUser({
+      logged: false,
+      email: null,
+      uid: null,
+      isAdmin: false,
+    });
   };
 
   const googleLogin = async () => {
@@ -57,16 +64,16 @@ export const AuthProvider = ({ children }) => {
         const docRef = doc(db, "roles", user.uid);
         const userDoc = await getDoc(docRef);
 
-        if (userDoc.data()?.rol === "admin") {
-          setUser({
-            logged: true,
-            email: user.email,
-            uid: user.uid,
-            isAdmin: true,
-          });
-        } else {
-          router.push("/unauthorized");
-          logOut();
+        const isAdmin = userDoc.data()?.rol === "admin";
+        setUser({
+          logged: true,
+          email: user.email,
+          uid: user.uid,
+          isAdmin: isAdmin,
+        });
+
+        if (!isAdmin) {
+          router.push("/");
         }
       } else {
         setUser({

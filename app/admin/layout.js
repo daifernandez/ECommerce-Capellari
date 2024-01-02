@@ -1,26 +1,15 @@
 "use client";
 import { Inter } from "next/font/google";
 import "tailwindcss/tailwind.css";
-import HeaderAdmin from "@/components/admin/headerAdmin";
-import Footer from "@/components/ui/footer";
 import { useAuth } from "@/components/context/authContext";
+import Unauthorized from "../unauthorized/page";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export default function AdminLayout({ children }) {
-//   return (
-//     <html lang="en">
-//       <body>
-//         <HeaderAdmin />
-//         {children}
-//         <Footer />
-//       </body>
-//     </html>
-//   );
-// }
-
 export default function AdminLayout({ children, login }) {
   const { user } = useAuth();
-
+  if (user.logged && !user.isAdmin) {
+    return <Unauthorized />;
+  }
   return <>{user.logged ? children : login}</>;
 }

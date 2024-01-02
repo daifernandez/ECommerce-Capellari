@@ -7,12 +7,15 @@ import {
   ShoppingCartIcon,
   UserIcon,
   XMarkIcon,
+  ArrowLeftOnRectangleIcon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartContext } from "../../components/context/cartContext";
 import { useAuth } from "../context/authContext";
 import HeaderAdmin from "../admin/headerAdmin";
+import { useRouter } from "next/navigation";
 
 const navigation = [
   { name: "Marketplace", href: "/" },
@@ -24,7 +27,8 @@ export default function Header() {
   const [cartItems, setCartItems] = useState(0);
   const pathname = usePathname();
   const { cart } = useCartContext();
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
+  const router = useRouter();
 
   const totalItemsInCart = (cart) => {
     let totalItems = 0;
@@ -37,6 +41,38 @@ export default function Header() {
   if (user?.isAdmin === true) {
     return <HeaderAdmin />;
   }
+
+  const profileButton = () => {
+    if (user?.logged === false) {
+      return (
+        <Link
+          href="/admin"
+          className="text-sm font-semibold leading-6 text-gray-900"
+        >
+          <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}
+        </Link>
+      );
+    }
+
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => router.push("/admin")}
+          className="block px-3 py-1 text-sm leading-6 text-gray-900"
+        >
+          <Cog6ToothIcon className="h-6 w-6" />
+        </button>
+        <button
+          type="button"
+          onClick={logOut}
+          className="block px-3 py-1 text-sm leading-6 text-gray-900 mr-2"
+        >
+          <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+        </button>
+      </>
+    );
+  };
 
   return (
     <header className="bg-white">
@@ -80,13 +116,7 @@ export default function Header() {
               {totalItemsInCart(cart)}
             </span>
           </Link>
-
-          <Link
-            href="/admin"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}
-          </Link>
+          {profileButton()}
           <div className="flex lg:hidden">
             <button
               type="button"

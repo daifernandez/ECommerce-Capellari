@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "../../components/context/authContext";
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/20/solid";
 
 export default function LogOutButton() {
   const { logOut } = useAuth();
@@ -8,8 +9,9 @@ export default function LogOutButton() {
     <button
       type="button"
       onClick={logOut}
-      className="block px-3 py-1 text-sm leading-6 text-gray-900"
+      className="flex items-center px-3 py-1 text-sm leading-6 text-gray-900"
     >
+      <ArrowLeftOnRectangleIcon className="h-6 w-6" />
       Cerrar sesión
     </button>
   );
