@@ -17,14 +17,14 @@ export default function HeaderAdmin() {
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="block px-3 py-1 text-sm leading-6 text-gray-900"
+          className="block px-3 py-1 text-sm leading-6 text-gray-900 hover:text-slate-600 mr-2"
         >
           <Cog6ToothIcon className="h-6 w-6" />
         </button>
         <button
           type="button"
           onClick={logOut}
-          className="block px-3 py-1 text-sm leading-6 text-gray-900 mr-2"
+          className="block px-3 py-1 text-sm leading-6 text-gray-900 hover:text-slate-600 mr-2"
         >
           <ArrowLeftOnRectangleIcon className="h-6 w-6" />
         </button>
@@ -35,18 +35,17 @@ export default function HeaderAdmin() {
   return (
     <header className="bg-white">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-18"
         aria-label="Global"
       >
-        <div className="flex flex-1 justify-center"></div>
+        <div className="flex flex-3 justify-center"></div>
         <a href="/" className="-m-1.5 p-1.5">
-          <span className="sr-only">Logo de Capellari </span>
           {/*imagen de logo */}
           logo capellari
         </a>
         <div className="flex flex-1 justify-end" />
         {pathname !== "/admin" && (
-          <div className="hidden lg:flex lg:gap-x-12">{secondaryButtons()}</div>
+          <div className="flex gap-x-2">{secondaryButtons()}</div>
         )}
       </nav>
     </header>

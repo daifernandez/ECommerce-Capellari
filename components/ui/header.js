@@ -55,22 +55,22 @@ export default function Header() {
     }
 
     return (
-      <>
+      <div className="flex gap-x-2">
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="block px-3 py-1 text-sm leading-6 text-gray-900"
+          className="block px-2 py-1 text-sm leading-6 text-gray-900"
         >
           <Cog6ToothIcon className="h-6 w-6" />
         </button>
         <button
           type="button"
           onClick={logOut}
-          className="block px-3 py-1 text-sm leading-6 text-gray-900 mr-2"
+          className="block px-2 py-1 text-sm leading-6 text-gray-900 mr-2"
         >
           <ArrowLeftOnRectangleIcon className="h-6 w-6" />
         </button>
-      </>
+      </div>
     );
   };
 
@@ -101,7 +101,7 @@ export default function Header() {
             </Link>
           ))}
         </div>
-        <div className="flex flex-1 justify-end">
+        <div className="flex flex-1 justify-end gap-x-2">
           <Link
             href="/carrito"
             className="flex items-center text-sm font-semibold leading-2 text-gray-900"
