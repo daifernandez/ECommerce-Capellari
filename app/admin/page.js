@@ -13,6 +13,8 @@ import AdminTable from "@/components/admin/adminTable";
 import AddProducts from "@/components/admin/addProducts";
 import Welcome from "@/components/admin/welcome";
 import LogOutButton from "@/components/admin/logOutButton";
+import Image from "next/image";
+import Link from "next/link";
 
 const navigation = [
   {
@@ -163,8 +165,17 @@ export default function Admin() {
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center">
-              {/*imagen logo*/}
+            <div className="flex h-16 shrink-0 items-center mt-10 mb-16">
+              <Link href="/" className="-m-1.5 p-1.5">
+                <Image
+                  src="/capellariLogo.svg"
+                  alt="logo"
+                  width={150}
+                  height={25}
+                  className="w-auto"
+                  priority
+                />
+              </Link>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
