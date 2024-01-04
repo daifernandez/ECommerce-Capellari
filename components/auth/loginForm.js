@@ -3,6 +3,7 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/authContext";
 import { useState } from "react";
 import Image from "next/image";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function LoginForm() {
   const { registerUser, loginUser, googleLogin } = useAuth();
@@ -23,9 +24,20 @@ export default function LoginForm() {
     console.log(values);
   };
 
+  const register = () => {
+    try {
+      registerUser({ values });
+      toast.success("Usuario registrado correctamente");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error al registrar el usuario");
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <Toaster />
         <div className="w-full max-w-sm space-y-10">
           <div>
             <UserIcon className="h-12 w-12 mx-auto text-slate-600" />
@@ -70,7 +82,7 @@ export default function LoginForm() {
             <div>
               <div className="flex justify-between">
                 <button
-                  onClick={() => registerUser({ values })}
+                  onClick={() => register()}
                   className="flex w-full justify-center rounded-md bg-slate-600 mr-1 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
                 >
                   Registrarme
