@@ -11,7 +11,7 @@ export default function Title() {
           alt="Electrodomésticos de Capellini"
           width={1920}
           height={1080}
-          className={"absolute inset-0 h-full w-full object-cover opacity-20"}
+          className={"absolute inset-0 h-full w-full object-cover opacity-20 "}
           priority
         />
 
@@ -29,9 +29,14 @@ export default function Title() {
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-6xl font-serif tracking-tight text-white">
-              Capellari
-            </h1>
+            <Image
+              className="mx-auto"
+              src="/capellari.svg"
+              alt="title"
+              width={350}
+              height={175}
+              priority
+            />
             <p className="mt-6  leading-8 text-gray-300">
               Electrodomésticos de alta calidad para tu hogar.
             </p>
