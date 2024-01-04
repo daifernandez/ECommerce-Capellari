@@ -2,6 +2,7 @@
 import { UserIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/authContext";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function LoginForm() {
   const { registerUser, loginUser, googleLogin } = useAuth();
@@ -65,7 +66,7 @@ export default function LoginForm() {
                   autoComplete="current-password"
                 />
               </div>
-            </div>
+            </div>{" "}
             <div>
               <div className="flex justify-between">
                 <button
@@ -104,8 +105,15 @@ export default function LoginForm() {
             <div className="text-sm leading-6">
               <button
                 onClick={() => googleLogin()}
-                className=" hover:text-slate-500 justify-center w-full rounded-md bg-white px-3 py-1.5 text-sm font-semibold leading-6 text-slate-600 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
+                className="w-full bg-[#4285F4] text-white border-[#4285F4] hover:bg-[#357ae8] hover:border-[#357ae8] flex items-center justify-center py-2 px-4  rounded-md"
               >
+                <Image
+                  src="/google-tile.svg"
+                  alt="google"
+                  width={25}
+                  height={25}
+                  className="mr-3 "
+                />
                 Ingresar con Google
               </button>
             </div>
