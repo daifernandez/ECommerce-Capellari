@@ -129,14 +129,40 @@ export default function About() {
               elegir.
             </p>
 
-            <div className="mx-auto mt-20 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:max-w-4xl lg:grid-cols-5">
-              {/* <Image
+            <div className="flex mx-auto mt-20 max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:max-w-4xl lg:grid-cols-5">
+              <Image
+                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1 shadow-lg"
+                src={"/whirlpool.png"}
+                alt="whirlpool"
+                width={400}
+                height={400}
+                style={{ filter: "drop-shadow(0 0 10px white)" }}
+              />
+              <Image
                 className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="Imagen de Marcas?"
-                alt="marcas"
-                width={158}
-                height={48}
-              />*/}
+                src={"/lg.png"}
+                alt="lg"
+                width={400}
+                height={400}
+                style={{ filter: "drop-shadow(0 0 10px white)" }}
+              />
+              <Image
+                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
+                src={"/samsung.png"}
+                alt="samsung"
+                width={400}
+                height={400}
+                style={{ filter: "drop-shadow(0 0 10px white)" }}
+              />
+
+              <Image
+                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                src={"/bosch.png"}
+                alt="bosch"
+                width={700}
+                height={700}
+                style={{ filter: "drop-shadow(0 0 10px white)" }}
+              />
             </div>
             <div
               className="absolute -top-24 right-0 -z-10 transform-gpu blur-3xl"

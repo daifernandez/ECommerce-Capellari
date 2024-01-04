@@ -117,7 +117,7 @@ export default function LoginForm() {
             <div className="text-sm leading-6">
               <button
                 onClick={() => googleLogin()}
-                className="w-full bg-[#4285F4] text-white border-[#4285F4] hover:bg-[#357ae8] hover:border-[#357ae8] flex items-center justify-center py-2 px-4  rounded-md"
+                className="w-full bg-[#4285F4] text-white border-[#4285F4] hover:bg-[#357ae8] hover:border-[#357ae8] flex items-center justify-center py-2 px-4 rounded-md"
               >
                 <Image
                   src="/google-tile.svg"
