@@ -1,6 +1,7 @@
 import ProductCard from "./productCard";
 import Pagination from "../ui/pagination";
 import NoProducts from "./noProducts";
+import { cart } from "../../components/context/cartContext";
 
 export default async function ProductsList({ categoria }) {
   const items = await fetch(

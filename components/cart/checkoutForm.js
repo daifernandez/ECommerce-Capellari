@@ -5,7 +5,7 @@ import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useCartContext } from "@/components/context/cartContext";
 import Image from "next/image";
 import { db } from "@/firebase/config";
-import { setDoc, doc, Timestamp } from "firebase/firestore";
+import { setDoc, doc, updateDoc, Timestamp } from "firebase/firestore";
 import CreditCard from "@/components/cart/creditCard";
 import Transfer from "@/components/cart/transfer";
 import PaymentMethod from "@/components/cart/paymentMethod";
@@ -193,7 +193,6 @@ export default function CheckoutForm() {
     e.preventDefault();
 
     console.log(value);
-    const toastId = toast.loading("Procesando orden...");
 
     const errors = Object.keys(value).reduce((acc, key) => {
       let errorMessage = validations[key](value[key]);
@@ -205,9 +204,7 @@ export default function CheckoutForm() {
 
     if (Object.keys(errors).length > 0) {
       setError(errors);
-      toast.error("Por favor, corrija los errores", {
-        id: toastId,
-      });
+      toast.error("Por favor, corrija los errores");
       return;
     }
 
@@ -215,21 +212,23 @@ export default function CheckoutForm() {
       // aca deberia ir la integracion con el pago con tarjeta de credito
       const result = await createOrder(value, cart);
       console.log(result);
-      toast.success("Orden creada con éxito"),
-        {
-          id: toastId,
-        };
-      {
-        /* <Link href="/carrito/checkout/success">Confirmar orden</Link> */
-        router.push("/carrito/checkout/success?orderId=" + result);
+      toast.success("Orden creada con éxito");
+      for (const product of cart) {
+        updatProductStock(product.slug, product.inStock - product.quantity);
       }
+      router.push("/carrito/checkout/success?orderId=" + result);
     } catch (error) {
-      toast.error("Error procesar la orden", {
-        id: toastId,
-      });
+      toast.error("Error procesar la orden");
       console.error("Error: ", error);
     }
   };
+
+  function updatProductStock(docId, newStock) {
+    const docRef = doc(db, "products", docId);
+    updateDoc(docRef, {
+      inStock: newStock,
+    });
+  }
 
   var contentComponentPaymentMethod;
   switch (selectedPaymentMethod) {
