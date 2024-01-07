@@ -28,6 +28,7 @@ export default async function ProductDetail({ slug }) {
               width={860}
               height={860}
               className="object-contain my-8"
+              priority
             />
           </div>
           <div

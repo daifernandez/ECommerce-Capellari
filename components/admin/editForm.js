@@ -46,7 +46,7 @@ export default function EditForm({ item }) {
 
   const validations = {
     title: (value) =>
-      /^[A-Za-z0-9-\s]+$/.test(value)
+      /^[A-Za-z0-9-\/\sóíá]+$/i.test(value)
         ? null
         : "El valor ingresado para title es inválido",
 
@@ -166,6 +166,7 @@ export default function EditForm({ item }) {
                 className="rounded"
                 name="image"
                 id="image"
+                priority
               />
             </div>
           </div>

@@ -245,6 +245,7 @@ export default function AddProducts() {
                         width={500}
                         height={300}
                         className="rounded-xl"
+                        priority
                       />
                       <p className="mt-3 text-sm leading-6 text-gray-500">
                         {value.image}

@@ -91,6 +91,7 @@ export default function AdminTable() {
                     width={100}
                     height={100}
                     className="object-contain my-8"
+                    priority
                   />
                 </td>
                 <td className="py-2 px-4 border-b">{appliance.title}</td>

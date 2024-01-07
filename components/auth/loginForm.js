@@ -125,6 +125,7 @@ export default function LoginForm() {
                   width={25}
                   height={25}
                   className="mr-3 "
+                  priority
                 />
                 Ingresar con Google
               </button>
