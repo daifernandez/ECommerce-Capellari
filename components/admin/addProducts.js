@@ -9,6 +9,7 @@ import Image from "next/image";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import toast, { Toaster } from "react-hot-toast";
 import CATEGORIES from "@/data/categories";
+import validations from "./validations/validations";
 
 const createProduct = async (values, file) => {
   const storageRef = ref(storage, values.slug);
@@ -39,42 +40,6 @@ export default function AddProducts() {
   });
   const [file, setFile] = useState(null);
   const [error, setError] = useState({});
-
-  const validations = {
-    title: (value) =>
-      /\D/.test(value) ? null : "El valor ingresado para title es inválido",
-
-    description: (value) =>
-      /\D/.test(value)
-        ? null
-        : "El valor ingresado para description es inválido",
-
-    brand: (value) =>
-      /^\D+$/.test(value) ? null : "El valor ingresado para brand es inválido",
-
-    slug: (value) =>
-      /\D/.test(value) ? null : "El valor ingresado para slug es inválido",
-
-    price: (value) =>
-      !isNaN(Number(value.replace(",", "."))) &&
-      Number(value.replace(",", ".")) >= 0
-        ? null
-        : "El valor ingresado para price es inválido",
-
-    inStock: (value) => {
-      const inStockValue = parseInt(value);
-      return !isNaN(inStockValue) && inStockValue > 0
-        ? null
-        : "El valor ingresado para inStock es inválido";
-    },
-
-    rating: (value) => {
-      const ratingValue = parseInt(value);
-      return !isNaN(ratingValue) && ratingValue >= 1 && ratingValue <= 5
-        ? null
-        : "El valor ingresado para rating es inválido";
-    },
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
