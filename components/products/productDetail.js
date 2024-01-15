@@ -2,6 +2,7 @@ import Image from "next/image";
 import QtySelector from "./qtySelector";
 import BackButton from "../ui/backbutton";
 import Stars from "../ui/stars";
+import ProductsList from "./productList";
 
 export default async function ProductDetail({ slug }) {
   const item = await fetch(
@@ -93,7 +94,18 @@ export default async function ProductDetail({ slug }) {
             </div>
           </div>
         </section>
-        {/* mostrar productos relacionados misma categoria */}
+        {/* mostrar productos relacionados con la misma categoria */}
+        <section className="mt-12">
+          <div className="px-4 py-5 sm:px-6">
+            <h2 className="text-lg leading-6 font-medium text-gray-900 ">
+              Productos relacionados
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-gray-500 mb-12">
+              {item.category}
+            </p>
+            <ProductsList categoria={item.category} />
+          </div>
+        </section>
       </div>
     );
   }
