@@ -1,6 +1,4 @@
-const { addItem } = useCartContext();
-
-const handleAddToCart = () => {
-  addItem(product, quantity);
-  // ... resto del código
-}; 
+export default function QtySelector() {
+  const { addItem } = useCartContext();
+  // ...
+} 
