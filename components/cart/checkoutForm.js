@@ -9,16 +9,12 @@ import { setDoc, doc, updateDoc, Timestamp } from "firebase/firestore";
 import CreditCard from "@/components/cart/creditCard";
 import Transfer from "@/components/cart/transfer";
 import PaymentMethod from "@/components/cart/paymentMethod";
+
 import { toast, Toaster } from "react-hot-toast";
 import Link from "next/link";
 import deliveryMethods from "@/data/deliveryMethods";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-const paymentMethods = [
-  { id: "creditCard", title: "Credit card" },
-
-  { id: "transfer", title: "Transferencia bancaria" },
-];
 
 const deliveryMethodFromId = (id) => {
   return deliveryMethods.find((deliveryMethod) => deliveryMethod.id === id);
@@ -55,8 +51,7 @@ function classNames(...classes) {
 export default function CheckoutForm() {
   const router = useRouter();
   const { cart, totalPrice } = useCartContext();
-  const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState("paymentMethod");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
 
   const [value, setValue] = useState({
     email: "",
@@ -174,7 +169,6 @@ export default function CheckoutForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     let errorMessage = validations[name](value);
 
     setError((prev) => {
@@ -192,7 +186,6 @@ export default function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(value);
 
     const errors = Object.keys(value).reduce((acc, key) => {
       let errorMessage = validations[key](value[key]);
@@ -211,7 +204,6 @@ export default function CheckoutForm() {
     try {
       // aca deberia ir la integracion con el pago con tarjeta de credito
       const result = await createOrder(value, cart);
-      console.log(result);
       toast.success("Orden creada con éxito");
       for (const product of cart) {
         updatProductStock(product.slug, product.inStock - product.quantity);
@@ -230,529 +222,428 @@ export default function CheckoutForm() {
     });
   }
 
-  var contentComponentPaymentMethod;
-  switch (selectedPaymentMethod) {
-    case "paymentMethod":
-      contentComponentPaymentMethod = <PaymentMethod />;
-      break;
-    case "creditCard":
-      contentComponentPaymentMethod = <CreditCard />;
-      break;
-
-    case "transfer":
-      contentComponentPaymentMethod = <Transfer />;
-      break;
-    default:
-      contentComponentPaymentMethod = <CreditCard />;
-  }
-
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen py-12">
       <Toaster />
-      <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
-          Checkout
-        </h1>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto lg:max-w-none mb-12">
+          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-8">
+            Finalizar Compra
+          </h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"
-        >
-          <div className="mt-10">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900">Informacion</h2>
-
-              <div className="mt-10">
-                <label
-                  htmlFor="email-address"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email
-                </label>
-                <div className="mt-1">
-                  <input
-                    value={value.email}
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    onChange={handleChange}
-                  />
-                </div>
-                {error && error.email && (
-                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                    {error.email}
+          <div className="mb-8">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <div className="flex items-center text-slate-800">
+                  <span className="h-6 w-6 flex items-center justify-center rounded-full border-2 border-slate-800">
+                    1
                   </span>
-                )}
+                  <span className="ml-2 text-sm font-medium">Información</span>
+                </div>
+                <div className="mx-4 h-0.5 w-16 bg-slate-200"></div>
+                <div className="flex items-center text-gray-400">
+                  <span className="h-6 w-6 flex items-center justify-center rounded-full border-2 border-gray-300">
+                    2
+                  </span>
+                  <span className="ml-2 text-sm font-medium">Envío</span>
+                </div>
+                <div className="mx-4 h-0.5 w-16 bg-slate-200"></div>
+                <div className="flex items-center text-gray-400">
+                  <span className="h-6 w-6 flex items-center justify-center rounded-full border-2 border-gray-300">
+                    3
+                  </span>
+                  <span className="ml-2 text-sm font-medium">Pago</span>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="mt-10 border-t border-gray-200 pt-10">
-              <h2 className="text-lg font-medium text-gray-900">
-                Informacion de Envio
-              </h2>
+        <form onSubmit={handleSubmit} className="lg:grid lg:grid-cols-12 lg:gap-x-12">
+          <div className="lg:col-span-7">
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  Información Personal
+                </h2>
 
-              <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                <div>
+                <div className="mt-10">
                   <label
-                    htmlFor="firstName"
+                    htmlFor="email-address"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Nombre
+                    Email
                   </label>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                      </svg>
+                    </div>
                     <input
-                      value={value.firstName}
-                      type="text"
-                      id="firstName"
-                      name="firstName"
+                      value={value.email}
+                      type="email"
+                      id="email"
+                      name="email"
                       required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm hover:border-gray-400 transition-colors"
                       onChange={handleChange}
                     />
                   </div>
-                  {error && error.firstName && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.firstName}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Apellido
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.lastName}
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.lastName && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.lastName}
-                    </span>
-                  )}
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Dirección
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.address}
-                      type="text"
-                      name="address"
-                      id="address"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.address && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.address}
-                    </span>
-                  )}
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="apartment"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Número de Apartamento, casa, etc.
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.apartment}
-                      type="text"
-                      name="apartment"
-                      id="apartment"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.apartment && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.apartment}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="city"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Ciudad
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.city}
-                      type="text"
-                      name="city"
-                      id="city"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.city && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.city}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="country"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    País
-                  </label>
-                  <div className="mt-1">
-                    <select
-                      value={value.country}
-                      id="country"
-                      name="country"
-                      // required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Seleccionar país
-                      </option>
-                      <option value="Argentina">Argentina</option>
-                      <option value="Bolivia">Bolivia</option>
-                      <option value="Brasil">Brasil</option>
-                      <option value="Chile">Chile</option>
-                      <option value="Paraguay">Paraguay</option>
-                      <option value="Uruguay">Uruguay</option>
-                    </select>
-                  </div>
-                  {error && error.country && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.country}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="region"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Region / Provincia
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.region}
-                      type="text"
-                      name="region"
-                      id="region"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.region && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.region}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="postalCode"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Código Postal
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.postalCode}
-                      type="text"
-                      name="postalCode"
-                      id="postalCode"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.postalCode && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.postalCode}
-                    </span>
-                  )}
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Número de teléfono
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      value={value.phone}
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      required
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  {error && error.phone && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.phone}
+                  {error && error.email && (
+                    <span className="flex items-center text-red-500 text-sm mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      {error.email}
                     </span>
                   )}
                 </div>
               </div>
-            </div>
 
-            <div className="mt-10 border-t border-gray-200 pt-10">
-              <RadioGroup
-                value={value.deliveryMethod}
-                onChange={(e) => {
-                  setValue((prevValues) => ({
-                    ...prevValues,
-                    deliveryMethod: e,
-                  }));
-                }}
-              >
-                <RadioGroup.Label className="text-lg font-medium text-gray-900">
-                  Método de envío
-                </RadioGroup.Label>
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  Información de Envío
+                </h2>
 
                 <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                  {deliveryMethods.map((deliveryMethod) => (
-                    <RadioGroup.Option
-                      key={deliveryMethod.id}
-                      value={deliveryMethod.id}
-                      name="deliveryMethod"
-                      required
-                      className={({ checked, active }) =>
-                        classNames(
-                          checked ? "border-transparent" : "border-gray-300",
-                          active ? "ring-2 ring-slate-500" : "",
-                          "relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-                        )
-                      }
+                  <div>
+                    <label
+                      htmlFor="firstName"
+                      className="block text-sm font-medium text-gray-700"
                     >
-                      {({ checked, active }) => (
-                        <>
-                          <span className="flex flex-1">
-                            <span className="flex flex-col">
-                              <RadioGroup.Label
-                                as="span"
-                                className="block text-sm font-medium text-gray-900"
-                              >
-                                {deliveryMethod.title}
-                              </RadioGroup.Label>
-                              <RadioGroup.Description
-                                as="span"
-                                className="mt-1 flex items-center text-sm text-gray-500"
-                              >
-                                {deliveryMethod.turnaround}
-                              </RadioGroup.Description>
-                              <RadioGroup.Description
-                                as="span"
-                                className="mt-6 text-sm font-medium text-gray-900"
-                              >
-                                {deliveryMethod.price}
-                              </RadioGroup.Description>
-                            </span>
-                          </span>
-                          {checked ? (
-                            <CheckCircleIcon
-                              className="h-5 w-5 text-slate-600"
-                              aria-hidden="true"
-                            />
-                          ) : null}
-                          <span
-                            className={classNames(
-                              active ? "border" : "border-2",
-                              checked
-                                ? "border-slate-500"
-                                : "border-transparent",
-                              "pointer-events-none absolute -inset-px rounded-lg"
-                            )}
-                            aria-hidden="true"
-                          />
-                        </>
-                      )}
-                    </RadioGroup.Option>
-                  ))}
-                </div>
-              </RadioGroup>
-            </div>
-
-            {/* Payment */}
-            <div className="mt-10 border-t border-gray-200 pt-10">
-              <h2 className="text-lg font-medium text-gray-900">Pago</h2>
-
-              <fieldset className="mt-4">
-                <legend className="sr-only">Forma de pago</legend>
-                <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
-                  {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
-                    <div key={paymentMethod.id} className="flex items-center">
+                      Nombre
+                    </label>
+                    <div className="mt-1">
                       <input
-                        id={paymentMethod.id}
-                        name="paymentType"
-                        type="radio"
+                        value={value.firstName}
+                        type="text"
+                        id="firstName"
+                        name="firstName"
                         required
-                        value={paymentMethod.title}
-                        // defaultChecked={paymentMethodIdx === 0}
-                        className="h-4 w-4 border-gray-300 text-slate-600 focus:ring-slate-500"
-                        onChange={(e) => {
-                          handleChange(e);
-                          setSelectedPaymentMethod(paymentMethod.id);
-                        }}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
                       />
-                      <label
-                        htmlFor={paymentMethod.id}
-                        className="ml-3 block text-sm font-medium text-gray-700"
-                      >
-                        {paymentMethod.title}
-                      </label>
                     </div>
-                  ))}
-                </div>
-              </fieldset>
+                    {error && error.firstName && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.firstName}
+                      </span>
+                    )}
+                  </div>
 
-              {/* renderiza el content segun paymentMethod */}
-              {contentComponentPaymentMethod}
+                  <div>
+                    <label
+                      htmlFor="lastName"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Apellido
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.lastName}
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.lastName && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.lastName}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="address"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Dirección
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.address}
+                        type="text"
+                        name="address"
+                        id="address"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.address && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.address}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="apartment"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Número de Apartamento, casa, etc.
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.apartment}
+                        type="text"
+                        name="apartment"
+                        id="apartment"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.apartment && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.apartment}
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="city"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Ciudad
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.city}
+                        type="text"
+                        name="city"
+                        id="city"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.city && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.city}
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="country"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      País
+                    </label>
+                    <div className="mt-1">
+                      <select
+                        value={value.country}
+                        id="country"
+                        name="country"
+                        // required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      >
+                        <option value="" disabled>
+                          Seleccionar país
+                        </option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Bolivia">Bolivia</option>
+                        <option value="Brasil">Brasil</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Paraguay">Paraguay</option>
+                        <option value="Uruguay">Uruguay</option>
+                      </select>
+                    </div>
+                    {error && error.country && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.country}
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="region"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Region / Provincia
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.region}
+                        type="text"
+                        name="region"
+                        id="region"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.region && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.region}
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="postalCode"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Código Postal
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.postalCode}
+                        type="text"
+                        name="postalCode"
+                        id="postalCode"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.postalCode && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.postalCode}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Número de teléfono
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={value.phone}
+                        type="text"
+                        name="phone"
+                        id="phone"
+                        required
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error && error.phone && (
+                      <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
+                        {error.phone}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Método de Pago */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  Método de Pago
+                </h2>
+                <PaymentMethod 
+                  selectedMethod={selectedPaymentMethod}
+                  onMethodSelect={(method) => {
+                    setSelectedPaymentMethod(method);
+                    setValue(prev => ({ ...prev, paymentType: method }));
+                  }}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Order summary */}
-          <div className="mt-10 lg:mt-0">
-            <h2 className="text-lg font-medium text-gray-900">
-              Datos de la orden
-            </h2>
+          <div className="lg:col-span-5 mt-10 lg:mt-0">
+            <div className="sticky top-6">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+                <div className="p-6 border-b border-gray-100">
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Resumen del Pedido
+                  </h2>
+                </div>
 
-            <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
-              <h3 className="sr-only">Items en tu carrito</h3>
-              <ul role="list" className="divide-y divide-gray-200">
-                {cart.map((product) => (
-                  <li key={product.slug} className="flex px-4 py-6 sm:px-6">
-                    <div className="flex items-center justify-center">
-                      <Image
-                        src={product.image}
-                        alt={product.title}
-                        width={100}
-                        height={100}
-                        className="rounded-md object-cover"
-                        style={{ width: "auto", height: "auto" }}
-                        priority
-                      />
-                    </div>
-
-                    <div className="ml-6 flex flex-1 flex-col">
-                      <div className="flex">
-                        <div className="min-w-0 flex-1">
-                          <h4 className="text-sm">
-                            <a
-                              href={product.href}
-                              className="font-medium text-gray-700 hover:text-gray-800"
-                            >
-                              {product.title}
-                            </a>
-                          </h4>
-                          <p className="mt-1 text-sm text-gray-500">
-                            {product.brand}
-                          </p>
-                          <p className="mt-1 text-sm text-gray-500">
-                            {product.category}
-                          </p>
+                {/* Lista de productos */}
+                <div className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
+                  {cart.map((product) => (
+                    <div key={product.slug} className="p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <Image
+                            src={product.image}
+                            alt={product.title}
+                            width={80}
+                            height={80}
+                            className="rounded-md object-cover"
+                            style={{ width: "auto", height: "auto" }}
+                            priority
+                          />
                         </div>
-
-                        {/* <div className="ml-4 flow-root flex-shrink-0">
-                          <button
-                            type="button"
-                            className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
-                          >
-                            <span className="sr-only">Eliminar</span>
-                            <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                          </button>
-                        </div> */}
-                      </div>
-
-                      <div className="flex flex-1 items-end justify-between pt-2">
-                        <p className="mt-1 text-sm font-medium text-gray-900">
-                          ${product.price}
-                        </p>
-
-                        <div className="ml-4">
-                          <label htmlFor="quantity" className="sr-only">
-                            Cantidad
-                          </label>
-
-                          <option defaultValue={product.quantity}>
-                            {product.quantity}
-                          </option>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {product.title}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {product.brand} • {product.category}
+                          </p>
+                          <div className="mt-2 flex items-center justify-between">
+                            <p className="text-sm font-medium text-gray-900">
+                              ${product.price}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              Cantidad: {product.quantity}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
-              <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <dt className="text-sm">Subtotal</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    ${totalPrice()}
-                  </dd>
+                  ))}
                 </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-sm">Costo de envio</dt>
-                  {/* colocar el costo del metodo de envio seleccionado */}
-                  <dd className="text-sm font-medium text-gray-900">
-                    ${deliveryMethodFromId(value.deliveryMethod).price}
-                  </dd>
-                </div>
-                {/* <div className="flex items-center justify-between">
-                  <dt className="text-sm">Taxes</dt>
-                  <dd className="text-sm font-medium text-gray-900">$5.52</dd>
-                </div> */}
-                <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-                  <dt className="text-base font-medium">Total</dt>
-                  {/* colocar el costo total sumando los taxes y el costo del metodo de envio */}
-                  <dd className="text-base font-medium text-gray-900">
-                    ${" "}
-                    {totalPrice() +
-                      Number(deliveryMethodFromId(value.deliveryMethod).price)}
-                  </dd>
-                </div>
-              </dl>
 
-              <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-                <button
-                  type="submit"
-                  className="w-full rounded-md border border-transparent bg-slate-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                >
-                  Confirmar orden
-                </button>
+                {/* Totales */}
+                <div className="p-6 bg-gray-50 border-t border-gray-100">
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Subtotal</span>
+                      <span className="font-medium">${totalPrice()}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Envío</span>
+                      <span className="font-medium">
+                        ${deliveryMethodFromId(value.deliveryMethod).price}
+                      </span>
+                    </div>
+                    <div className="pt-3 border-t border-gray-200">
+                      <div className="flex justify-between">
+                        <span className="text-base font-medium">Total</span>
+                        <span className="text-base font-medium">
+                          ${totalPrice() + Number(deliveryMethodFromId(value.deliveryMethod).price)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botón de confirmar */}
+                <div className="p-6 border-t border-gray-100">
+                  <button
+                    type="submit"
+                    className="w-full rounded-md bg-slate-800 px-6 py-4 text-base font-medium text-white transition-all duration-200 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transform hover:-translate-y-0.5"
+                  >
+                    <span className="flex items-center justify-center">
+                      <span>Confirmar Pedido</span>
+                      <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

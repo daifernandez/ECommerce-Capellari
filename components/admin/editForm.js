@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db, storage } from "@/firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -44,6 +44,8 @@ export default function EditForm({ item }) {
   });
   const [file, setFile] = useState(null);
   const [error, setError] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,15 +66,19 @@ export default function EditForm({ item }) {
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    const blob = await file.arrayBuffer();
-    const fileBlob = new Blob([blob], { type: file.type });
-    const imageUrl = URL.createObjectURL(fileBlob);
-    setValues({ ...values, image: imageUrl });
-    setFile(file);
+    if (file) {
+      const blob = await file.arrayBuffer();
+      const fileBlob = new Blob([blob], { type: file.type });
+      const imageUrl = URL.createObjectURL(fileBlob);
+      setPreviewUrl(imageUrl);
+      setValues({ ...values, image: file.name });
+      setFile(file);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const errors = Object.keys(values).reduce((acc, key) => {
       const error = validations[key] ? validations[key](values[key]) : null;
@@ -92,231 +98,282 @@ export default function EditForm({ item }) {
       await updateProduct(item.slug, values, file);
       toast.success("Producto actualizado");
     } catch (error) {
-      toast
-        .error("Error al actualizar el producto")
-        .console.error("Error updating document: ", error);
+      toast.error("Error al actualizar el producto");
+      console.error("Error updating document: ", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return (
-    <div className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-      <Toaster />
-      <div className="space-y-10 divide-y divide-gray-900/10">
-        <Link
-          href="/admin"
-          className="flex justify-center items-center px-4 py-2 text-sm font-medium"
-        >
-          Volver al menú principal
-        </Link>
-        <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
-          <div className="px-4 sm:px-0">
-            <h2 className="text-base font-semibold leading-7 text-gray-900 mt-10">
-              Editar Producto
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600 mb-20">
-              Modificar los datos del producto
-            </p>
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (JSON.stringify(values) !== JSON.stringify(item)) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
 
-            {/* imagen actual del producto */}
-            <div className="flex flex-col items-center  h-full">
-              <Image
-                src={values.image}
-                alt={values.title}
-                width={500}
-                height={500}
-                className="rounded"
-                name="image"
-                id="image"
-                priority
-              />
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [values, item]);
+
+  return (
+    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <Toaster position="top-center" />
+      
+      <nav className="flex mb-8" aria-label="Breadcrumb">
+        <ol className="inline-flex items-center space-x-1 md:space-x-3">
+          <li className="inline-flex items-center">
+            <Link href="/admin" className="text-gray-700 hover:text-navy-900">
+              Admin
+            </Link>
+          </li>
+          <li>
+            <div className="flex items-center">
+              <span className="mx-2 text-gray-400">/</span>
+              <span className="text-gray-500">Editar producto</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+
+      <div className="space-y-12">
+        <div className="grid grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-3">
+          <div className="px-4 sm:px-0">
+            <div className="sticky top-8">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Editar Producto
+              </h2>
+              <p className="mt-2 text-sm text-gray-600 mb-8">
+                Modificar los datos del producto
+              </p>
+
+              <div className="relative group rounded-xl overflow-hidden bg-gray-100">
+                <Image
+                  src={previewUrl || values.image}
+                  alt={values.title}
+                  width={500}
+                  height={500}
+                  className="rounded-xl shadow-md transition-all duration-300 group-hover:scale-105 object-cover"
+                  priority
+                />
+                {previewUrl && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 transition-opacity opacity-0 group-hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPreviewUrl(null);
+                        setFile(null);
+                        setValues(prev => ({ ...prev, image: item.image }));
+                      }}
+                      className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium"
+                    >
+                      Cancelar cambio
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           <form
             onSubmit={handleSubmit}
-            className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2 px-4 py-6 sm:p-8"
+            className="bg-white shadow-xl ring-1 ring-gray-900/5 rounded-xl md:col-span-2 p-8"
           >
-            <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-4">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Titulo
-                </label>
-                <div className="mt-2">
-                  <div className="mb-5 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-600 sm:max-w-md">
-                    <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm"></span>
+            <div className="space-y-10">
+              <div className="border-b border-gray-900/10 pb-10">
+                <h3 className="text-lg font-medium text-gray-900 mb-8">
+                  Información básica
+                </h3>
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Título
+                    </label>
                     <input
                       value={values.title}
                       required
                       type="text"
-                      className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                      onChange={(e) => handleChange(e)}
                       name="title"
-                      id="title"
+                      className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-colors"
+                      onChange={handleChange}
                     />
+                    {error.title && (
+                      <p className="mt-2 text-sm text-red-600">{error.title}</p>
+                    )}
                   </div>
-                  {error && error.title && (
-                    <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                      {error.title}
-                    </span>
-                  )}
-                </div>
-              </div>
 
-              <div className="sm:col-span-4">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Marca
-                </label>
-                <div className="mt-2 mb-5">
-                  <input
-                    value={values.brand}
-                    required
-                    type="text"
-                    name="brand"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => handleChange(e)}
-                  />
-                </div>
-                {error && error.brand && (
-                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                    {error.brand}
-                  </span>
-                )}
-              </div>
-
-              <div className="sm:col-span-4">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Imagen
-                </label>
-                <div className="mt-2 mb-5">
-                  <p className="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm  placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6">
-                    {values.image}
-                  </p>
-                  <label
-                    htmlFor="image"
-                    className="flex items-center space-x-1 text-blue-500 cursor-pointer justify-end mt-2"
-                  >
-                    <PencilSquareIcon className="w-5 h-5" />
-                    <span>Cambiar</span>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Marca
+                    </label>
                     <input
-                      id="image"
-                      name="image"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleImageChange}
+                      value={values.brand}
+                      required
+                      type="text"
+                      name="brand"
+                      className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-colors"
+                      onChange={handleChange}
                     />
-                  </label>
-                </div>
-              </div>
+                    {error.brand && (
+                      <p className="mt-2 text-sm text-red-600">{error.brand}</p>
+                    )}
+                  </div>
 
-              <div className="sm:col-span-4">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Precio
-                </label>
-                <div className="mt-2 mb-5">
-                  <input
-                    value={values.price}
-                    required
-                    type="text"
-                    name="price"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => handleChange(e)}
-                  />
-                </div>
-                {error && error.price && (
-                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                    {error.price}
-                  </span>
-                )}
-              </div>
-
-              <div className="sm:col-span-4">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Stock
-                </label>
-                <div className="mt-2 mb-5">
-                  <input
-                    value={values.inStock}
-                    required
-                    type="number"
-                    name="inStock"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => handleChange(e)}
-                  />
-                </div>
-                {error && error.inStock && (
-                  <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                    {error.inStock}
-                  </span>
-                )}
-              </div>
-
-              <div className="sm:col-span-4">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Categoria
-                </label>
-                <div className="mt-2 mb-5">
-                  <select
-                    value={values.category || ""}
-                    required
-                    id="category"
-                    name="category"
-                    autoComplete="category"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                    onChange={(e) => handleChange(e)}
-                  >
-                    <option value="" disabled>
-                      Seleccione una categoria
-                    </option>
-                    {CATEGORIES.filter(
-                      (category) => category.id != "todos"
-                    ).map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.label}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Categoría
+                    </label>
+                    <select
+                      value={values.category || ""}
+                      required
+                      name="category"
+                      className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-colors"
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Seleccione una categoría
                       </option>
-                    ))}
-                  </select>
+                      {CATEGORIES.filter((category) => category.id != "todos").map(
+                        (category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.label}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Imagen
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <p className="flex-1 truncate text-sm text-gray-500">
+                        {values.image}
+                      </p>
+                      <label
+                        htmlFor="image"
+                        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-navy-900 hover:text-navy-700 cursor-pointer transition-colors rounded-md hover:bg-gray-50"
+                      >
+                        <PencilSquareIcon className="w-5 h-5" />
+                        <span>Cambiar imagen</span>
+                        <input
+                          id="image"
+                          name="image"
+                          type="file"
+                          accept="image/*"
+                          className="sr-only"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="col-span-full">
-                <label className="block text-sm font-medium leading-6 text-gray-900">
-                  Description
-                </label>
-                <div className="mt-2 mb-5">
-                  <textarea
-                    required
-                    rows={3}
-                    name="description"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                    value={values.description}
-                    onChange={(e) => handleChange(e)}
-                  />
+              <div className="border-b border-gray-900/10 pb-10">
+                <h3 className="text-lg font-medium text-gray-900 mb-8">
+                  Precios y disponibilidad
+                </h3>
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Precio
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500 sm:text-sm">$</span>
+                      </div>
+                      <input
+                        value={values.price}
+                        required
+                        type="text"
+                        name="price"
+                        className="block w-full pl-7 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-colors"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {error.price && (
+                      <p className="mt-2 text-sm text-red-600">{error.price}</p>
+                    )}
+                  </div>
+
+                  <div className="group relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      Stock disponible
+                      <span className="text-gray-400 hover:text-gray-600 cursor-help">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </span>
+                    </label>
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-1 px-2">
+                      Cantidad disponible para la venta
+                    </div>
+                    <input
+                      value={values.inStock}
+                      required
+                      type="number"
+                      name="inStock"
+                      min="0"
+                      className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-colors"
+                      onChange={handleChange}
+                    />
+                    {error.inStock && (
+                      <p className="mt-2 text-sm text-red-600">{error.inStock}</p>
+                    )}
+                  </div>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-gray-600">
-                  Modificar la descripción del producto
+              </div>
+
+              <div className="pb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Descripción
+                </label>
+                <textarea
+                  required
+                  rows={4}
+                  name="description"
+                  value={values.description}
+                  onChange={handleChange}
+                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-colors resize-none"
+                />
+                {error.description && (
+                  <p className="mt-2 text-sm text-red-600">{error.description}</p>
+                )}
+                <p className="mt-3 text-sm text-gray-500">
+                  Describe el producto con detalle
                 </p>
               </div>
-              {error && error.description && (
-                <span className="flex items-center text-red-500 pl-3 text-sm mt-2">
-                  {error.description}
-                </span>
-              )}
-            </div>
 
-            <div className="flex justify-start mb-10 mt-10">
-              <button
-                type="submit"
-                className="flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-500 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-600"
-              >
-                Guardar
-              </button>
-
-              <Link
-                href="/admin"
-                className="flex justify-center items-center px-4 py-2 text-sm font-medium hover:text-slate-500"
-              >
-                Volver al menú principal
-              </Link>
+              <div className="flex items-center justify-end gap-4 pt-6 border-t border-gray-900/10">
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-navy-900 transition-colors"
+                >
+                  Cancelar
+                </Link>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`inline-flex items-center px-6 py-2.5 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white 
+                    ${isSubmitting ? 'bg-navy-700 cursor-not-allowed' : 'bg-navy-900 hover:bg-navy-800 hover:-translate-y-0.5'} 
+                    transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-900 transform`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Guardando...
+                    </>
+                  ) : (
+                    'Guardar cambios'
+                  )}
+                </button>
+              </div>
             </div>
           </form>
         </div>

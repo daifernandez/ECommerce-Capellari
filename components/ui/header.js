@@ -19,13 +19,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const navigation = [
-  { name: "Marketplace", href: "/" },
   { name: "Compania", href: "/about" },
+  { name: "Marketplace", href: "/productos", scroll: true },
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [cartItems, setCartItems] = useState(0);
   const pathname = usePathname();
   const { cart } = useCartContext();
   const { user, logOut } = useAuth();
@@ -48,26 +47,28 @@ export default function Header() {
       return (
         <Link
           href="/admin"
-          className="text-sm font-semibold leading-6 text-gray-900"
+          className="flex items-center text-sm font-semibold leading-6 text-gray-900 hover:text-gray-600 transition-colors"
         >
-          <UserIcon className="h-6 w-6 mx-3" aria-hidden="true" />{" "}
+          <UserIcon className="h-6 w-6" aria-hidden="true" />
         </Link>
       );
     }
 
     return (
-      <div className="flex gap-x-2">
+      <div className="flex gap-x-4 items-center">
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="block px-2 py-1 text-sm leading-6 text-gray-900"
+          className="text-gray-900 hover:text-gray-600 transition-colors"
+          title="Configuración"
         >
           <Cog6ToothIcon className="h-6 w-6" />
         </button>
         <button
           type="button"
           onClick={logOut}
-          className="block px-2 py-1 text-sm leading-6 text-gray-900 mr-2"
+          className="text-gray-900 hover:text-gray-600 transition-colors"
+          title="Cerrar sesión"
         >
           <ArrowLeftOnRectangleIcon className="h-6 w-6" />
         </button>
@@ -76,9 +77,9 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white">
+    <header className="bg-white shadow-sm">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
@@ -87,7 +88,8 @@ export default function Header() {
               src="/capellariLogo.svg"
               alt="logo"
               width={150}
-              height={25}
+              height={150}
+              className="w-auto h-[35px]"
               priority
             />
           </Link>
@@ -98,28 +100,43 @@ export default function Header() {
             <Link
               key={item.name}
               href={item.href}
+              onClick={(e) => {
+                if (item.scroll) {
+                  e.preventDefault();
+                  const productsSection = document.getElementById('productos');
+                  if (productsSection) {
+                    productsSection.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  } else if (pathname !== '/') {
+                    router.push('/#productos');
+                  }
+                }
+              }}
               className={`${
-                pathname === item.href ? " underline underline-offset-8" : ""
-              } text-sm leading-6 font-semibold text-gray-900`}
+                pathname === item.href 
+                  ? "text-navy-900 underline underline-offset-8" 
+                  : "text-gray-900 hover:text-navy-900"
+              } text-sm font-semibold leading-6 transition-colors cursor-pointer`}
             >
               {item.name}
             </Link>
           ))}
         </div>
-        <div className="flex flex-1 justify-end gap-x-2">
+        <div className="flex flex-1 justify-end items-center gap-x-4">
           <Link
             href="/carrito"
-            className="flex items-center text-sm font-semibold leading-2 text-gray-900"
+            className="flex items-center text-gray-900 hover:text-gray-600 transition-colors"
           >
-            <ShoppingCartIcon
-              className="h-6 w-6 mr-1 mx-3"
-              aria-hidden="true"
-            />
-
-            {/* Agregar número para la cantidad de pedidos en el carrito */}
-            <span className="bg-slate-700 text-white rounded-full px-2 py-1">
-              {totalItemsInCart(cart)}
-            </span>
+            <div className="relative">
+              <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+              {totalItemsInCart(cart) > 0 && (
+                <span className="absolute -top-2 -right-2 bg-navy-900 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalItemsInCart(cart)}
+                </span>
+              )}
+            </div>
           </Link>
           {profileButton()}
           <div className="flex lg:hidden">
@@ -149,7 +166,8 @@ export default function Header() {
                 src="/capellariLogo.svg"
                 alt="logo"
                 width={150}
-                height={25}
+                height={150}
+                className="w-auto h-[35px]"
                 priority
               />
             </Link>

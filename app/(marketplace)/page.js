@@ -11,7 +11,9 @@ export default function Home() {
   return (
     <main>
       <Title />
-      <Products />
+      <section id="productos">
+        <Products />
+      </section>
     </main>
   );
 }

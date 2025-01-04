@@ -22,12 +22,20 @@ const navigation = [
     icon: FolderIcon,
     current: false,
     content: "AddProducts",
+    description: "Añadir nuevos productos al catálogo",
+    bgColor: "bg-gradient-to-br from-emerald-50 to-emerald-100/50",
+    hoverBg: "hover:from-emerald-100/80 hover:to-emerald-100/60",
+    iconColor: "text-emerald-600",
   },
   {
     name: "Editar Productos",
     icon: UsersIcon,
     current: false,
     content: "AdminTable",
+    description: "Gestionar productos existentes",
+    bgColor: "bg-gradient-to-br from-blue-50 to-blue-100/50",
+    hoverBg: "hover:from-blue-100/80 hover:to-blue-100/60",
+    iconColor: "text-blue-600",
   },
 ];
 
@@ -165,14 +173,14 @@ export default function Admin() {
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center mt-10 mb-16">
-              <Link href="/" className="-m-1.5 p-1.5">
+            <div className="flex h-16 shrink-0 items-center mt-8 mb-6">
+              <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105">
                 <Image
                   src="/capellariLogo.svg"
                   alt="logo"
-                  width={150}
-                  height={25}
-                  className="w-auto"
+                  width={675}
+                  height={110}
+                  className="w-auto h-28"
                   priority
                 />
               </Link>
@@ -180,16 +188,15 @@ export default function Admin() {
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
-                  <ul role="list" className="-mx-2 space-y-1">
+                  <ul role="list" className="-mx-2 space-y-3">
                     {navigation.map((item) => (
                       <li key={item.name}>
                         <a
-                          href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-gray-50 text-slate-600"
-                              : "text-gray-700 hover:text-slate-600 hover:bg-gray-50",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                              ? `${item.bgColor} ${item.iconColor}`
+                              : `text-gray-700 hover:bg-gray-50 ${item.hoverBg}`,
+                            "group flex flex-col gap-y-1 rounded-lg p-4 text-sm leading-6 transition-all duration-300 hover:shadow-lg relative overflow-hidden"
                           )}
                           onClick={
                             item.name == "Agregar Productos"
@@ -197,16 +204,19 @@ export default function Admin() {
                               : handleEditContent
                           }
                         >
-                          <item.icon
-                            className={classNames(
-                              item.current
-                                ? "text-slate-600"
-                                : "text-gray-400 group-hover:text-slate-600",
-                              "h-6 w-6 shrink-0"
-                            )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
+                          <div className="flex items-center gap-x-3 relative z-10">
+                            <item.icon
+                              className={classNames(
+                                item.current
+                                  ? item.iconColor
+                                  : `${item.iconColor} group-hover:scale-110`,
+                                "h-6 w-6 shrink-0 transition-transform duration-300"
+                              )}
+                              aria-hidden="true"
+                            />
+                            <span className="font-medium">{item.name}</span>
+                          </div>
+                          <p className="text-gray-600 text-xs ml-9 relative z-10">{item.description}</p>
                         </a>
                       </li>
                     ))}
@@ -219,10 +229,10 @@ export default function Admin() {
 
         <div className="lg:pl-72">
           <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
-            <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
+            <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white/80 px-4 backdrop-blur-sm sm:gap-x-6 sm:px-6 lg:px-0">
               <button
                 type="button"
-                className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+                className="-m-2.5 p-2.5 text-gray-700 lg:hidden hover:bg-gray-50 rounded-lg transition-all duration-200 hover:shadow-sm active:scale-95"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="sr-only">Open sidebar</span>
@@ -230,53 +240,64 @@ export default function Admin() {
               </button>
 
               {/* Separador */}
-              <div
-                className="h-6 w-px bg-gray-200 lg:hidden"
-                aria-hidden="true"
-              />
+              <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
               <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                <form
-                  className="relative flex flex-1"
-                  action="#"
-                  method="GET"
-                ></form>
+                <div className="flex flex-1 items-center">
+                  
+                </div>
                 <div className="flex items-center gap-x-4 lg:gap-x-6">
-                  {/* Separador */}
                   <div
                     className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
                     aria-hidden="true"
                   />
 
-                  {/* Perfil */}
+                  {/* Perfil actualizado */}
                   <Menu as="div" className="relative">
-                    <Menu.Button className="-m-1.5 flex items-center p-1.5">
+                    <Menu.Button className="-m-1.5 flex items-center p-2.5 rounded-lg transition-all duration-200 hover:bg-gradient-to-br from-slate-50 to-slate-100/50 hover:shadow-sm active:scale-95">
                       <span className="sr-only">Abrir menu de usuario</span>
-                      {/* logo pequeño */}
-                      <span className="lg:flex lg:items-center">
-                        <span
-                          className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-                          aria-hidden="true"
-                        >
-                          Capellari
-                        </span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200/50">
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="currentColor" 
+                            className="w-5 h-5 text-slate-600"
+                          >
+                            <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-slate-700">
+                            Capellari
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            Administrador
+                          </span>
+                        </div>
                         <ChevronDownIcon
-                          className="ml-2 h-5 w-5 text-gray-400"
+                          className="ml-1 h-5 w-5 text-slate-400 transition-transform duration-200 group-hover:text-slate-600"
                           aria-hidden="true"
                         />
-                      </span>
+                      </div>
                     </Menu.Button>
                     <Transition
                       as={Fragment}
-                      enter="transition ease-out duration-100"
+                      enter="transition ease-out duration-200"
                       enterFrom="transform opacity-0 scale-95"
                       enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
+                      leave="transition ease-in duration-150"
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                        <LogOutButton />
+                      <Menu.Items className="absolute right-0 z-10 mt-2.5 w-56 origin-top-right rounded-lg bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none divide-y divide-gray-100">
+                        <div className="px-4 py-3">
+                          <p className="text-sm text-slate-900">Conectado como</p>
+                          <p className="truncate text-sm font-medium text-slate-700">admin@capellari.com</p>
+                        </div>
+                        <div className="py-1">
+                          <LogOutButton />
+                        </div>
                       </Menu.Items>
                     </Transition>
                   </Menu>

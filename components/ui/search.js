@@ -1,15 +1,35 @@
-export default function Search() {
+'use client'
+
+import { useState } from 'react'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+
+export default function Search({ onSearch }) {
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (onSearch) {
+      onSearch(searchTerm)
+    }
+  }
+
   return (
-    <div>
-      <div className="mt-10">
+    <form onSubmit={handleSubmit} className="relative w-full max-w-md">
+      <div className="relative">
         <input
-          type="producto"
-          name="producto"
-          id="producto"
-          className="block w-80 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-          placeholder="Buscar productos"
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar productos..."
+          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 focus:border-blue-500 focus:outline-none"
         />
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          <MagnifyingGlassIcon className="h-5 w-5" />
+        </button>
       </div>
-    </div>
-  );
-}
+    </form>
+  )
+} 

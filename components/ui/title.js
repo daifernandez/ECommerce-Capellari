@@ -11,7 +11,7 @@ export default function Title() {
           alt="Electrodomésticos de Capellini"
           width={1920}
           height={1080}
-          className={"absolute inset-0 h-full w-full object-cover opacity-20 "}
+          className={"absolute inset-0 h-full w-full object-cover opacity-25 blur-sm"}
           priority
         />
 
@@ -27,21 +27,21 @@ export default function Title() {
             }}
           />
         </div>
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div className="mx-auto max-w-2xl py-24 sm:py-36 lg:py-44">
           <div className="text-center">
             <Image
-              className="mx-auto"
+              className="mx-auto hover:scale-105 transition-transform duration-300 w-auto h-[120px]"
               src="/capellari.svg"
               alt="title"
               width={350}
-              height={175}
+              height={350}
               priority
             />
-            <p className="mt-6  leading-8 text-gray-300">
+            <p className="mt-6 text-lg font-medium leading-8 text-gray-300">
               Electrodomésticos de alta calidad para tu hogar.
             </p>
             <div className="sm:mb-8 sm:flex sm:justify-center mb-6 mt-8">
-              <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-yellow-500">
+              <div className="relative rounded-full px-5 py-2 text-sm leading-6 text-gray-300 ring-1 ring-white/10 hover:ring-yellow-500 transition-all duration-300 hover:scale-105 hover:bg-white/5">
                 Descubre la calidad y tradición de Capellari.{" "}
                 <Link href="/about" className="font-semibold text-white">
                   <span className="absolute inset-0" aria-hidden="true" />
