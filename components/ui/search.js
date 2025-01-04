@@ -2,19 +2,23 @@
 
 import { useState } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
 
-export default function Search({ onSearch }) {
+export default function Search() {
   const [searchTerm, setSearchTerm] = useState('')
+  const router = useRouter()
 
-  const handleSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault()
-    if (onSearch) {
-      onSearch(searchTerm)
+    
+    if (searchTerm.trim()) {
+      // Redirigir a la página de productos con el término de búsqueda como query parameter
+      router.push(`/productos?search=${encodeURIComponent(searchTerm.trim())}`)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-full max-w-md">
+    <form onSubmit={handleSearch} className="relative w-full max-w-md">
       <div className="relative">
         <input
           type="text"
@@ -26,6 +30,7 @@ export default function Search({ onSearch }) {
         <button
           type="submit"
           className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          disabled={!searchTerm.trim()}
         >
           <MagnifyingGlassIcon className="h-5 w-5" />
         </button>

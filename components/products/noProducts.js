@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 
-export default function NoProducts() {
+export default function NoProducts({ searchTerm }) {
   return (
     <div className="bg-white px-6 py-16 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -12,16 +12,16 @@ export default function NoProducts() {
           />
         </div>
 
-        <p className="text-base font-semibold leading-7 text-navy-900">
-          Lo sentimos
-        </p>
-        
         <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          No hay productos disponibles
+          {searchTerm 
+            ? `No se encontraron resultados para "${searchTerm}"`
+            : "No hay productos disponibles"}
         </h2>
         
         <p className="mt-4 text-lg leading-8 text-gray-600">
-          Por el momento no encontramos productos en esta categoría.
+          {searchTerm 
+            ? "Intenta con otros términos de búsqueda"
+            : "Por el momento no encontramos productos en esta categoría."}
         </p>
 
         <div className="mt-10">
