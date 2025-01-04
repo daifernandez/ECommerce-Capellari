@@ -1,5 +1,3 @@
-"use client";
-
 import CategoriesMenu from "@/components/products/categoriesMenu";
 import Title from "@/components/ui/title";
 import Search from "@/components/ui/search";
