@@ -1,5 +1,5 @@
 "use client";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { UserIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/authContext";
 import { useState } from "react";
 import Image from "next/image";
@@ -11,6 +11,8 @@ export default function LoginForm() {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = ({ target }) => {
     setValues({
@@ -19,18 +21,47 @@ export default function LoginForm() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      await loginUser(values);
+      toast.success("Inicio de sesión exitoso");
+    } catch (error) {
+      if (error.code === "auth/wrong-password") {
+        toast.error("Contraseña incorrecta");
+      } else if (error.code === "auth/user-not-found") {
+        toast.error("No existe una cuenta con este correo");
+      } else if (error.code === "auth/invalid-email") {
+        toast.error("Correo electrónico inválido");
+      } else {
+        toast.error("Error al iniciar sesión");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const register = () => {
+  const register = async () => {
+    setIsLoading(true);
     try {
-      registerUser({ values });
+      await registerUser({ values });
       toast.success("Usuario registrado correctamente");
     } catch (error) {
-      toast.error("Error al registrar el usuario");
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("Este correo ya está registrado");
+      } else if (error.code === "auth/weak-password") {
+        toast.error("La contraseña debe tener al menos 6 caracteres");
+      } else {
+        toast.error("Error al registrar el usuario");
+      }
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
   };
 
   return (
@@ -65,32 +96,48 @@ export default function LoginForm() {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Contraseña
                 </label>
-                <input
-                  name="password"
-                  type="password"
-                  value={values.password}
-                  required
-                  className="block w-full rounded-md border border-gray-200 px-4 py-2.5 text-gray-900 placeholder:text-gray-400 focus:border-slate-500 focus:ring-1 focus:ring-slate-500 sm:text-sm"
-                  placeholder="••••••••"
-                  onChange={handleChange}
-                  autoComplete="current-password"
-                />
+                <div className="relative">
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={values.password}
+                    required
+                    className="block w-full rounded-md border border-gray-200 px-4 py-2.5 text-gray-900 placeholder:text-gray-400 focus:border-slate-500 focus:ring-1 focus:ring-slate-500 sm:text-sm"
+                    placeholder="••••••••"
+                    onChange={handleChange}
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
             <div className="flex flex-col space-y-3">
               <button
-                onClick={() => loginUser(values)}
-                className="flex w-full justify-center rounded-md bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 transition-colors"
+                type="submit"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 transition-colors disabled:opacity-70"
               >
-                Ingresar
+                {isLoading ? "Cargando..." : "Ingresar"}
               </button>
 
               <button
-                onClick={() => register()}
-                className="flex w-full justify-center rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 transition-colors"
+                type="button"
+                onClick={register}
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 transition-colors disabled:opacity-70"
               >
-                Registrarme
+                {isLoading ? "Cargando..." : "Registrarme"}
               </button>
             </div>
 
