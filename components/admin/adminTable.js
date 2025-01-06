@@ -19,7 +19,27 @@ export default function AdminTable() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const productsPerPage = 5;
   const { deleteItem } = useCartContext();
+
+  // Filtrar productos basado en el término de búsqueda
+  const filteredProducts = products.filter(product => 
+    product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.brand.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Calcular productos para la página actual usando los productos filtrados
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  // Reset página cuando cambia la búsqueda
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   useEffect(() => {
     getProducts()
@@ -58,71 +78,167 @@ export default function AdminTable() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-2 sm:p-6">
       <Toaster />
-      {/* <SearchAdmin /> */}
-      <div className="flex justify-between items-center my-4 mb-8">
-        <h2 className="text-2xl font-semibold">Productos</h2>
+      <div className="mb-4 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-navy-900">Productos</h2>
+        <p className="mt-2 text-xs sm:text-sm text-gray-600">
+          Gestiona el catálogo de productos. Aquí puedes ver, editar y eliminar los productos existentes.
+        </p>
       </div>
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">Imagen</th>
-            <th className="py-2 px-4 border-b">Titulo</th>
-            <th className="py-2 px-4 border-b">Categoria</th>
-            <th className="py-2 px-4 border-b">Precio</th>
-            <th className="py-2 px-4 border-b">Stock</th>
-            <th className="py-2 px-4 border-b">Marca</th>
-            <th className="py-2 px-4 border-b">Slug</th>
-            <th className="py-2 px-4 border-b"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {products &&
-            products.map((appliance, index) => (
-              <tr
-                key={index}
-                className={(index + 1) % 2 === 0 ? "bg-gray-100" : ""}
-              >
-                <td className="py-2 px-4 border-b">
-                  <Image
-                    src={appliance.image}
-                    alt={appliance.title}
-                    width={100}
-                    height={100}
-                    className="object-contain my-8"
-                    priority
-                  />
-                </td>
-                <td className="py-2 px-4 border-b">{appliance.title}</td>
-                <td className="py-2 px-4 border-b">{appliance.category}</td>
-                <td className="py-2 px-4 border-b">${appliance.price}</td>
-                <td className="py-2 px-4 border-b">{appliance.inStock}</td>
-                <td className="py-2 px-4 border-b">{appliance.brand}</td>
-                <td className="py-2 px-4 border-b">{appliance.slug}</td>
 
-                <td className="py-3 px-6 border-b">
-                  <div className="flex items-center justify-center space-x-1">
+      {/* Buscador */}
+      <div className="mb-4 sm:mb-6">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 pl-10 pr-4 text-navy-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-navy-900"
+          />
+          <svg
+            className="absolute left-3 top-2.5 h-5 w-5 text-navy-900"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Mensaje cuando no hay resultados */}
+      {filteredProducts.length === 0 && (
+        <div className="text-center py-4 sm:py-8 bg-white rounded-lg shadow-md">
+          <p className="text-sm text-gray-500">No se encontraron productos que coincidan con la búsqueda</p>
+        </div>
+      )}
+
+      {/* Tabla responsive */}
+      <div className="bg-white rounded-lg shadow-md overflow-x-auto">
+        <table className="min-w-full">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Imagen</th>
+              <th className="py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Titulo</th>
+              <th className="hidden sm:table-cell py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Categoria</th>
+              <th className="py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Precio</th>
+              <th className="hidden md:table-cell py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Stock</th>
+              <th className="hidden lg:table-cell py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Marca</th>
+              <th className="hidden xl:table-cell py-2 sm:py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Slug</th>
+              <th className="py-2 sm:py-3 px-2 sm:px-4"></th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {currentProducts.map((appliance, index) => (
+              <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                <td className="py-2 sm:py-4 px-2 sm:px-4">
+                  <div className="w-12 h-12 sm:w-20 sm:h-20 relative">
+                    <Image
+                      src={appliance.image}
+                      alt={appliance.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 640px) 48px, 80px"
+                      priority
+                    />
+                  </div>
+                </td>
+                <td className="py-2 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-900">
+                  <div className="max-w-[150px] sm:max-w-none truncate">
+                    {appliance.title}
+                  </div>
+                </td>
+                <td className="hidden sm:table-cell py-2 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-600">{appliance.category}</td>
+                <td className="py-2 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm font-medium text-gray-900">${appliance.price}</td>
+                <td className="hidden md:table-cell py-2 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-600">{appliance.inStock}</td>
+                <td className="hidden lg:table-cell py-2 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-600">{appliance.brand}</td>
+                <td className="hidden xl:table-cell py-2 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-600">{appliance.slug}</td>
+                <td className="py-2 sm:py-4 px-2 sm:px-4">
+                  <div className="flex items-center justify-end space-x-1 sm:space-x-2">
                     <Link href={`/admin/edit/${appliance.slug}`}>
-                      {" "}
-                      <button className="bg-slate-500 text-white px-3 py-1  rounded">
-                        <PencilSquareIcon className="w-5 h-5" />{" "}
+                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-600 p-1.5 sm:p-2 rounded-lg transition-colors duration-200">
+                        <PencilSquareIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                     </Link>
-
                     <button
-                      className="bg-red-500 text-white px-3 py-1  rounded"
+                      className="bg-red-100 hover:bg-red-200 text-red-600 p-1.5 sm:p-2 rounded-lg transition-colors duration-200"
                       onClick={() => openModal(appliance.slug)}
                     >
-                      <TrashIcon className="w-5 h-5" />
+                      <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </div>
                 </td>
               </tr>
             ))}
-        </tbody>
-      </table>{" "}
-      {/* <AdminPagination /> */}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Controles de paginación */}
+      <div className="flex flex-col sm:flex-row items-center justify-between px-2 sm:px-4 py-3 bg-white mt-4 rounded-lg shadow-md gap-4 sm:gap-0">
+        <div className="flex items-center text-xs sm:text-sm text-navy-900 text-center sm:text-left">
+          <span>
+            Mostrando{' '}
+            <span className="font-medium">{indexOfFirstProduct + 1}</span>
+            {' '}-{' '}
+            <span className="font-medium">
+              {Math.min(indexOfLastProduct, products.length)}
+            </span>{' '}
+            de{' '}
+            <span className="font-medium">{products.length}</span>
+            {' '}productos
+          </span>
+        </div>
+        
+        <div className="flex items-center space-x-1 sm:space-x-2">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md ${
+              currentPage === 1
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-200 text-navy-900 hover:bg-gray-300'
+            }`}
+          >
+            Anterior
+          </button>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md ${
+                currentPage === page
+                  ? 'bg-navy-900 text-white'
+                  : 'bg-gray-200 text-navy-900 hover:bg-gray-300'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+          
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md ${
+              currentPage === totalPages
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-200 text-navy-900 hover:bg-gray-300'
+            }`}
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
+
       <Transition appear show={open} as={Fragment}>
         <Dialog
           as="div"

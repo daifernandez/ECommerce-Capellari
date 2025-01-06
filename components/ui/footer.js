@@ -29,28 +29,24 @@ const navigation = {
 
 export default function Footer() {
   return (
-    <div className="items-center justify-between border-t border-gray-200 px-4 sm:px-0 mt-2 mb-2">
-      <footer className="bg-white">
-        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
-          <nav
-            className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12"
-            aria-label="Footer"
-          ></nav>
-          <div className="mt-10 flex justify-center space-x-10">
+    <div className="bg-gray-50">
+      <footer className="mx-auto max-w-7xl">
+        <div className="mx-auto px-6 py-8 flex justify-end items-center gap-8">
+          <div className="text-sm leading-5 text-gray-600">
+            <p>Daiana Fernandez. Todos los derechos reservados.</p>
+          </div>
+          <div className="flex space-x-6">
             {navigation.social.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-gray-400 hover:text-gray-500"
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 <span className="sr-only">{item.name}</span>
-                <item.icon className="h-6 w-6" aria-hidden="true" />
+                <item.icon className="h-5 w-5" aria-hidden="true" />
               </a>
             ))}
           </div>
-          <p className="mt-10 text-center text-xs leading-5 text-gray-500">
-            &copy; 2023 Daiana Fernandez, Next.js app || Coderhouse S.R.L.
-          </p>
         </div>
       </footer>
     </div>

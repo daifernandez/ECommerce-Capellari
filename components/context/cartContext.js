@@ -40,19 +40,19 @@ export const CartProvider = ({ children }) => {
   };
 
   const addItem = (item, quantity) => {
-    // Si el producto no esta en el carrito, lo agregamos.
-    // Si el producto ya esta en el carrito, aumentamos en la cantidad.
-    if (!isInCart(item, cart)) {
-      item.quantity = quantity;
-      setCart([...cart, item]);
-    } else {
-      for (let i = 0; i < cart.length; i++) {
-        if (cart[i].slug === item.slug) {
-          cart[i].quantity += quantity;
-        }
+    setCart(currentCart => {
+      const existingItem = currentCart.find(cartItem => cartItem.slug === item.slug);
+      
+      if (existingItem) {
+        return currentCart.map(cartItem => 
+          cartItem.slug === item.slug 
+            ? {...cartItem, quantity: cartItem.quantity + quantity}
+            : cartItem
+        );
       }
-      setCart([...cart]);
-    }
+      
+      return [...currentCart, {...item, quantity}];
+    });
   };
 
   const totalPrice = () => {
@@ -97,7 +97,7 @@ export const CartProvider = ({ children }) => {
         totalPrice,
         removeFromCart,
         deleteItem,
-        clearCart,
+        clearCart
       }}
     >
       {children}

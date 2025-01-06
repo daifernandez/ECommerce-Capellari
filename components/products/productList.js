@@ -1,32 +1,34 @@
-import ProductCard from "./productCard";
-import Pagination from "../ui/pagination";
 import NoProducts from "./noProducts";
+import PaginatedProducts from "./paginatedProducts";
 
-export default async function ProductsList({ categoria }) {
-  const items = await fetch(
-    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/productos/${categoria}`,
-    {
-      cache: "no-store", // TODO: Mejorar cache
-      next: {
-        tags: ["productos"],
-      },
+export default async function ProductsList({ categoria, searchTerm }) {
+  try {
+    let items = await fetch(
+      `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/productos/${categoria || 'todos'}`,
+      {
+        cache: "no-store",
+        next: {
+          tags: ["productos"],
+        },
+      }
+    ).then((res) => res.json());
+
+    // Filtrar productos si hay un término de búsqueda
+    if (searchTerm) {
+      items = items.filter(item => 
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     }
-  )
-    .then((res) => res.json())
-    .catch((err) => console.log(err));
 
-  if (items === undefined || items.length === 0) {
-    return <NoProducts />;
-  } else {
-    return (
-      <div className="mb-20">
-        <section className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
-          {items.map((item) => {
-            return <ProductCard key={item.slug} item={item} />;
-          })}
-        </section>
-        {/* <Pagination /> */}
-      </div>
-    );
+    if (!items || items.length === 0) {
+      return <NoProducts searchTerm={searchTerm} />;
+    }
+
+    return <PaginatedProducts items={items} />;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return <NoProducts searchTerm={searchTerm} />;
   }
 }

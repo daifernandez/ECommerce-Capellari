@@ -1,39 +1,47 @@
 import CategoriesMenu from "@/components/products/categoriesMenu";
 import NavbarCategory from "@/components/products/navbarCategory";
 import ProductsList from "@/components/products/productList";
-import Search from "@/components/ui/search";
 import StreamingList from "@/components/ui/streamingList";
 import { Suspense } from "react";
 
-export async function generateMetadata({ params, serchParams }, parent) {
+export async function generateMetadata({ params, searchParams }) {
+  const categoryName = params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1);
   return {
-    title: `Capellari - ${params.categoria}`,
+    title: `Capellari - ${categoryName}`,
+    description: `Explora nuestra selección de productos en la categoría ${categoryName}`,
   };
 }
 
 export const revalidate = 3600;
 
 export default function Products({ params }) {
-  const categoria = params ? params.categoria : "todos";
+  const categoria = params?.categoria || "todos";
 
   return (
-    <main className="mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
-      <div className="border-b border-gray-200 pb-10 pt-24">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-          Marketplace
+    <main className="min-h-screen mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
+      <div className="border-b border-gray-200 pb-8 pt-24">
+        <h1 className="text-4xl font-semibold tracking-tight mb-3">
+          <span className="bg-gradient-to-r from-blue-900 to-navy-900 bg-clip-text text-transparent">
+            Marketplace
+          </span>
         </h1>
-        {/* <Search /> */}
+        <p className="text-base text-gray-600">
+          Encuentra los mejores productos en nuestra tienda
+        </p>
       </div>
+      
       <NavbarCategory categoria={categoria} />
-      <div className="flex flex-col lg:flex-row">
-        <div className="lg:w-1/4">
+      
+      <div className="flex flex-col lg:flex-row gap-6 py-6">
+        <aside className="lg:w-1/4">
           <CategoriesMenu />
-        </div>
-        <div className="lg:w-3/4">
+        </aside>
+        
+        <section className="lg:w-3/4">
           <Suspense fallback={<StreamingList />}>
             <ProductsList categoria={categoria} />
           </Suspense>
-        </div>
+        </section>
       </div>
     </main>
   );

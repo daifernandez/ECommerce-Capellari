@@ -1,8 +1,29 @@
-export default function Button({ children, className = "", ...args }) {
+export default function Button({ children, className = "", ...props }) {
   return (
     <button
-      className={`bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ${className}`}
-      {...args}
+      className={`
+        px-6 
+        py-3.5
+        bg-navy-900 
+        text-white 
+        font-medium
+        rounded-xl
+        hover:bg-navy-800 
+        active:bg-navy-950
+        active:scale-[0.98]
+        shadow-sm
+        hover:shadow
+        transition-all 
+        duration-200 
+        flex 
+        items-center 
+        justify-center 
+        gap-2
+        disabled:opacity-50
+        disabled:cursor-not-allowed
+        ${className}
+      `}
+      {...props}
     >
       {children}
     </button>
