@@ -1,5 +1,5 @@
-"use client";
+// "use client";
 
-export default function Page() {
-  return <SearchComponent onSearch={(term) => {/* ... */}} />
-} 
+// export default function Page() {
+//   return <SearchComponent onSearch={(term) => {/* ... */}} />
+// } 
