@@ -5,7 +5,9 @@ import StreamingList from "@/components/ui/streamingList";
 import { Suspense } from "react";
 
 export async function generateMetadata({ params, searchParams }) {
-  const categoryName = params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1);
+  const p = await params
+  const categoria = p?.categoria
+  const categoryName = categoria?.charAt(0).toUpperCase() + categoria?.slice(1);
   return {
     title: `Capellari - ${categoryName}`,
     description: `Explora nuestra selección de productos en la categoría ${categoryName}`,
@@ -14,8 +16,10 @@ export async function generateMetadata({ params, searchParams }) {
 
 export const revalidate = 3600;
 
-export default function Products({ params }) {
-  const categoria = params?.categoria || "todos";
+export default async function Products({ params }) {
+  const p = await params
+  const categoria = p?.categoria;
+  const categoriaFinal = categoria || "todos";
 
   return (
     <main className="min-h-screen mx-auto max-w-2xl px-4 lg:max-w-7xl lg:px-8">
@@ -30,7 +34,7 @@ export default function Products({ params }) {
         </p>
       </div>
       
-      <NavbarCategory categoria={categoria} />
+      <NavbarCategory categoria={categoriaFinal} />
       
       <div className="flex flex-col lg:flex-row gap-6 py-6">
         <aside className="lg:w-1/4">
@@ -39,7 +43,7 @@ export default function Products({ params }) {
         
         <section className="lg:w-3/4">
           <Suspense fallback={<StreamingList />}>
-            <ProductsList categoria={categoria} />
+            <ProductsList categoria={categoriaFinal} />
           </Suspense>
         </section>
       </div>

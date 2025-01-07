@@ -1,5 +1,5 @@
 "use client";
-import { auth, googleProvider, db } from "../../firebase/config";
+import { auth, db } from "../../firebase/config";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -7,9 +7,11 @@ import {
   signOut,
   onAuthStateChanged,
   signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -23,68 +25,83 @@ export const AuthProvider = ({ children }) => {
   });
 
   const router = useRouter();
+  const googleProvider = new GoogleAuthProvider();
 
   const registerUser = async ({ values }) => {
     await createUserWithEmailAndPassword(auth, values.email, values.password);
   };
 
   const loginUser = async (values) => {
-    await signInWithEmailAndPassword(auth, values.email, values.password);
+    const result = await signInWithEmailAndPassword(auth, values.email, values.password);
+    return result;
   };
 
   const logOut = async () => {
     await signOut(auth);
-    console.log("Sesión cerrada");
     setUser({
       logged: false,
       email: null,
       uid: null,
       isAdmin: false,
     });
+    router.push('/');
   };
 
   const googleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        // Manejar el cierre del popup por el usuario
-        console.log(
-          "El usuario cerró el popup antes de finalizar la autenticación."
-        );
-      } else {
-        console.log(error.message);
+      console.error("Error en login con Google:", error);
+      toast.error("Error al iniciar sesión con Google");
+    }
+  };
+
+  const handleUserStateChange = async (firebaseUser) => {
+    if (firebaseUser) {
+      try {
+        const docRef = doc(db, "roles", firebaseUser.uid);
+        const userDoc = await getDoc(docRef);
+        const isAdmin = userDoc.exists() ? userDoc.data()?.rol === "admin" : false;
+
+        setUser({
+          logged: true,
+          email: firebaseUser.email,
+          uid: firebaseUser.uid,
+          isAdmin: isAdmin,
+        });
+
+        // Redirigir basado en el rol
+        if (isAdmin) {
+          if (window.location.pathname === '/admin') return; // Evitar redirección innecesaria
+          router.push('/admin');
+        } else {
+          if (window.location.pathname === '/') return; // Evitar redirección innecesaria
+          router.push('/');
+        }
+      } catch (error) {
+        console.error("Error verificando rol:", error);
+        setUser({
+          logged: true,
+          email: firebaseUser.email,
+          uid: firebaseUser.uid,
+          isAdmin: false,
+        });
+        router.push('/');
       }
+    } else {
+      setUser({
+        logged: false,
+        email: null,
+        uid: null,
+        isAdmin: false,
+      });
     }
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const docRef = doc(db, "roles", user.uid);
-        const userDoc = await getDoc(docRef);
-
-        const isAdmin = userDoc.data()?.rol === "admin";
-        setUser({
-          logged: true,
-          email: user.email,
-          uid: user.uid,
-          isAdmin: isAdmin,
-        });
-
-        if (!isAdmin) {
-          router.push("/");
-        }
-      } else {
-        setUser({
-          logged: false,
-          emaiL: null,
-          uid: null,
-          isAdmin: false,
-        });
-      }
-    });
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, handleUserStateChange);
+    return () => unsubscribe();
+  }, [router]);
 
   return (
     <AuthContext.Provider

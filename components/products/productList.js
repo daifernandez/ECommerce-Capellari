@@ -3,8 +3,12 @@ import PaginatedProducts from "./paginatedProducts";
 
 export default async function ProductsList({ categoria, searchTerm }) {
   try {
+    const baseUrl = process.env.NODE_ENV === 'production'
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : 'http://localhost:3000';
+
     let items = await fetch(
-      `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/productos/${categoria || 'todos'}`,
+      `${baseUrl}/api/productos/${categoria || 'todos'}`,
       {
         cache: "no-store",
         next: {

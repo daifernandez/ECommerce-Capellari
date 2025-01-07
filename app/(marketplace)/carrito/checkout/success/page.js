@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import deliveryMethods from "@/data/deliveryMethods";
@@ -7,7 +7,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useCartContext } from "@/components/context/cartContext";
 import toast from "react-hot-toast";
 
-export default function SuccessOrder() {
+function OrderContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const [order, setOrder] = useState(null);
@@ -251,5 +251,13 @@ export default function SuccessOrder() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SuccessOrder() {
+  return (
+    <Suspense fallback={<div className="container mx-auto mt-8 text-center">Cargando detalles del pedido...</div>}>
+      <OrderContent />
+    </Suspense>
   );
 }
