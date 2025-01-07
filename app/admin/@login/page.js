@@ -1,16 +1,10 @@
 import LoginForm from "@/components/auth/loginForm";
 
 export const metadata = {
-  title: "Acesso || Capellari",
+  title: "Acceso || Capellari",
   description: "Login Capellari",
 };
 
-const LoginPage = () => {
-  return (
-    <>
-      <LoginForm />
-    </>
-  );
-};
-
-export default LoginPage;
+export default function LoginPage() {
+  return <LoginForm />;
+}

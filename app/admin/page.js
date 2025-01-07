@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, Suspense } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -9,12 +9,19 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import AdminTable from "@/components/admin/adminTable";
-import AddProducts from "@/components/admin/addProducts";
+import dynamic from 'next/dynamic';
 import Welcome from "@/components/admin/welcome";
 import LogOutButton from "@/components/admin/logOutButton";
 import Image from "next/image";
 import Link from "next/link";
+
+// Importación directa del componente
+import AdminTable from "@/components/admin/adminTable";
+
+// Solo AddProducts será dinámico
+const AddProducts = dynamic(() => import('@/components/admin/addProducts'), {
+  loading: () => <p className="text-center text-slate-500 text-sm mt-4 animate-pulse">Cargando formulario...</p>
+});
 
 const navigation = [
   {
@@ -46,29 +53,36 @@ function classNames(...classes) {
 export default function Admin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [content, setContent] = useState("Welcome");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleAddContent = () => {
-    setContent("AddProducts");
-  };
-  const handleEditContent = () => {
-    setContent("AdminTable");
+  const handleContentChange = (newContent) => {
+    setIsLoading(true);
+    setContent(newContent);
+    setTimeout(() => setIsLoading(false), 100);
   };
 
-  var contentComponent;
-  switch (content) {
-    case "AddProducts":
-      contentComponent = <AddProducts />;
-      break;
-    case "AdminTable":
-      contentComponent = <AdminTable />;
-      break;
-    default:
-      contentComponent = <Welcome />;
-  }
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        </div>
+      );
+    }
+
+    switch (content) {
+      case "AddProducts":
+        return <AddProducts />;
+      case "AdminTable":
+        return <AdminTable />;
+      default:
+        return <Welcome />;
+    }
+  };
 
   return (
     <>
-      <div>
+      <div className="min-h-screen bg-gray-50">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -141,8 +155,8 @@ export default function Admin() {
                                   )}
                                   onClick={
                                     item.name == "Agregar Productos"
-                                      ? handleAddContent
-                                      : handleEditContent
+                                      ? handleContentChange.bind(null, "AddProducts")
+                                      : handleContentChange.bind(null, "AdminTable")
                                   }
                                 >
                                   <item.icon
@@ -170,53 +184,72 @@ export default function Admin() {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
           {/* Sidebar */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center mt-8 mb-6">
-              <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105">
-                <Image
-                  src="/capellariLogo.svg"
-                  alt="logo"
-                  width={675}
-                  height={110}
-                  className="w-auto h-28"
-                  priority
-                />
+          <div className="flex grow flex-col gap-y-4 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-6 transition-all duration-300 ease-in-out">
+            <div className="flex h-16 shrink-0 items-center mt-6 mb-4">
+              <Link href="/" className="group transition-all duration-300 hover:scale-105">
+                <div style={{ position: 'relative', width: '200px', height: '45px' }}>
+                  <Image
+                    src="/capellariLogo.svg"
+                    alt="logo"
+                    fill
+                    sizes="200px"
+                    style={{ objectFit: 'contain' }}
+                    priority
+                    className="transition-opacity duration-300 group-hover:opacity-80"
+                  />
+                </div>
               </Link>
             </div>
             <nav className="flex flex-1 flex-col">
-              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+              <ul role="list" className="flex flex-1 flex-col gap-y-3">
                 <li>
-                  <ul role="list" className="-mx-2 space-y-3">
+                  <ul role="list" className="space-y-3">
                     {navigation.map((item) => (
                       <li key={item.name}>
                         <a
                           className={classNames(
-                            item.current
-                              ? `${item.bgColor} ${item.iconColor}`
-                              : `text-gray-700 hover:bg-gray-50 ${item.hoverBg}`,
-                            "group flex flex-col gap-y-1 rounded-lg p-4 text-sm leading-6 transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+                            content === item.content
+                              ? `${item.bgColor} ${item.iconColor} shadow-md`
+                              : `text-gray-700 hover:bg-gray-50/80 ${item.hoverBg}`,
+                            "group flex flex-col gap-y-1 rounded-xl p-4 text-sm leading-6 transition-all duration-300 hover:shadow-sm relative overflow-hidden cursor-pointer",
+                            "before:absolute before:inset-0 before:rounded-xl before:transition-opacity before:duration-300",
+                            content === item.content
+                              ? "before:bg-gradient-to-r before:from-white/50 before:to-transparent before:opacity-100"
+                              : "before:opacity-0"
                           )}
-                          onClick={
-                            item.name == "Agregar Productos"
-                              ? handleAddContent
-                              : handleEditContent
-                          }
+                          onClick={() => {
+                            handleContentChange(item.content);
+                            navigation.forEach(nav => nav.current = nav.name === item.name);
+                          }}
                         >
                           <div className="flex items-center gap-x-3 relative z-10">
                             <item.icon
                               className={classNames(
-                                item.current
-                                  ? item.iconColor
+                                content === item.content
+                                  ? `${item.iconColor} scale-110`
                                   : `${item.iconColor} group-hover:scale-110`,
-                                "h-6 w-6 shrink-0 transition-transform duration-300"
+                                "h-6 w-6 shrink-0 transition-all duration-300"
                               )}
                               aria-hidden="true"
                             />
-                            <span className="font-medium">{item.name}</span>
+                            <span className={classNames(
+                              "font-semibold transition-all duration-300",
+                              content === item.content ? "text-slate-800" : "text-slate-600"
+                            )}>
+                              {item.name}
+                            </span>
                           </div>
-                          <p className="text-gray-600 text-xs ml-9 relative z-10">{item.description}</p>
+                          <p className={classNames(
+                            "text-xs ml-9 relative z-10 transition-all duration-300",
+                            content === item.content ? "text-slate-600" : "text-slate-500"
+                          )}>
+                            {item.description}
+                          </p>
+                          {content === item.content && (
+                            <div className="absolute inset-y-0 right-0 w-1.5 bg-gradient-to-b from-slate-400 to-slate-300 rounded-l-full" />
+                          )}
                         </a>
                       </li>
                     ))}
@@ -227,88 +260,77 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
-            <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white/80 px-4 backdrop-blur-sm sm:gap-x-6 sm:px-6 lg:px-0">
+        <div className="lg:pl-64">
+          <div className="sticky top-0 z-40">
+            <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white/90 px-6 backdrop-blur-sm sm:px-8 lg:px-10">
               <button
                 type="button"
-                className="-m-2.5 p-2.5 text-gray-700 lg:hidden hover:bg-gray-50 rounded-lg transition-all duration-200 hover:shadow-sm active:scale-95"
+                className="-m-2.5 p-2.5 text-gray-700 lg:hidden hover:bg-gray-50 rounded-xl transition-all duration-200 hover:shadow-sm active:scale-95"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="sr-only">Open sidebar</span>
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
 
-              {/* Separador */}
               <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
-              <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                <div className="flex flex-1 items-center">
-                  
-                </div>
-                <div className="flex items-center gap-x-4 lg:gap-x-6">
-                  <div
-                    className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
-                    aria-hidden="true"
-                  />
-
-                  {/* Perfil actualizado */}
-                  <Menu as="div" className="relative">
-                    <Menu.Button className="-m-1.5 flex items-center p-2.5 rounded-lg transition-all duration-200 hover:bg-gradient-to-br from-slate-50 to-slate-100/50 hover:shadow-sm active:scale-95">
-                      <span className="sr-only">Abrir menu de usuario</span>
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200/50">
-                          <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            viewBox="0 0 24 24" 
-                            fill="currentColor" 
-                            className="w-5 h-5 text-slate-600"
-                          >
-                            <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium text-slate-700">
-                            Capellari
-                          </span>
-                          <span className="text-xs text-slate-500">
-                            Administrador
-                          </span>
-                        </div>
-                        <ChevronDownIcon
-                          className="ml-1 h-5 w-5 text-slate-400 transition-transform duration-200 group-hover:text-slate-600"
-                          aria-hidden="true"
-                        />
+              <div className="flex flex-1 justify-end">
+                {/* Perfil actualizado */}
+                <Menu as="div" className="relative">
+                  <Menu.Button className="flex items-center p-2.5 rounded-xl transition-all duration-200 hover:bg-gradient-to-br from-slate-50 to-slate-100/50 hover:shadow-sm active:scale-95 group">
+                    <span className="sr-only">Abrir menu de usuario</span>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-200 ring-2 ring-indigo-100 group-hover:ring-indigo-200 transition-all duration-200">
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          viewBox="0 0 24 24" 
+                          fill="currentColor" 
+                          className="w-5 h-5 text-indigo-600 group-hover:scale-110 transition-transform duration-200"
+                        >
+                          <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+                        </svg>
                       </div>
-                    </Menu.Button>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-150"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2.5 w-56 origin-top-right rounded-lg bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none divide-y divide-gray-100">
-                        <div className="px-4 py-3">
-                          <p className="text-sm text-slate-900">Conectado como</p>
-                          <p className="truncate text-sm font-medium text-slate-700">admin@capellari.com</p>
-                        </div>
-                        <div className="py-1">
-                          <LogOutButton />
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors duration-200">
+                          Capellari
+                        </span>
+                        <span className="text-xs font-medium text-slate-500 group-hover:text-slate-600">
+                          Administrador
+                        </span>
+                      </div>
+                      <ChevronDownIcon
+                        className="ml-1 h-5 w-5 text-slate-400 transition-all duration-200 group-hover:text-indigo-500 group-hover:rotate-180"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-200"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-150"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 z-10 mt-3 w-64 origin-top-right rounded-xl bg-white py-3 shadow-lg ring-1 ring-gray-900/5 focus:outline-none divide-y divide-gray-100">
+                      <div className="px-4 py-2.5">
+                        <p className="text-sm text-slate-500">Conectado como</p>
+                        <p className="truncate text-sm font-semibold text-indigo-600">capellariAdmin@gmail.com</p>
+                      </div>
+                      <div className="py-1.5">
+                        <LogOutButton />
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
               </div>
             </div>
           </div>
 
-          <main className="py-10">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              {contentComponent}
+          <main className="py-8">
+            <div className="mx-auto px-6 sm:px-8 lg:px-10">
+              {renderContent()}
             </div>
           </main>
         </div>
