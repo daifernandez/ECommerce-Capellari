@@ -47,7 +47,7 @@ export default async function ProductDetail({ slug }) {
                 <p className="text-lg text-gray-600 font-medium">
                   {item.brand}
                 </p>
-                <span className="text-gray-300">|</span>
+                <div className="h-4 w-px bg-gray-300" />
                 <Stars count={item.rating} />
               </div>
             </div>
