@@ -107,7 +107,7 @@ export default async function ProductDetail({ slug }) {
             </div>
           </div>
           <div className="relative">
-            <ProductsList categoria={item.category} />
+            <ProductsList categoria={item.category} showPagination={false} />
           </div>
         </section>
       </div>

@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import ProductCard from './productCard';
 
-export default function PaginatedProducts({ items }) {
+export default function PaginatedProducts({ items, showPagination = true }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = showPagination ? items.slice(indexOfFirstItem, indexOfLastItem) : items;
   const totalPages = Math.ceil(items.length / itemsPerPage);
 
   return (
@@ -21,27 +21,29 @@ export default function PaginatedProducts({ items }) {
       </div>
 
       {/* Paginación */}
-      <div className="mt-8 flex items-center justify-center gap-2">
-        <button
-          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 text-sm font-medium text-navy-600 bg-white border border-navy-200 rounded-md hover:bg-navy-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          ← Anterior
-        </button>
+      {showPagination && totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm font-medium text-navy-600 bg-white border border-navy-200 rounded-md hover:bg-navy-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            ← Anterior
+          </button>
 
-        <span className="text-sm text-navy-600">
-          Página {currentPage} de {totalPages}
-        </span>
+          <span className="text-sm text-navy-600">
+            Página {currentPage} de {totalPages}
+          </span>
 
-        <button
-          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 text-sm font-medium text-navy-600 bg-white border border-navy-200 rounded-md hover:bg-navy-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Siguiente →
-        </button>
-      </div>
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm font-medium text-navy-600 bg-white border border-navy-200 rounded-md hover:bg-navy-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Siguiente →
+          </button>
+        </div>
+      )}
     </div>
   );
 } 

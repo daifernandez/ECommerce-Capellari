@@ -39,7 +39,7 @@ export default function QtySelector({ item }) {
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-16 h-10 border-y border-gray-200 text-center text-gray-900 text-lg focus:outline-none focus:ring-0"
+            className="w-16 h-10 border-y border-gray-200 text-center text-gray-900 text-lg focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             min="1"
           />
           

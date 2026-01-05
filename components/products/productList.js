@@ -1,7 +1,7 @@
 import NoProducts from "./noProducts";
 import PaginatedProducts from "./paginatedProducts";
 
-export default async function ProductsList({ categoria, searchTerm }) {
+export default async function ProductsList({ categoria, searchTerm, showPagination = true }) {
   try {
     let items = await fetch(
       `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/productos/${categoria || 'todos'}`,
@@ -26,7 +26,7 @@ export default async function ProductsList({ categoria, searchTerm }) {
       return <NoProducts searchTerm={searchTerm} />;
     }
 
-    return <PaginatedProducts items={items} />;
+    return <PaginatedProducts items={items} showPagination={showPagination} />;
   } catch (error) {
     console.error('Error fetching products:', error);
     return <NoProducts searchTerm={searchTerm} />;
