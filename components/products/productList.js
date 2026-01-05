@@ -6,8 +6,8 @@ export default async function ProductsList({ categoria, searchTerm, showPaginati
     let items = await fetch(
       `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/productos/${categoria || 'todos'}`,
       {
-        cache: "no-store",
         next: {
+          revalidate: 3600,
           tags: ["productos"],
         },
       }

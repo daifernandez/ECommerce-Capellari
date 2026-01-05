@@ -1,6 +1,8 @@
 import Title from "../../components/ui/title";
 import Products from "./productos/[categoria]/page";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Coderhouse Next App || Daiana Fernandez",
   description:
