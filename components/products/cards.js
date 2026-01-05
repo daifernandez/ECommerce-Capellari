@@ -4,14 +4,13 @@ import Stars from "../ui/stars";
 export default function Cards({ item }) {
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
-      <div className="relative aspect-square overflow-hidden bg-gray-50">
+      <div className="relative aspect-square overflow-hidden bg-gray-50 flex items-center justify-center p-6">
         <Image
           alt={item.title}
           src={item.image}
           width={288}
           height={288}
-          style={{ objectFit: "contain" }}
-          className="h-full w-full transition-transform duration-300 group-hover:scale-105"
+          className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
           priority
         />
       </div>

@@ -148,13 +148,13 @@ export default function EditForm({ item }) {
                 Modificar los datos del producto
               </p>
 
-              <div className="relative group rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative group rounded-xl overflow-hidden bg-gray-100 aspect-square flex items-center justify-center p-8">
                 <Image
                   src={previewUrl || values.image}
                   alt={values.title}
-                  width={500}
-                  height={500}
-                  className="rounded-xl shadow-md transition-all duration-300 group-hover:scale-105 object-cover"
+                  width={400}
+                  height={400}
+                  className="rounded-xl shadow-md transition-all duration-300 group-hover:scale-105 object-contain max-h-full"
                   priority
                 />
                 {previewUrl && (

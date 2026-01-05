@@ -21,53 +21,56 @@ export default async function ProductDetail({ slug }) {
       <div className="max-w-7xl m-auto px-4 sm:px-6 lg:px-8 my-16">
         <BackButton className="text-sm mb-16 text-gray-500 hover:text-navy-900 transition-colors duration-200" />
         
-        <section className="flex flex-col lg:flex-row gap-12 mb-16">
-          <div className="lg:basis-3/5">
-            <div className="relative group bg-gradient-to-b from-gray-50 to-white rounded-2xl p-8 transition-all duration-300 hover:shadow-lg">
+        <section className="flex flex-col lg:flex-row gap-12 mb-20">
+          <div className="lg:basis-1/2 xl:basis-3/5">
+            <div className="relative group bg-white rounded-2xl border border-gray-100 p-8 transition-all duration-300 aspect-square flex items-center justify-center">
               <Image
                 priority={true}
                 src={item.image}
                 alt={`Imagen de ${item.title}`}
-                width={860}
-                height={860}
-                className="object-contain mix-blend-multiply hover:scale-102 transition-transform duration-500"
+                width={500}
+                height={500}
+                className="object-contain mix-blend-multiply transition-transform duration-500 max-h-[75%]"
               />
             </div>
           </div>
 
-          <div className="lg:basis-2/5 space-y-8">
+          <div className="lg:basis-1/2 xl:basis-2/5 flex flex-col justify-start pt-4">
             <div className="space-y-4">
-              <p className="text-sm font-medium text-navy-900 tracking-wide uppercase">
+              <p className="text-[10px] font-bold text-blue-600 tracking-[0.2em] uppercase">
                 {item.category}
               </p>
-              <h2 className="text-3xl font-light text-navy-900 leading-tight">
+              <h1 className="text-2xl font-medium text-navy-900 leading-tight">
                 {item.title}
-              </h2>
-              <div className="flex items-center gap-4">
-                <p className="text-lg text-gray-600 font-medium">
+              </h1>
+              <div className="flex items-center gap-3">
+                <p className="text-sm text-gray-400 font-medium">
                   {item.brand}
                 </p>
-                <div className="h-4 w-px bg-gray-300" />
+                <div className="h-3 w-px bg-gray-200" />
                 <Stars count={item.rating} />
+                <span className="text-xs text-gray-400">(5.0)</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-gray-100">
-              <p className="text-4xl font-light text-navy-900">
-                ${item.price.toLocaleString()}
-              </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Envío gratuito en pedidos superiores a $999
+            <div className="mt-8 pt-8 border-t border-gray-100">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-semibold text-navy-900">
+                  ${item.price.toLocaleString()}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-2 flex items-center gap-2">
+                Envío gratuito a todo el país
               </p>
             </div>
 
-            <div className="pt-6">
+            <div className="mt-8">
               <QtySelector item={item} />
             </div>
           </div>
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-12 my-16">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-32 mb-32">
           <div className="lg:col-span-2 space-y-8">
             <div>
               <h3 className="text-lg font-medium text-navy-900 mb-4">
@@ -95,7 +98,7 @@ export default async function ProductDetail({ slug }) {
           </div>
         </section>
 
-        <section className="mt-24">
+        <section className="mt-32">
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="text-2xl font-light text-navy-900">

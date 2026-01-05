@@ -267,16 +267,16 @@ export default function AddProducts() {
                       >
                         Agregar Imagen
                       </label>
-                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 hover:border-slate-400 transition-all cursor-pointer">
+                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 hover:border-slate-400 transition-all cursor-pointer min-h-[400px]">
                         {value.image ? (
-                          <div className="flex flex-col items-center justify-center">
-                            <div className="relative group">
+                          <div className="flex flex-col items-center justify-center w-full">
+                            <div className="relative group aspect-square w-full max-w-[400px] flex items-center justify-center bg-gray-50 rounded-xl overflow-hidden">
                               <Image
                                 src={value.image}
                                 alt="Imagen"
                                 width={500}
-                                height={300}
-                                className="rounded-xl shadow-md transition-all duration-300 group-hover:opacity-75"
+                                height={500}
+                                className="rounded-xl shadow-md transition-all duration-300 group-hover:opacity-75 object-contain max-h-full"
                                 priority
                               />
                               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -511,13 +511,13 @@ export default function AddProducts() {
                 <div className="flex flex-col md:flex-row gap-8">
                   {value.image ? (
                     <div className="md:basis-2/5">
-                      <div className="relative group bg-gradient-to-b from-gray-50 to-white rounded-xl p-4 transition-all duration-300 hover:shadow-lg">
+                      <div className="relative group bg-gradient-to-b from-gray-50 to-white rounded-xl p-8 transition-all duration-300 hover:shadow-lg aspect-square flex items-center justify-center max-h-full">
                         <Image
                           src={value.image}
                           alt="Vista previa"
-                          width={400}
-                          height={400}
-                          className="object-contain mix-blend-multiply hover:scale-102 transition-transform duration-500"
+                          width={300}
+                          height={300}
+                          className="object-contain mix-blend-multiply hover:scale-102 transition-transform duration-500 max-h-full"
                         />
                       </div>
                     </div>
