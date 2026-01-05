@@ -19,7 +19,7 @@ export default async function ProductDetail({ slug }) {
   } else {
     return (
       <div className="max-w-7xl m-auto px-4 sm:px-6 lg:px-8 my-16">
-        <BackButton className="text-sm mb-8 text-gray-500 hover:text-navy-900 transition-colors duration-200" />
+        <BackButton className="text-sm mb-16 text-gray-500 hover:text-navy-900 transition-colors duration-200" />
         
         <section className="flex flex-col lg:flex-row gap-12 mb-16">
           <div className="lg:basis-3/5">

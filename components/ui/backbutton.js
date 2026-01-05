@@ -1,12 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-export default function BackButton() {
+export default function BackButton({ className = "" }) {
   const router = useRouter();
   return (
     <button
       onClick={() => router.back()}
-      className="group flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+      className={`group flex items-center gap-2 font-medium transition-colors duration-200 ${className || "text-sm text-gray-600 hover:text-gray-900"}`}
     >
       <span 
         aria-hidden="true" 
