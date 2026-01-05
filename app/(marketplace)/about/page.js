@@ -59,16 +59,20 @@ export default function About() {
     <>
       <main className="isolate">
         {/* Hero section */}
-        <div className="relative isolate -z-10 overflow-hidden bg-gradient-to-b from-slate-100/20 pt-14 transition-all duration-500 animate-fade-in-down">
+        <div className="relative isolate -z-10 overflow-hidden bg-gradient-to-b from-indigo-50/50 pt-14 transition-all duration-500 animate-fade-in-down">
           <div
-            className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
+            className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/5 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
             aria-hidden="true"
           />
           <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8">
             <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
-              <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto">
-                Somos una empresa con historia.
-              </h1>
+              <div className="max-w-2xl lg:col-span-2 xl:col-auto">
+                <h2 className="text-base font-semibold leading-7 text-indigo-600">Nuestra Trayectoria</h2>
+                <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                  Somos una empresa con historia.
+                </h1>
+                <div className="mt-6 h-1 w-20 bg-indigo-600 rounded-full"></div>
+              </div>
               <div className="mt-6 max-w-xl lg:mt-0 xl:col-end-1 xl:row-start-1">
                 <p className="text-lg leading-8 text-gray-600">
                   Capellari tiene una rica historia que se remonta a 1929. Desde
@@ -94,103 +98,43 @@ export default function About() {
                 alt="Capellini familia"
                 width={1920}
                 height={1080}
-                className="mt-10 aspect-[5/7] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
+                className="mt-10 aspect-[5/7] w-full max-w-lg rounded-3xl object-cover shadow-2xl ring-1 ring-gray-900/10 sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36 transition-transform duration-500 hover:scale-[1.02]"
                 priority
               />
             </div>
           </div>
           <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32" />
         </div>
-        {/* Timeline section */}
-        <div className="relative py-12 sm:py-16 bg-gradient-to-b from-white to-slate-50/40">
+        {/* Timeline section - Rediseño Minimalista y Lineal */}
+        <div className="relative py-24 sm:py-32 bg-white">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">
+            <div className="mx-auto max-w-2xl text-center mb-20">
+              <h2 className="text-sm font-bold tracking-widest text-indigo-600 uppercase">Trayectoria</h2>
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Nuestra Historia</p>
+              <div className="mt-4 h-1 w-12 bg-indigo-600 mx-auto rounded-full"></div>
+            </div>
+            
+            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-12 lg:mx-0 lg:max-w-none lg:grid-cols-4">
               {timeline.map((item) => (
                 <div 
                   key={item.name} 
-                  className="transform transition-all duration-300 hover:scale-105 p-6 rounded-xl bg-white shadow-sm hover:shadow-md border border-gray-100"
+                  className="relative pl-8 group transition-all duration-300"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 rounded-full bg-slate-100 text-slate-600">
-                      {item.icon}
-                    </div>
+                  <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-100 group-hover:bg-indigo-500 transition-colors duration-500" />
+                  <div className="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-gray-300 group-hover:bg-indigo-500 transition-all duration-500 group-hover:scale-125" />
+                  
+                  <div className="flex flex-col">
                     <time
                       dateTime={item.dateTime}
-                      className="text-sm font-semibold leading-6 text-slate-500"
+                      className="text-xs font-bold uppercase tracking-widest text-indigo-500 transition-colors duration-300"
                     >
                       {item.date}
                     </time>
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold leading-8 tracking-tight text-gray-900">
-                    {item.name}
-                  </h3>
-                  <p className="mt-2 text-base leading-7 text-gray-600">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        {/* Logo cloud section */}
-        <div className="relative py-16 sm:py-20">
-          <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
-          <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-4xl text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4">
-                Marcas Premium
-              </h2>
-              <div className="w-24 h-1 bg-slate-900/20 mx-auto rounded-full"></div>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
-                Trabajamos con las marcas más reconocidas del mercado
-              </p>
-            </div>
-            <div className="mx-auto mt-10 grid grid-cols-2 items-center gap-x-8 gap-y-10 sm:grid-cols-4 sm:gap-x-10">
-              {[
-                { 
-                  src: "/whirlpool.png", 
-                  alt: "Whirlpool",
-                  description: "Innovación y calidad"
-                },
-                { 
-                  src: "/lg.png", 
-                  alt: "LG",
-                  description: "Tecnología de vanguardia"
-                },
-                { 
-                  src: "/samsung.png", 
-                  alt: "Samsung",
-                  description: "Diseño inteligente"
-                },
-                { 
-                  src: "/bosch.png", 
-                  alt: "Bosch",
-                  description: "Ingeniería alemana"
-                },
-              ].map((brand) => (
-                <div 
-                  key={brand.alt}
-                  className="group relative flex flex-col items-center"
-                >
-                  <div className="relative h-24 w-full transform transition-all duration-300 group-hover:scale-105">
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white to-gray-50 shadow-sm ring-1 ring-gray-200/50" />
-                    <div className="absolute inset-0 flex items-center justify-center p-4">
-                      <Image
-                        src={brand.src}
-                        alt={brand.alt}
-                        width={100}
-                        height={100}
-                        className="h-12 w-auto object-contain transition-all duration-300 group-hover:scale-110"
-                        style={{ 
-                          filter: "grayscale(100%)",
-                        }}
-                        priority
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-3 text-center">
-                    <p className="text-sm font-medium text-gray-900 opacity-0 transform -translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                      {brand.description}
+                    <h3 className="mt-4 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-indigo-600">
+                      {item.name}
+                    </h3>
+                    <p className="mt-3 text-base leading-relaxed text-gray-500 font-light">
+                      {item.description}
                     </p>
                   </div>
                 </div>
@@ -198,107 +142,138 @@ export default function About() {
             </div>
           </div>
         </div>
-        {/* Stats section */}
-        <div className="relative py-16 sm:py-20 bg-gradient-to-b from-slate-50/40 to-white">
+        {/* Logo cloud section - Minimalista */}
+        <div className="relative py-24 bg-slate-50/30">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:max-w-none">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4">
-                  Confianza que crece año tras año
-                </h2>
-                <div className="w-24 h-1 bg-slate-900/20 mx-auto rounded-full"></div>
-                <p className="mt-6 text-lg leading-8 text-gray-600">
-                  Descubre por qué miles de clientes confían en nosotros
-                </p>
-              </div>
-              <dl className="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  { id: 1, name: 'Años de experiencia', value: '94+' },
-                  { id: 2, name: 'Clientes satisfechos', value: '50k+' },
-                  { id: 3, name: 'Productos vendidos', value: '100k+' },
-                  { id: 4, name: 'Ciudades alcanzadas', value: '20+' },
-                ].map((stat) => (
-                  <div key={stat.id} className="flex flex-col bg-gray-400/5 p-8">
-                    <dt className="text-sm font-semibold leading-6 text-gray-600">{stat.name}</dt>
-                    <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900">{stat.value}</dd>
-                  </div>
-                ))}
-              </dl>
+            <div className="text-center mb-16">
+              <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">Marcas que confían en nosotros</p>
             </div>
-          </div>
-        </div>
-        {/* Content section - Nuestros Clientes */}
-        <div className="relative py-16 sm:py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-white to-slate-50/40"></div>
-          <div className="relative mx-auto max-w-7xl px-6 lg:flex lg:px-8">
-            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
-              <div className="lg:col-end-1 lg:w-full lg:max-w-lg lg:pb-8">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4">
-                  Nuestros Clientes
-                </h2>
-                <div className="w-24 h-1 bg-slate-900/20 rounded-full mb-6"></div>
-                <p className="mt-6 text-xl leading-8 text-gray-600">
-                  En Capellari, nuestros clientes son más que una prioridad, son
-                  el corazón de nuestra empresa. Dedicamos todo nuestro esfuerzo
-                  en proporcionarles un servicio excepcional y ofrecerles los
-                  productos de la más alta calidad.
-                </p>
-                <p className="mt-6 text-base leading-7 text-gray-600">
-                  Nuestro objetivo es brindarles una experiencia de compra sin
-                  igual, para que puedan encontrar los electrodomésticos que
-                  mejor se adapten a sus necesidades.
-                </p>
-                <div className="mt-10 flex items-center justify-center gap-x-6">
-                  <BackButton />
-                </div>
-              </div>
-              <div className="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">
-                <div className="w-0 flex-auto lg:ml-auto lg:w-auto lg:flex-none lg:self-end">
+            <div className="mx-auto grid grid-cols-2 items-center gap-x-12 gap-y-12 sm:grid-cols-4 lg:gap-x-20">
+              {[
+                { src: "/whirlpool.png", alt: "Whirlpool" },
+                { src: "/lg.png", alt: "LG" },
+                { src: "/samsung.png", alt: "Samsung" },
+                { src: "/bosch.png", alt: "Bosch" },
+              ].map((brand) => (
+                <div key={brand.alt} className="flex justify-center">
                   <Image
-                    src={"/clientes.jpg"}
-                    alt="Capellini clientes"
-                    width={1920}
-                    height={1080}
-                    className="aspect-[7/5] w-[37rem] max-w-none rounded-2xl bg-gray-50 object-cover transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+                    src={brand.src}
+                    alt={brand.alt}
+                    width={140}
+                    height={70}
+                    className="max-h-12 w-auto object-contain opacity-40 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0 hover:scale-110"
                     priority
                   />
                 </div>
-                <div className="contents lg:col-span-2 lg:col-end-2 lg:ml-auto lg:flex lg:w-[37rem] lg:items-start lg:justify-end lg:gap-x-8">
-                  <div className="order-first flex w-64 flex-none justify-end self-end lg:w-auto">
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* Stats section - Ultra Minimalista */}
+        <div className="py-20 bg-white">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 border-t border-gray-50 pt-20">
+            <dl className="flex flex-wrap justify-center gap-x-12 gap-y-10 sm:gap-x-24">
+              {[
+                { name: 'Años de experiencia', value: '94+' },
+                { name: 'Clientes satisfechos', value: '50k+' },
+                { name: 'Productos vendidos', value: '100k+' },
+                { name: 'Ciudades alcanzadas', value: '20+' },
+              ].map((stat) => (
+                <div key={stat.name} className="flex flex-col items-center">
+                  <dd className="text-3xl font-extralight tracking-tighter text-gray-900">
+                    {stat.value}
+                  </dd>
+                  <dt className="text-[9px] font-medium uppercase tracking-[0.3em] text-gray-400 mt-2">
+                    {stat.name}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+        {/* Content section - Nuestros Clientes: Rediseño Final Prolijo y Robusto */}
+        <section className="relative py-24 sm:py-32 overflow-hidden bg-white">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:items-center lg:gap-x-16">
+              
+              {/* Bloque de Texto: Elegante y con aire */}
+              <div className="max-w-xl">
+                <h2 className="text-base font-semibold leading-7 text-indigo-600">Nuestra Comunidad</h2>
+                <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                  Confianza que nos impulsa
+                </p>
+                <div className="mt-6 h-1 w-12 bg-indigo-600 rounded-full"></div>
+                
+                <div className="mt-10 space-y-8 text-lg leading-8 text-gray-600">
+                  <p>
+                    En <span className="font-semibold text-gray-900">Capellari</span>, nuestros clientes son más que una prioridad, son
+                    el corazón de nuestra empresa. Dedicamos todo nuestro esfuerzo
+                    en proporcionarles un servicio excepcional y ofrecerles los
+                    productos de la más alta calidad.
+                  </p>
+                  <p>
+                    Nuestro objetivo es brindarles una experiencia de compra sin
+                    igual, para que puedan encontrar los electrodomésticos que
+                    mejor se adapten a sus necesidades y estilo de vida.
+                  </p>
+                </div>
+
+                <div className="mt-12 flex items-center gap-x-6">
+                  <BackButton />
+                </div>
+              </div>
+
+              {/* Bloque de Imágenes: Collage "Masonry" prolijo que NO colapsa */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-8">
+                <div className="space-y-4 lg:space-y-8">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-gray-900/5">
                     <Image
-                      src={"/clientes2.jpg"}
-                      alt="Capellini clientes"
-                      width={1920}
-                      height={1080}
-                      className="aspect-[4/3] w-[24rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover"
+                      src="/clientes.jpg"
+                      alt="Clientes en tienda Capellari"
+                      fill
+                      className="object-cover transition-transform duration-700 hover:scale-110"
                       priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="flex w-96 flex-auto justify-end lg:w-auto lg:flex-none">
+                  <div className="relative aspect-square overflow-hidden rounded-3xl shadow-xl ring-1 ring-gray-900/5">
                     <Image
-                      src={"/clientes3.jpg"}
-                      alt="Capellini clientes"
-                      width={1920}
-                      height={1080}
-                      className="aspect-[7/5] w-[37rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover"
+                      src="/clientes2.jpg"
+                      alt="Asesoría personalizada"
+                      fill
+                      className="object-cover transition-transform duration-700 hover:scale-110"
                       priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="hidden sm:block sm:w-0 sm:flex-auto lg:w-auto lg:flex-none">
+                </div>
+                <div className="space-y-4 lg:space-y-8 lg:pt-20">
+                  <div className="relative aspect-square overflow-hidden rounded-3xl shadow-xl ring-1 ring-gray-900/5">
                     <Image
-                      src={"/clientes1.jpg"}
-                      alt="Capellini clientes"
-                      width={1920}
-                      height={1080}
-                      className="aspect-[4/3] w-[24rem] max-w-none rounded-2xl bg-gray-50 object-cover"
+                      src="/clientes3.jpg"
+                      alt="Experiencia de compra"
+                      fill
+                      className="object-cover transition-transform duration-700 hover:scale-110"
                       priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  </div>
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-gray-900/5">
+                    <Image
+                      src="/clientes1.jpg"
+                      alt="Satisfacción del cliente"
+                      fill
+                      className="object-cover transition-transform duration-700 hover:scale-110"
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
-        </div>
+        </section>
       </main>
     </>
   );
